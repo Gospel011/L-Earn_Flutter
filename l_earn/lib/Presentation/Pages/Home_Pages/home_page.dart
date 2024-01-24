@@ -80,34 +80,36 @@ class _HomePageState extends State<HomePage> {
         create: (context) => PageCubit(),
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
-              child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Builder(builder: (context) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List<Widget>.generate(pageIconsFill.length, (index) {
-                  return BlocBuilder<PageCubit, PageState>(
-                      builder: (context, state) {
-                    print('Page state is ${state.pageNo}');
-                    return InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        print('${pagesTitles[index]} page Pressed');
-                        if (index != 2) {
-                          context.read<PageCubit>().goToPage(index);
-                        }
-                      },
-                      child: MyBottomAppBarItem(
-                          icon: state.pageNo == index
-                              ? pageIconsFill[index]
-                              : pageIconsThin[index],
-                          text: pagesTitles[index]),
-                    );
-                  });
-                }),
-              );
-            }),
-          )),
+              child: Builder(builder: (context) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List<Widget>.generate(pageIconsFill.length, (index) {
+                    return BlocBuilder<PageCubit, PageState>(
+                        builder: (context, state) {
+                      print('Page state is ${state.pageNo}');
+                      return InkWell(
+                        
+                        // overlayColor: MaterialStatePropertyAll(Colors.transparent),
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          print('${pagesTitles[index]} page Pressed');
+                          if (index != 2) {
+                            context.read<PageCubit>().goToPage(index);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: MyBottomAppBarItem(
+                              icon: state.pageNo == index
+                                  ? pageIconsFill[index]
+                                  : pageIconsThin[index],
+                              text: pagesTitles[index]),
+                        ),
+                      );
+                    });
+                  }),
+                );
+              })),
           appBar: widget.buildAppBar(context, actions: [
             Builder(builder: (context) {
               return IconButton(

@@ -7,9 +7,12 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Welcome ${context.read<AuthCubit>().state.user?.firstName}. The app is still in development and would be done soon',
-                  textAlign: TextAlign.center,)
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: Text('Welcome ${context.read<AuthCubit>().state.user?.firstName}. The app is still in development and would be done soon.',
+                    textAlign: TextAlign.center,)
+      ),
     );
   }
 }
