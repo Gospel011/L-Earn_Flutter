@@ -22,23 +22,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(),
-      child: Builder(
-        builder: (context) {
+      child: Builder(builder: (context) {
         print('Current state is ${context.read<AuthCubit>().state}');
-          return MaterialApp(
-            title: 'Flutter Demo',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.myAppTheme,
-            onGenerateRoute: widget.routeGenerator.onGenerateRoute,
-            initialRoute: context.read<AuthCubit>().state is AuthInitial ? '/login': '/',
-          );
-        }
-      ),
+        return MaterialApp(
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.myAppTheme,
+          onGenerateRoute: widget.routeGenerator.onGenerateRoute,
+          initialRoute:
+              context.read<AuthCubit>().state is AuthInitial ? '/login' : '/',
+        );
+      }),
     );
   }
 }
