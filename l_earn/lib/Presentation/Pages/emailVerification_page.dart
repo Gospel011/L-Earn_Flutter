@@ -2,9 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
+import 'package:l_earn/Helpers/auth_helper.dart';
+import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_textfield.dart';
 import 'package:l_earn/utils/mixins.dart';
+
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
+import 'package:l_earn/Presentation/components/my_text_button.dart';
+import 'package:l_earn/utils/colors.dart';
 
 import '../../../utils/enums.dart';
 
@@ -41,164 +49,228 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
 
     return Scaffold(
       appBar: buildAppBar(context, title: 'L-EARN', includeClose: true),
-      body: SafeArea(
-          child: Padding(
-        padding:
-            const EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 20),
-        child: Column(children: [
-          const SizedBox(
-            height: 32,
-          ),
+      body: BlocListener<VerificationCubit, VerificationState>(
+        listener: (context, state) async {
+          if (state is EmailVerified) {
+            print("V E R I F I C A T I O N SUCCESSFUL");
+            await showDialog(
+                context: context,
+                builder: (context) {
+                  return const MyDialog(
+                    title: 'Congratulations',
+                    content:
+                        'Your Account setup is complete. You may now login with your email and password.',
+                  );
+                });
 
-          Text(
-            'Verify Email',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-
-          const SizedBox(
-            height: 16,
-          ),
-
-          //* Text
-          const Text(
-            'Please provide the 6-digit code we sent to example@gmail.com',
-            textAlign: TextAlign.center,
-          ),
-
-          const SizedBox(
-            height: 16,
-          ),
-
-          //? SIX OTP BOXES
-          Row(
-            children: [
-              Expanded(
-                child: MyTextField(
-                  controller: e1,
-                  focusNode: _d1Focusnode,
-                  onChanged: (value) {
-                    value != '' ? _d2Focusnode.requestFocus() : null;
-                  },
-                  textFieldType: TextFieldType.otp,
-                ),
-              ),
-
-              //* 10px Spacing
-              const SizedBox(
-                width: 10,
-              ),
-
-              Expanded(
-                child: MyTextField(
-                  controller: e2,
-                  focusNode: _d2Focusnode,
-                  onChanged: (value) {
-                    value != ''
-                        ? _d3Focusnode.requestFocus()
-                        : _d1Focusnode.requestFocus();
-                  },
-                  textFieldType: TextFieldType.otp,
-                ),
-              ),
-
-              //* 10px Spacing
-              const SizedBox(
-                width: 10,
-              ),
-
-              Expanded(
-                child: MyTextField(
-                  controller: e3,
-                  focusNode: _d3Focusnode,
-                  onChanged: (value) {
-                    value != ''
-                        ? _d4Focusnode.requestFocus()
-                        : _d2Focusnode.requestFocus();
-                  },
-                  textFieldType: TextFieldType.otp,
-                ),
-              ),
-
-              //* 10px Spacing
-              const SizedBox(
-                width: 10,
-              ),
-
-              Expanded(
-                child: MyTextField(
-                  controller: e4,
-                  focusNode: _d4Focusnode,
-                  onChanged: (value) {
-                    value != ''
-                        ? _d5Focusnode.requestFocus()
-                        : _d3Focusnode.requestFocus();
-                  },
-                  textFieldType: TextFieldType.otp,
-                ),
-              ),
-
-              //* 10px Spacing
-              const SizedBox(
-                width: 10,
-              ),
-
-              Expanded(
-                  child: MyTextField(
-                controller: e5,
-                focusNode: _d5Focusnode,
-                onChanged: (value) {
-                  value != ''
-                      ? _d6Focusnode.requestFocus()
-                      : _d4Focusnode.requestFocus();
-                },
-                textFieldType: TextFieldType.otp,
-              )),
-
-              //* 10px Spacing
-              const SizedBox(
-                width: 10,
-              ),
-
-              Expanded(
-                child: MyTextField(
-                  controller: e6,
-                  focusNode: _d6Focusnode,
-                  onChanged: (value) {
-                    value != ''
-                        ? _d6Focusnode.unfocus()
-                        : _d5Focusnode.requestFocus();
-                  },
-                  textFieldType: TextFieldType.otp,
-                ),
-              ),
-            ],
-          ),
-          const Expanded(child: SizedBox()),
-
-          //? VERIFY EMAIL
-          MyElevatedButton(
-            text: 'Verify',
-            onPressed: () async {
-              await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16))),
-                      title: Center(child: Text('Congratulations')),
-                      content: Text(
-                          'Your Account setup is complete. You may now login with your email and password.'),
-                    );
-                  });
-
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
                   context, '/login', (route) => false);
-              }
-            },
-          ),
-        ]),
-      )),
+            }
+          } else if (state is VerificationFailed) {
+            print("V e r i f i c a t i o n failed");
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return MyDialog(
+                    title: state.error.title,
+                    content: state.error.content,
+                  );
+                });
+          }
+        },
+        child: SafeArea(
+            child: Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 20),
+          child: Column(children: [
+            const SizedBox(
+              height: 32,
+            ),
+
+            Text(
+              'Verify Email',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            //* Text
+            Text(
+              'Please provide the 6-digit code we sent to ${context.read<AuthCubit>().state.email}',
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            //? SIX OTP BOXES
+            Row(
+              children: [
+                Expanded(
+                  child: MyTextField(
+                    controller: e1,
+                    focusNode: _d1Focusnode,
+                    onChanged: (value) {
+                      value != '' ? _d2Focusnode.requestFocus() : null;
+                    },
+                    textFieldType: TextFieldType.otp,
+                  ),
+                ),
+
+                //* 10px Spacing
+                const SizedBox(
+                  width: 10,
+                ),
+
+                Expanded(
+                  child: MyTextField(
+                    controller: e2,
+                    focusNode: _d2Focusnode,
+                    onChanged: (value) {
+                      value != ''
+                          ? _d3Focusnode.requestFocus()
+                          : _d1Focusnode.requestFocus();
+                    },
+                    textFieldType: TextFieldType.otp,
+                  ),
+                ),
+
+                //* 10px Spacing
+                const SizedBox(
+                  width: 10,
+                ),
+
+                Expanded(
+                  child: MyTextField(
+                    controller: e3,
+                    focusNode: _d3Focusnode,
+                    onChanged: (value) {
+                      value != ''
+                          ? _d4Focusnode.requestFocus()
+                          : _d2Focusnode.requestFocus();
+                    },
+                    textFieldType: TextFieldType.otp,
+                  ),
+                ),
+
+                //* 10px Spacing
+                const SizedBox(
+                  width: 10,
+                ),
+
+                Expanded(
+                  child: MyTextField(
+                    controller: e4,
+                    focusNode: _d4Focusnode,
+                    onChanged: (value) {
+                      value != ''
+                          ? _d5Focusnode.requestFocus()
+                          : _d3Focusnode.requestFocus();
+                    },
+                    textFieldType: TextFieldType.otp,
+                  ),
+                ),
+
+                //* 10px Spacing
+                const SizedBox(
+                  width: 10,
+                ),
+
+                Expanded(
+                    child: MyTextField(
+                  controller: e5,
+                  focusNode: _d5Focusnode,
+                  onChanged: (value) {
+                    value != ''
+                        ? _d6Focusnode.requestFocus()
+                        : _d4Focusnode.requestFocus();
+                  },
+                  textFieldType: TextFieldType.otp,
+                )),
+
+                //* 10px Spacing
+                const SizedBox(
+                  width: 10,
+                ),
+
+                Expanded(
+                  child: MyTextField(
+                    controller: e6,
+                    focusNode: _d6Focusnode,
+                    onChanged: (value) {
+                      value != ''
+                          ? _d6Focusnode.unfocus()
+                          : _d5Focusnode.requestFocus();
+                    },
+                    textFieldType: TextFieldType.otp,
+                  ),
+                ),
+              ],
+            ),
+            const Expanded(child: SizedBox()),
+
+            //? VERIFY EMAIL
+            BlocBuilder<VerificationCubit, VerificationState>(
+                builder: (context, state) {
+              return MyElevatedButton(
+                text: 'Verify',
+                loading: state is VerifyingEmail,
+                onPressed: () async {
+                  AuthHelper.userMap["otp"] =
+                      "${e1.text}${e2.text}${e3.text}${e4.text}${e5.text}${e6.text}";
+                  context.read<VerificationCubit>().verifyEmailOtp();
+                },
+              );
+            }),
+
+            //? DON'T HAVE AN ACCOUNT? SIGNUP
+            const SizedBox(
+              height: 8,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text("Didn't receive the code?"),
+                  BlocBuilder<TimerCubit, TimerState>(
+                    builder: (context, state) {
+                      print("T I M E R S T A T E IS $state");
+                      return MyTextButton(
+                          text: 'resend',
+                          textcolor: AppColor.buttonTextBlue,
+                          textDecoration: TextDecoration.underline,
+                          onPressed: () {
+                            //TODO --> NAVIGATE TO SIGNUP
+
+                            if (state is TimerEnded) {
+                              print('Resending...');
+
+                              //? RESENT OTP
+                              context
+                                  .read<VerificationCubit>()
+                                  .requestEmailVerificationOtp();
+
+                              //? start timer
+                              context.read<TimerCubit>().setTimer(
+                                  duration: const Duration(minutes: 1));
+                            } else {
+                              print("Timer hasn't ended");
+                            }
+                          });
+                    },
+                  )
+                ],
+              ),
+            )
+          ]),
+        )),
+      ),
     );
   }
 }

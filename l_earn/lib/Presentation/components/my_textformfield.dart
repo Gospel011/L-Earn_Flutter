@@ -46,28 +46,21 @@ class MyTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: [
-        TextFormField(
-          obscureText: obscureText ?? false,
-          enabled: enabled,
-          controller: controller,
-          validator: validator,
-          cursorColor: AppColor.textColor,
-          cursorWidth: 1.0,
-          decoration: InputDecoration(hintText: hintText),
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
-        ),
-        suffixIcon != null
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child:
-                    IconButton(onPressed: suffixOnpressed, icon: suffixIcon!),
-              )
-            : const SizedBox(),
-      ],
+    return TextFormField(
+      obscureText: obscureText ?? false,
+      enabled: enabled,
+      controller: controller,
+      validator: validator,
+      cursorColor: AppColor.textColor,
+      cursorWidth: 1.0,
+      decoration: InputDecoration(
+        hintText: hintText,
+        suffixIcon: suffixIcon != null
+            ? IconButton(onPressed: suffixOnpressed, icon: suffixIcon!)
+            : null,
+      ),
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
     );
   }
 }

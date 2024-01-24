@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 //! NETWORK CONSTANTS
 class NetWorkConstants {
-  final String baseUrl = "http://127.0.0.1:5000/api/v1";
-  final Map<String, String> defaultHeader = {
+  static const String baseUrl = "https://l-earn.onrender.com/api/v1"; //? [PRODUCTION]
+  // static const String baseUrl = "http://127.0.0.1:5000/api/v1"; //? [DEVELOPMENT]
+  static final Map<String, String> defaultHeader = {
     "Content-Type": "application/json"
   };
 }

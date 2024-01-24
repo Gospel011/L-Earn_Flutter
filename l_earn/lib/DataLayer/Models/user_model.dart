@@ -46,17 +46,18 @@ class User {
   final String? gender;
   final String? school;
   final String? role;
+  final String? token;
 
-  const User({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    this.emailVerified = false,
-    this.profilePicture,
-    this.gender,
-    this.school,
-    this.role
-  });
+  const User(
+      {required this.firstName,
+      required this.lastName,
+      required this.email,
+      this.emailVerified = false,
+      this.profilePicture,
+      this.gender,
+      this.school,
+      this.role,
+      this.token});
 
   User copyWith({
     String? firstName,
@@ -67,6 +68,7 @@ class User {
     String? gender,
     String? school,
     String? role,
+    String? token
   }) {
     return User(
       firstName: firstName ?? this.firstName,
@@ -77,6 +79,7 @@ class User {
       gender: gender ?? this.gender,
       school: school ?? this.school,
       role: role ?? this.role,
+      token: token ?? this.token,
     );
   }
 
@@ -90,6 +93,7 @@ class User {
       'gender': gender,
       'school': school,
       'role': role,
+      'token': token
     };
   }
 
@@ -99,27 +103,31 @@ class User {
       lastName: map['lastName'] as String,
       email: map['email'] as String,
       emailVerified: map['emailVerified'] as bool,
-      profilePicture: map['profilePicture'] != null ? map['profilePicture'] as String : null,
+      profilePicture: map['profilePicture'] != null
+          ? map['profilePicture'] as String
+          : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
       school: map['school'] != null ? map['school'] as String : null,
       role: map['role'] != null ? map['role'] as String : null,
+      token: map['token'] != null ? map['token'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory User.fromJson(String source) =>
+      User.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'User(firstName: $firstName, lastName: $lastName, email: $email, emailVerified: $emailVerified, profilePicture: $profilePicture, gender: $gender, school: $school, role: $role)';
+    return 'User(firstName: $firstName, lastName: $lastName, email: $email, emailVerified: $emailVerified, profilePicture: $profilePicture, gender: $gender, school: $school, role: $role, token: $token)';
   }
 
   // @override
   // bool operator ==(covariant User other) {
   //   if (identical(this, other)) return true;
-  
-  //   return 
+
+  //   return
   //     other.firstName == firstName &&
   //     other.lastName == lastName &&
   //     other.email == email &&
@@ -142,3 +150,5 @@ class User {
   //     role.hashCode;
   // }
 }
+  
+

@@ -93,6 +93,8 @@ static ThemeData myAppTheme = ThemeData(
 
     //* Input decoration theme
     inputDecorationTheme: InputDecorationTheme(
+      //* suffix icon style
+      suffixIconColor: MyMainButtonColor(),
         //* padding
         contentPadding: const EdgeInsets.only(left: 16, top: 10),
         //* for normal border

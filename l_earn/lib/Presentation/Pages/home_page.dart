@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/utils/mixins.dart';
 
 class HomePage extends StatelessWidget with AppBarMixin {
@@ -19,8 +21,8 @@ class HomePage extends StatelessWidget with AppBarMixin {
           )
         ]),
         endDrawer: Drawer(),
-        body: const Center(
-          child: Text('home page'),
+        body: Center(
+          child: Text('Welcome ${context.read<AuthCubit>().state.user?.firstName}. The app is still in development and would be done soon'),
         ));
   }
 }

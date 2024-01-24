@@ -1,0 +1,153 @@
+import 'dart:convert';
+
+import 'package:l_earn/Helpers/auth_helper.dart';
+import 'package:http/http.dart' as http;
+import 'package:l_earn/utils/constants.dart';
+
+class AuthSource {
+  static dynamic signup() async {
+    //* get firstName, lastName, email, password and confirmPassword from
+    //  AuthHelper
+
+    final Uri url = Uri.parse('${NetWorkConstants.baseUrl}/user/signup');
+
+    final body = {
+      "firstName": AuthHelper.userMap["firstName"],
+      "lastName": AuthHelper.userMap["lastName"],
+      "email": AuthHelper.userMap["email"],
+      "password": AuthHelper.userMap["password"],
+      "confirmPassword": AuthHelper.userMap["confirmPassword"],
+    };
+
+    print('SIGNUP R E Q U E S T BODY = $body');
+
+    //* communicate with server to sign user up
+
+    try {
+      http.Response serverResponse = await http.put(url,
+          body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+
+      print('S I G N U P RESPONSE = ${jsonDecode(serverResponse.body)}');
+
+      return jsonDecode(serverResponse.body);
+    } catch (e) {
+      if (e is http.ClientException) {
+        String errno = "$e".split('errno = ')[1].split('),')[0];
+        print("E R R O R NUMBER IS $errno :::");
+        print(" E R R IS $e");
+        return {
+          "title": "Network Error",
+          "message": "Please check your internet connection"
+        };
+      } else {
+        print("U N K N O W N ERROR IS $e");
+        return {
+          "title": "Something went wrong",
+          "message":
+              "Please contact us with a description of what you were doing before you saw this message."
+        };
+      }
+    }
+  }
+
+  static Future<dynamic> sendEmailOtp() async {
+    final Uri url =
+        Uri.parse('${NetWorkConstants.baseUrl}/user/send-email-otp');
+
+    //* REQUEST BODY
+    final Map<String, String> body = {"email": AuthHelper.userMap["email"]};
+
+    //* tell server to send email verification otp
+    try {
+      http.Response serverResponse = await http.post(url,
+          body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+
+      if (serverResponse.statusCode == 200) {
+        return "success";
+      } else {
+        return jsonDecode(serverResponse.body);
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        return {
+          "title": "Network Error",
+          "message": "Please check your internet connection"
+        };
+      } else {
+        print("U N K N O W N ERROR IS $e");
+        return {
+          "title": "Something went wrong",
+          "message":
+              "Please contact us with a description of what you were doing before you saw this message."
+        };
+      }
+    }
+  }
+
+  static verifyEmailOtp() async {
+    final Uri url = Uri.parse('${NetWorkConstants.baseUrl}/user/verify-email');
+
+    //* REQUEST BODY
+    final Map<String, String> body = {"otp": AuthHelper.userMap["otp"]};
+
+    //* tell server to send email verification otp
+    try {
+      http.Response serverResponse = await http.post(url,
+          body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+
+      if (serverResponse.statusCode == 200) {
+        print(":::: RESPONSE FROM VERIFY EMAIL OTP ::: success");
+        return "success";
+      } else {
+        print(":::: RESPONSE FROM VERIFY EMAIL OTP ::: failed");
+        return jsonDecode(serverResponse.body);
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        print(":::: RESPONSE FROM VERIFY EMAIL OTP ::: Exception $e");
+        return {
+          "title": "Network Error",
+          "message": "Please check your internet connection"
+        };
+      } else {
+        print("U N K N O W N ERROR IS $e");
+        return {
+          "title": "Something went wrong",
+          "message":
+              "Please contact us with a description of what you were doing before you saw this message."
+        };
+      }
+    }
+  }
+
+  static login() async {
+    Uri url = Uri.parse('${NetWorkConstants.baseUrl}/user/login');
+    Map<String, dynamic> body = {
+      'email': AuthHelper.userMap['email'],
+      'password': AuthHelper.userMap["password"]
+    };
+
+    //* send login request to server
+    try {
+      final http.Response serverResponse = await http.post(url,
+          body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+
+      return jsonDecode(serverResponse.body);
+    } catch (e) {
+      if (e is http.ClientException) {
+        print(":::: RESPONSE FROM LOGIN IN AUTHSOURCE :::  Exception $e");
+        return {
+          "title": "Network Error",
+          "message": "Please check your internet connection"
+        };
+      } else {
+        print("U N K N O W N ERROR IS $e");
+        return {
+          "title": "Something went wrong",
+          "message":
+              "Please contact us with a description of what you were doing before you saw this message."
+        };
+      }
+    }
+  }
+}

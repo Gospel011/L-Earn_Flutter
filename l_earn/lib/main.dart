@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:l_earn/BusinessLogic/AuthCubit/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+
 import 'package:l_earn/Presentation/Pages/login_page.dart';
 import 'package:l_earn/Presentation/route_generator.dart';
 import 'package:l_earn/utils/themes.dart';
