@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/Presentation/components/my_profile_picture.dart';
+import 'package:l_earn/utils/constants.dart';
 
 class MyDrawer extends StatelessWidget {
   final User user;
@@ -12,15 +14,34 @@ class MyDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          //? Image
+          //* Image and Name
           DrawerHeader(
               decoration: const BoxDecoration(shape: BoxShape.circle),
-              child: CircleAvatar(
-                backgroundColor: Colors.blueGrey,
-                foregroundImage: user.profilePicture != 'default.png'
-                    ? NetworkImage(user.profilePicture!)
-                    : null,
-                radius: 48,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  //* Picture
+                  MyProfilePicture(user: user),
+
+                  const SizedBox(
+                    height: 8,
+                  ),
+
+                  //* Name
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${user.firstName} ${user.lastName}",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+
+                      //! Check if user is verified before displaying the verified icon beside their name
+                      const Text(" "),
+                      AppIcons.verifiedIcon
+                    ],
+                  )
+                ],
               )),
 
           //? Logout
@@ -83,3 +104,4 @@ class MyDrawer extends StatelessWidget {
     );
   }
 }
+

@@ -4,7 +4,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
 import 'package:l_earn/Presentation/Pages/emailVerification_page.dart';
 
-import 'package:l_earn/Presentation/Pages/home_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
 import 'package:l_earn/Presentation/Pages/login_page.dart';
 import 'package:l_earn/Presentation/Pages/signup_page.dart';
 
@@ -18,7 +18,7 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (context) {
           print('/home from route generator');
-          return const HomePage();
+          return HomePage();
         });
 
       //? LOGIN PAGE

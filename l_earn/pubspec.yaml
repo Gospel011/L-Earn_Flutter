@@ -70,7 +70,7 @@ flutter:
     - assets/svg_icons/events-thin.svg
     - assets/svg_icons/google_icon.svg
     - assets/svg_icons/home-fill.svg
-    - assets/svg_icons/events-thin.svg
+    - assets/svg_icons/home-thin.svg
     - assets/svg_icons/learn-fill.svg
     - assets/svg_icons/learn-thin.svg
     - assets/svg_icons/post.svg
