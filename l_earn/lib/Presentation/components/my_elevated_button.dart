@@ -25,7 +25,7 @@ class MyElevatedButton extends StatelessWidget {
           style: ButtonStyle(
               backgroundColor: loading == true
                   ? MaterialStatePropertyAll(
-                      AppColor.mainColorBlack.withOpacity(0.5))
+                      AppColor.mainColorBlack.withOpacity(0.6))
                   : Theme.of(context)
                       .elevatedButtonTheme
                       .style

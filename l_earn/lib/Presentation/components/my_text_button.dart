@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:l_earn/utils/colors.dart';
 
-
 class MyTextButton extends StatefulWidget {
   final void Function()? onPressed;
   final String text;
   final Color? textcolor;
   final TextDecoration? textDecoration;
   final FontWeight? fontWeight;
+  final double? fontSize;
 
   const MyTextButton(
       {super.key,
@@ -15,7 +15,8 @@ class MyTextButton extends StatefulWidget {
       required this.onPressed,
       this.textcolor,
       this.textDecoration,
-      this.fontWeight});
+      this.fontWeight,
+      this.fontSize});
 
   @override
   State<MyTextButton> createState() => _MyTextButtonState();
@@ -34,7 +35,7 @@ class _MyTextButtonState extends State<MyTextButton> {
           textStyle: MaterialStatePropertyAll(TextStyle(
               decoration: widget.textDecoration,
               fontWeight: widget.fontWeight ?? FontWeight.w400,
-              fontSize: 16,
+              fontSize: widget.fontSize ?? 16,
               height: 22 / 16))),
       child: Text(widget.text),
     );

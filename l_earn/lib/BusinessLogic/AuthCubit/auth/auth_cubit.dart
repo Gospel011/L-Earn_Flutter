@@ -44,6 +44,8 @@ class AuthCubit extends Cubit<AuthState> {
     //* Tell AuthRepo to log user in {response is User or AppError object}
     final response = await AuthRepo.logUserIn();
 
+    print("::: L O G I N RESPONSE FROM AUTH CUBIT IS $response");
+
     //* Emit AuthLoggedIn or AuthFailed
     if (response is User) {
       emit(AuthLoggedIn(user: response));

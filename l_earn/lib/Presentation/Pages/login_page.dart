@@ -5,6 +5,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
 
 import 'package:l_earn/Presentation/components/Functions/validators.dart';
+import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/Presentation/components/my_textformfield.dart';
@@ -29,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //? Update email controller
-    _emailController.text = context.read<AuthCubit>().state.email ?? '';
+    _emailController.text =
+        context.read<AuthCubit>().state.email ?? _emailController.text;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         //* Navigate to home page if login is successful
@@ -40,6 +42,13 @@ class _LoginPageState extends State<LoginPage> {
         } else if (state is AuthSignedUp) {
           print("::: state is auth signed up :::");
           _emailController.text = state.email!;
+        } else if (state is AuthFailed) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return MyDialog(
+                    title: state.error.title, content: state.error.content);
+              });
         }
       },
       child: Scaffold(
@@ -136,22 +145,29 @@ class _LoginPageState extends State<LoginPage> {
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: MyElevatedButton(
-                        text: 'Login',
-                        onPressed: () {
-                          //TODO --> IMPLEMENT LOGIN
-                          print('LOGIN PRESSED');
-                          final isValid = _formKey.currentState?.validate();
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          return MyElevatedButton(
+                            text: 'Login',
+                            loading: state is AuthLoggingIn,
+                            onPressed: () {
+                              //TODO --> IMPLEMENT LOGIN
+                              print('LOGIN PRESSED');
+                              final isValid = _formKey.currentState?.validate();
 
-                          if (isValid == true) {
-                            //? update AuthHelper.userMap to have email and password
-                            AuthHelper.userMap["email"] = _emailController.text;
-                            AuthHelper.userMap["password"] =
-                                _passwordController.text;
-                            //? TELL AUTHCUBIT TO LOG USER IN
-                            context.read<AuthCubit>().login();
-                          }
-                        },
+                              if (isValid == true) {
+                                //? update AuthHelper.userMap to have email and password
+                                AuthHelper.userMap["email"] = _emailController.text;
+                                AuthHelper.userMap["password"] =
+                                    _passwordController.text;
+
+                                print(':::: LOGGING IN ::::');
+                                //? TELL AUTHCUBIT TO LOG USER IN
+                                context.read<AuthCubit>().login();
+                              }
+                            },
+                          );
+                        }
                       ),
                     ),
 

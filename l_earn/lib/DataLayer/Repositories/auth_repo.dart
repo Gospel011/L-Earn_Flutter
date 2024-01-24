@@ -57,7 +57,7 @@ class AuthRepo {
       return User.fromMap(userMap);
     } else {
       return AppError(
-          title: response["title"] ?? 'Signup failed',
+          title: response["title"] ?? 'Login failed',
           content: response["message"]);
     }
   }
