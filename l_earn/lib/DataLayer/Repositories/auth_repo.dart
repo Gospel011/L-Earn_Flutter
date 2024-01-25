@@ -61,4 +61,29 @@ class AuthRepo {
           content: response["message"]);
     }
   }
+
+  static Future<dynamic> sentForgotPasswordOtp() async {
+    final dynamic response = await AuthSource.sendPasswordResetOtp();
+
+    //* return "success" or AppError
+    if (response == 'success') {
+      return "success";
+    } else {
+      return AppError(
+          title: response["title"] ?? 'Error', content: response["message"]);
+    }
+  }
+
+  static Future<dynamic> resetPassword() async {
+    final dynamic response = await AuthSource.resetPassword();
+
+
+    if (response == 'success') {
+      return "success";
+    } else {
+      return AppError(
+          title: response["title"] ?? 'Error', content: response["message"]);
+    }
+
+  }
 }

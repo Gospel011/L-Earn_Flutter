@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:http/http.dart';
 import 'package:l_earn/DataLayer/Models/error_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/DataLayer/Repositories/auth_repo.dart';
@@ -57,5 +58,31 @@ class AuthCubit extends Cubit<AuthState> {
   //* Log out
   Future<void> logout() async {
     emit(const AuthInitial());
+  }
+
+  Future<void> forgotPassword() async {
+    emit(AuthRequestingPasswordResetOtp());
+
+    final dynamic response = await AuthRepo.sentForgotPasswordOtp();
+
+    if (response == 'success') {
+      emit(AuthPasswordResetOtpSent(email: AuthHelper.userMap["email"]!));
+    } else {
+      emit(AuthPasswordResetOtpNotSent(error: response as AppError));
+    }
+  }
+
+  Future<void> resetPassword() async {
+    emit(AuthResetingPassword());
+
+    final dynamic response = await AuthRepo.resetPassword();
+
+    if (response == 'success') {
+      emit(AuthPasswordChanged(email: AuthHelper.userMap["email"]!));
+    } else {
+      emit(AuthPasswordResetFailed(error: response as AppError, email: AuthHelper.userMap["email"]));
+    }
+
+
   }
 }

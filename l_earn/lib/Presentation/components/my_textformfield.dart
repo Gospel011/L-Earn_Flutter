@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:l_earn/utils/enums.dart';
 import '../../utils/colors.dart';
 
 class MyTextFormField extends StatelessWidget {
@@ -11,7 +12,7 @@ class MyTextFormField extends StatelessWidget {
   final String? Function(String?) validator;
 
   /// This tells the user what to input in the TextFormField
-  final String hintText;
+  final String? hintText;
 
   /// This is the [widget] that would be shown at the far right of the
   /// TextFormField
@@ -30,11 +31,20 @@ class MyTextFormField extends StatelessWidget {
   /// This specifies which type of keyboard should be shown to the user
   final TextInputType? keyboardType;
 
+  /// This controls whether the textform field should be in focus or not
+  final FocusNode? focusNode;
+
+  /// What happens when the textform field value is changed
+  final void Function(String)? onChanged;
+
+  /// The textfield type
+  final TextFieldType? textFieldType;
+
   /// This filters the users input and accepts only the valid ones.
   final List<TextInputFormatter>? inputFormatters;
   const MyTextFormField(
       {super.key,
-      required this.hintText,
+      this.hintText,
       required this.controller,
       required this.validator,
       this.suffixIcon,
@@ -42,25 +52,43 @@ class MyTextFormField extends StatelessWidget {
       this.obscureText,
       this.enabled,
       this.keyboardType,
-      this.inputFormatters});
+      this.inputFormatters,
+      this.focusNode,
+      this.onChanged,
+      this.textFieldType});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscureText ?? false,
       enabled: enabled,
+      focusNode: focusNode,
+      onChanged: onChanged,
       controller: controller,
       validator: validator,
       cursorColor: AppColor.textColor,
+      textAlign: textFieldType == TextFieldType.otp
+          ? TextAlign.center
+          : TextAlign.start,
+      keyboardType: textFieldType == TextFieldType.otp
+          ? TextInputType.number
+          : keyboardType,
       cursorWidth: 1.0,
       decoration: InputDecoration(
+        contentPadding: textFieldType == TextFieldType.otp
+            ? EdgeInsets.symmetric(horizontal: 8)
+            : null,
         hintText: hintText,
         suffixIcon: suffixIcon != null
             ? IconButton(onPressed: suffixOnpressed, icon: suffixIcon!)
             : null,
       ),
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
+      inputFormatters: textFieldType == TextFieldType.otp
+          ? [
+              LengthLimitingTextInputFormatter(1),
+              FilteringTextInputFormatter.digitsOnly
+            ]
+          : inputFormatters,
     );
   }
 }

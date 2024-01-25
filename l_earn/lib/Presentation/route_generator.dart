@@ -5,7 +5,10 @@ import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.d
 import 'package:l_earn/Presentation/Pages/emailVerification_page.dart';
 
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
+import 'package:l_earn/Presentation/Pages/error_page.dart';
+import 'package:l_earn/Presentation/Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/login_page.dart';
+import 'package:l_earn/Presentation/Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/signup_page.dart';
 
 class RouteGenerator {
@@ -13,19 +16,38 @@ class RouteGenerator {
   static VerificationCubit verificationCubit = VerificationCubit();
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    print('SETTING = $settings');
     switch (settings.name) {
-      //? HOME PAGE
+      //? LOGIN PAGE
       case '/':
+        return MaterialPageRoute(builder: (_) {
+          print('/login from route generator');
+          return const LoginPage();
+        });
+
+      //? HOME PAGE
+      case '/home':
         return MaterialPageRoute(builder: (context) {
           print('/home from route generator');
           return HomePage();
         });
 
-      //? LOGIN PAGE
-      case '/login':
-        return MaterialPageRoute(builder: (_) {
-          print('/login from route generator');
-          return const LoginPage();
+      case '/forgot-password':
+        return MaterialPageRoute(builder: (context) {
+          print('/forgot-password from route generator');
+          return BlocProvider.value(
+            value: timerCubit,
+            child: const ForgotPasswordPage(),
+          );
+        });
+
+      case '/reset-password':
+        return MaterialPageRoute(builder: (context) {
+          print('/home from route generator');
+          return BlocProvider.value(
+            value: timerCubit,
+            child: ResetPasswordPage(),
+          );
         });
 
       //? SIGN UP PAGE
@@ -52,10 +74,10 @@ class RouteGenerator {
           return MultiBlocProvider(
             providers: [
               BlocProvider.value(
-                value:  timerCubit,
+                value: timerCubit,
               ),
               BlocProvider.value(
-                value:  verificationCubit,
+                value: verificationCubit,
               ),
             ],
             child: EmailVerificationPage(),
@@ -63,13 +85,8 @@ class RouteGenerator {
         });
 
       //! ERROR PAGE
-      default:
-        return MaterialPageRoute(builder: (_) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: const Center(child: Text("The page requested does not exit")),
-          );
-        });
+      // default:
+      //   return MaterialPageRoute(builder: (context) => const ErrorPage());
     }
   }
 }

@@ -12,6 +12,19 @@ abstract class AuthState {
 }
 
 //*
+///? Auth state when authentication failed
+final class AuthFailed extends AuthState {
+  final AppError error;
+  const AuthFailed({required this.error});
+}
+
+//*
+final class AuthPasswordResetFailed extends AuthState {
+  final AppError error;
+  AuthPasswordResetFailed({required this.error, super.email});
+}
+
+//*
 ///? Auth state for new users and for those that have not logged in
 final class AuthInitial extends AuthState {
   const AuthInitial({super.user});
@@ -19,6 +32,27 @@ final class AuthInitial extends AuthState {
 
 ///? Auth state when login request is sent to the server to process
 final class AuthLoggingIn extends AuthState {}
+
+///? Auth state when password reset otp request is being proccssed
+final class AuthRequestingPasswordResetOtp extends AuthState {}
+
+///? Auth state when password reset otp request is being proccssed
+final class AuthPasswordResetOtpSent extends AuthState {
+  AuthPasswordResetOtpSent({required super.email});
+}
+
+final class AuthPasswordResetOtpNotSent extends AuthState {
+  final AppError error;
+  const AuthPasswordResetOtpNotSent({required this.error});
+}
+
+///? Auth state when password has been changed
+final class AuthPasswordChanged extends AuthState {
+  AuthPasswordChanged({super.email});
+}
+
+///? Auth state when password is being reseted
+final class AuthResetingPassword extends AuthState {}
 
 ///? Auth state for those that have logged in
 final class AuthLoggedIn extends AuthState {
@@ -40,11 +74,3 @@ final class AuthSignedUp extends AuthState {
 
 //*
 ///? Auth state when forgot
-
-//*
-///? Auth state when authentication failed
-final class AuthFailed extends AuthState {
-  final AppError error;
-  const AuthFailed({required this.error});
-}
-

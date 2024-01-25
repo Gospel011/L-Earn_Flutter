@@ -28,6 +28,17 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   @override
+  void initState() {
+    super.initState();
+    if (context.read<AuthCubit>().state is AuthLoggedIn) {
+      print('Navigating to home page');
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+    } else {
+      print('User is new');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     //? Update email controller
     _emailController.text =
@@ -38,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         print('state in login page bloc listener is $state');
         if (state is AuthLoggedIn) {
           print("::: state is authlogged in :::");
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         } else if (state is AuthSignedUp) {
           print("::: state is auth signed up :::");
           _emailController.text = state.email!;
@@ -107,7 +118,9 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "Password",
                         controller: _passwordController,
                         validator: passwordValidator,
-                        inputFormatters: [LengthLimitingTextInputFormatter(8)],
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(8)
+                        ],
                         obscureText: _obscureText,
                         suffixIcon: Icon(_obscureText == false
                             ? Icons.visibility
@@ -132,6 +145,8 @@ class _LoginPageState extends State<LoginPage> {
                               textcolor: AppColor.buttonTextBlue,
                               onPressed: () {
                                 print('Forgot password button pressed');
+                                Navigator.pushNamed(
+                                    context, '/forgot-password');
                               })
                         ],
                       ),
@@ -146,29 +161,29 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: BlocBuilder<AuthCubit, AuthState>(
-                        builder: (context, state) {
-                          return MyElevatedButton(
-                            text: 'Login',
-                            loading: state is AuthLoggingIn,
-                            onPressed: () {
-                              //TODO --> IMPLEMENT LOGIN
-                              print('LOGIN PRESSED');
-                              final isValid = _formKey.currentState?.validate();
+                          builder: (context, state) {
+                        return MyElevatedButton(
+                          text: 'Login',
+                          loading: state is AuthLoggingIn,
+                          onPressed: () {
+                            //TODO --> IMPLEMENT LOGIN
+                            print('LOGIN PRESSED');
+                            final isValid = _formKey.currentState?.validate();
 
-                              if (isValid == true) {
-                                //? update AuthHelper.userMap to have email and password
-                                AuthHelper.userMap["email"] = _emailController.text;
-                                AuthHelper.userMap["password"] =
-                                    _passwordController.text;
+                            if (isValid == true) {
+                              //? update AuthHelper.userMap to have email and password
+                              AuthHelper.userMap["email"] =
+                                  _emailController.text;
+                              AuthHelper.userMap["password"] =
+                                  _passwordController.text;
 
-                                print(':::: LOGGING IN ::::');
-                                //? TELL AUTHCUBIT TO LOG USER IN
-                                context.read<AuthCubit>().login();
-                              }
-                            },
-                          );
-                        }
-                      ),
+                              print(':::: LOGGING IN ::::');
+                              //? TELL AUTHCUBIT TO LOG USER IN
+                              context.read<AuthCubit>().login();
+                            }
+                          },
+                        );
+                      }),
                     ),
 
                     //* OR LOGIN WITH

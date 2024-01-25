@@ -73,43 +73,89 @@ class _HomePageState extends State<HomePage> {
       listener: ((context, state) {
         if (state is AuthInitial) {
           Navigator.pushNamedAndRemoveUntil(
-              context, '/login', (route) => false);
+              context, '/', (route) => false);
         }
       }),
       child: BlocProvider(
         create: (context) => PageCubit(),
         child: Scaffold(
-          bottomNavigationBar: BottomAppBar(
-              child: Builder(builder: (context) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List<Widget>.generate(pageIconsFill.length, (index) {
-                    return BlocBuilder<PageCubit, PageState>(
-                        builder: (context, state) {
-                      print('Page state is ${state.pageNo}');
-                      return InkWell(
-                        
-                        // overlayColor: MaterialStatePropertyAll(Colors.transparent),
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () {
-                          print('${pagesTitles[index]} page Pressed');
-                          if (index != 2) {
-                            context.read<PageCubit>().goToPage(index);
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          child: MyBottomAppBarItem(
-                              icon: state.pageNo == index
-                                  ? pageIconsFill[index]
-                                  : pageIconsThin[index],
-                              text: pagesTitles[index]),
-                        ),
-                      );
-                    });
-                  }),
-                );
-              })),
+          bottomNavigationBar: BottomAppBar(child: Builder(builder: (context) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List<Widget>.generate(pageIconsFill.length, (index) {
+                return BlocBuilder<PageCubit, PageState>(
+                    builder: (context, state) {
+                  print('Page state is ${state.pageNo}');
+                  return InkWell(
+                    // overlayColor: MaterialStatePropertyAll(Colors.transparent),
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      print('${pagesTitles[index]} page Pressed');
+                      if (index != 2) {
+                        context.read<PageCubit>().goToPage(index);
+                      } else {
+                        showModalBottomSheet(
+                            backgroundColor:
+                                const Color.fromARGB(0, 255, 193, 193),
+                            context: context,
+                            builder: (context) {
+                              //! TODO --> Extract into a different widget
+                              return Container(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadiusDirectional.only(
+                                        topStart: Radius.circular(16),
+                                        topEnd: Radius.circular(16))),
+                                // height: MediaQuery.of(context).size.height / 2.5,
+                                child: SingleChildScrollView(
+                                  child: Column(children: [
+                                    //* POST
+                                    ListTile(
+                                      onTap: () {
+                                        print("Make a post tapped");
+                                      },
+                                      leading: AppIcons.write,
+                                      title: const Text("Make a post"),
+                                    ),
+
+                                    //* CREATE A TUTORIAL
+                                    ListTile(
+                                      onTap: () {
+                                        print("Create a tutorial tapped");
+                                      },
+                                      leading: AppIcons.learnFill,
+                                      title: const Text("Create a tutorial"),
+                                    ),
+
+                                    //* CREATE A TUTORIAL
+                                    ListTile(
+                                      onTap: () {
+                                        print("Create an event tapped");
+                                      },
+                                      leading: AppIcons.eventsFill,
+                                      title: const Text("Create an event"),
+                                    )
+                                  ]),
+                                ),
+                              );
+                            });
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: MyBottomAppBarItem(
+                          icon: state.pageNo == index
+                              ? pageIconsFill[index]
+                              : pageIconsThin[index],
+                          text: pagesTitles[index]),
+                    ),
+                  );
+                });
+              }),
+            );
+          })),
           appBar: widget.buildAppBar(context, actions: [
             Builder(builder: (context) {
               return IconButton(

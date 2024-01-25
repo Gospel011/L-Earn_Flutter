@@ -1,4 +1,3 @@
-
 ///? Confirms if the email is valid
 String? emailValidator(value) {
   if (value.toString().contains('@')) {
@@ -7,7 +6,6 @@ String? emailValidator(value) {
     return 'Please provide a valid email address';
   }
 }
-
 
 ///? confirms if the password is valid
 String? passwordValidator(value) {
@@ -54,5 +52,12 @@ String? firstNameFieldValidator(value) {
     return "Atleast two letters long";
   } else {
     return null;
+  }
+}
+
+///? Ensures that otp has value
+String? otpValidator(value) {
+  if (value == '') {
+    return '';
   }
 }

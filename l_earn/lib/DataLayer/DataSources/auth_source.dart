@@ -150,4 +150,78 @@ class AuthSource {
       }
     }
   }
+
+  static sendPasswordResetOtp() async {
+    final Uri url =
+        Uri.parse('${NetWorkConstants.baseUrl}/user/forgot-password');
+
+    //* REQUEST BODY
+    final Map<String, String> body = {"email": AuthHelper.userMap["email"]};
+
+    //* tell server to send forgot passwort otp
+    try {
+      http.Response serverResponse = await http.post(url,
+          body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+
+      if (serverResponse.statusCode == 200) {
+        return "success";
+      } else {
+        return jsonDecode(serverResponse.body);
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        return {
+          "title": "Network Error",
+          "message": "Please check your internet connection"
+        };
+      } else {
+        print("U N K N O W N ERROR IS $e");
+        return {
+          "title": "Something went wrong",
+          "message":
+              "Please contact us with a description of what you were doing before you saw this message."
+        };
+      }
+    }
+  }
+
+  static Future<dynamic> resetPassword() async {
+    final Uri url =
+        Uri.parse('${NetWorkConstants.baseUrl}/user/reset-password');
+
+    //* REQUEST BODY
+    final Map<String, String> body = {
+      "otp": AuthHelper.userMap["otp"],
+      "newPassword": AuthHelper.userMap["newPassword"],
+      "newConfirmPassword": AuthHelper.userMap["newConfirmPassword"],
+    };
+
+    print(body);
+
+    //* tell server to reset password
+    try {
+      http.Response serverResponse = await http.patch(url,
+          body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+
+      if (serverResponse.statusCode == 200) {
+        return "success";
+      } else {
+        return jsonDecode(serverResponse.body);
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        return {
+          "title": "Network Error",
+          "message": "Please check your internet connection"
+        };
+      } else {
+        print("U N K N O W N ERROR IS $e");
+        return {
+          "title": "Something went wrong",
+          "message":
+              "Please contact us with a description of what you were doing before you saw this message."
+        };
+      }
+    }
+  }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 
-import 'package:l_earn/Presentation/Pages/login_page.dart';
+
 import 'package:l_earn/Presentation/route_generator.dart';
 import 'package:l_earn/utils/themes.dart';
 
@@ -33,8 +33,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.myAppTheme,
           onGenerateRoute: widget.routeGenerator.onGenerateRoute,
-          initialRoute:
-              context.read<AuthCubit>().state is AuthInitial ? '/login' : '/',
+          initialRoute: '/'
         );
       }),
     );

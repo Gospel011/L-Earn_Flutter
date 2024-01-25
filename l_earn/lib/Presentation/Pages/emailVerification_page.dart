@@ -65,7 +65,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
 
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/login', (route) => false);
+                  context, '/', (route) => false);
             }
           } else if (state is VerificationFailed) {
             print("V e r i f i c a t i o n failed");
@@ -114,9 +114,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                   child: MyTextField(
                     controller: e1,
                     focusNode: _d1Focusnode,
-                    onChanged: (value) {
-                      value != '' ? _d2Focusnode.requestFocus() : null;
-                    },
+                    onChanged: e1OnChanged,
                     textFieldType: TextFieldType.otp,
                   ),
                 ),
@@ -130,11 +128,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                   child: MyTextField(
                     controller: e2,
                     focusNode: _d2Focusnode,
-                    onChanged: (value) {
-                      value != ''
-                          ? _d3Focusnode.requestFocus()
-                          : _d1Focusnode.requestFocus();
-                    },
+                    onChanged: e2OnChanged,
                     textFieldType: TextFieldType.otp,
                   ),
                 ),
@@ -148,11 +142,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                   child: MyTextField(
                     controller: e3,
                     focusNode: _d3Focusnode,
-                    onChanged: (value) {
-                      value != ''
-                          ? _d4Focusnode.requestFocus()
-                          : _d2Focusnode.requestFocus();
-                    },
+                    onChanged: e3OnChanged,
                     textFieldType: TextFieldType.otp,
                   ),
                 ),
@@ -166,11 +156,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                   child: MyTextField(
                     controller: e4,
                     focusNode: _d4Focusnode,
-                    onChanged: (value) {
-                      value != ''
-                          ? _d5Focusnode.requestFocus()
-                          : _d3Focusnode.requestFocus();
-                    },
+                    onChanged: e4OnChanged,
                     textFieldType: TextFieldType.otp,
                   ),
                 ),
@@ -184,11 +170,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                     child: MyTextField(
                   controller: e5,
                   focusNode: _d5Focusnode,
-                  onChanged: (value) {
-                    value != ''
-                        ? _d6Focusnode.requestFocus()
-                        : _d4Focusnode.requestFocus();
-                  },
+                  onChanged: e5OnChanged,
                   textFieldType: TextFieldType.otp,
                 )),
 
@@ -201,11 +183,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                   child: MyTextField(
                     controller: e6,
                     focusNode: _d6Focusnode,
-                    onChanged: (value) {
-                      value != ''
-                          ? _d6Focusnode.unfocus()
-                          : _d5Focusnode.requestFocus();
-                    },
+                    onChanged: e6OnChanged,
                     textFieldType: TextFieldType.otp,
                   ),
                 ),
@@ -273,4 +251,38 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
       ),
     );
   }
+
+  void e6OnChanged(value) {
+                    value != ''
+                        ? _d6Focusnode.unfocus()
+                        : _d5Focusnode.requestFocus();
+                  }
+
+  void e5OnChanged(value) {
+                  value != ''
+                      ? _d6Focusnode.requestFocus()
+                      : _d4Focusnode.requestFocus();
+                }
+
+  void e4OnChanged(value) {
+                    value != ''
+                        ? _d5Focusnode.requestFocus()
+                        : _d3Focusnode.requestFocus();
+                  }
+
+  void e3OnChanged(value) {
+                    value != ''
+                        ? _d4Focusnode.requestFocus()
+                        : _d2Focusnode.requestFocus();
+                  }
+
+  void e2OnChanged(value) {
+                    value != ''
+                        ? _d3Focusnode.requestFocus()
+                        : _d1Focusnode.requestFocus();
+                  }
+
+  void e1OnChanged(value) {
+                    value != '' ? _d2Focusnode.requestFocus() : null;
+                  }
 }

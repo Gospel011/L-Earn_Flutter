@@ -18,10 +18,10 @@ class SignupPage extends StatefulWidget with AppBarMixin {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<SignupPage> {
+class _SignupPageState extends State<SignupPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -277,7 +277,7 @@ class _LoginPageState extends State<SignupPage> {
                                 //TODO --> NAVIGATE TO SIGNUP
                                 print('Login button pressed');
                                 Navigator.pushNamedAndRemoveUntil(
-                                    context, '/login', (route) => false);
+                                    context, '/', (route) => false);
                               })
                         ],
                       ),

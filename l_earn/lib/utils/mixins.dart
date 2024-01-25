@@ -27,7 +27,7 @@ mixin AppBarMixin {
         includeClose == true ? IconButton(
             onPressed: () {
                closeButtonOnpressed == null ? Navigator.pushNamedAndRemoveUntil(
-                  context, '/login', (route) => false) : closeButtonOnpressed();
+                  context, '/', (route) => false) : closeButtonOnpressed();
             },
             icon: const Icon(Icons.close_rounded)) : const SizedBox()
       ],
