@@ -26,7 +26,6 @@ class MyMainButtonColor extends MaterialStateColor {
 
   @override
   Color resolve(Set<MaterialState> states) {
-    // TODO: implement resolve
     if (states.contains(MaterialState.focused)) {
       return Color(_focusedColor);
     } else {
