@@ -72,8 +72,7 @@ class _HomePageState extends State<HomePage> {
     return BlocListener<AuthCubit, AuthState>(
       listener: ((context, state) {
         if (state is AuthInitial) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         }
       }),
       child: BlocProvider(
@@ -99,46 +98,37 @@ class _HomePageState extends State<HomePage> {
                                 const Color.fromARGB(0, 255, 193, 193),
                             context: context,
                             builder: (context) {
-                              //! TODO --> Extract into a different widget
-                              return Container(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadiusDirectional.only(
-                                        topStart: Radius.circular(16),
-                                        topEnd: Radius.circular(16))),
-                                // height: MediaQuery.of(context).size.height / 2.5,
-                                child: SingleChildScrollView(
-                                  child: Column(children: [
-                                    //* POST
-                                    ListTile(
-                                      onTap: () {
-                                        print("Make a post tapped");
-                                      },
-                                      leading: AppIcons.write,
-                                      title: const Text("Make a post"),
-                                    ),
-
-                                    //* CREATE A TUTORIAL
-                                    ListTile(
-                                      onTap: () {
-                                        print("Create a tutorial tapped");
-                                      },
-                                      leading: AppIcons.learnFill,
-                                      title: const Text("Create a tutorial"),
-                                    ),
-
-                                    //* CREATE A TUTORIAL
-                                    ListTile(
-                                      onTap: () {
-                                        print("Create an event tapped");
-                                      },
-                                      leading: AppIcons.eventsFill,
-                                      title: const Text("Create an event"),
-                                    )
-                                  ]),
+                              return MyBottomModalSheet(children: [
+                                //* POST
+                                ListTile(
+                                  onTap: () {
+                                    print("Make a post tapped");
+                                    Navigator.pushNamed(context, '/make-post');
+                                  },
+                                  leading: AppIcons.write,
+                                  title: const Text("Make a post"),
                                 ),
-                              );
+
+                                //* CREATE A TUTORIAL
+                                ListTile(
+                                  onTap: () {
+                                    print("Create a tutorial tapped");
+                                    Navigator.pushNamed(context, '/create-tutorial');
+                                  },
+                                  leading: AppIcons.learnFill,
+                                  title: const Text("Create a tutorial"),
+                                ),
+
+                                //* CREATE A TUTORIAL
+                                ListTile(
+                                  onTap: () {
+                                    print("Create an event tapped");
+                                    Navigator.pushNamed(context, '/create-event');
+                                  },
+                                  leading: AppIcons.eventsFill,
+                                  title: const Text("Create an event"),
+                                )
+                              ]);
                             });
                       }
                     },
@@ -176,6 +166,28 @@ class _HomePageState extends State<HomePage> {
               return pages[state.pageNo];
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyBottomModalSheet extends StatelessWidget {
+  final List<Widget> children;
+  const MyBottomModalSheet({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadiusDirectional.only(
+              topStart: Radius.circular(16), topEnd: Radius.circular(16))),
+      // height: MediaQuery.of(context).size.height / 2.5,
+      child: SingleChildScrollView(
+        child: Column(
+          children: children,
         ),
       ),
     );

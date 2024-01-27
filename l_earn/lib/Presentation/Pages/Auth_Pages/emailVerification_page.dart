@@ -14,7 +14,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.d
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/utils/colors.dart';
 
-import '../../../utils/enums.dart';
+import '../../../../utils/enums.dart';
 
 class EmailVerificationPage extends StatelessWidget with AppBarMixin {
   EmailVerificationPage({super.key});
