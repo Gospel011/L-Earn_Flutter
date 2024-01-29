@@ -17,7 +17,6 @@ class MyTextField extends StatelessWidget {
   final bool? obscureText;
   final int? maxLines;
   final int? maxLength;
-  
 
   const MyTextField(
       {super.key,
@@ -31,20 +30,37 @@ class MyTextField extends StatelessWidget {
       this.textAlign = TextAlign.start,
       this.onChanged,
       this.hintText,
-      this.maxLines,
+      this.maxLines = 0,
       this.obscureText});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       obscureText: obscureText ?? false,
-      maxLines: maxLines ?? 1,
+      maxLines: maxLines == 0 ? 1 : maxLines,
       maxLength: maxLength,
-      maxLengthEnforcement: maxLength != null ? MaxLengthEnforcement.enforced : null,
+      minLines: 1,
+      maxLengthEnforcement:
+          maxLength != null ? MaxLengthEnforcement.enforced : null,
       decoration: textFieldType == TextFieldType.otp
+            //*  INPUT DECORATION FOR OTP
           ? InputDecoration(
-              contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 8))
-          : InputDecoration(hintText: hintText, contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 8)),
+              contentPadding:
+                  contentPadding ?? const EdgeInsets.symmetric(horizontal: 8))
+          : textFieldType == TextFieldType.post
+              //*  INPUT DECORATION FOR POST
+              ? InputDecoration(
+                contentPadding: contentPadding,
+                hintText: hintText,
+                  enabledBorder:
+                      const OutlineInputBorder(borderSide: BorderSide.none),
+                  focusedBorder:
+                      const OutlineInputBorder(borderSide: BorderSide.none))
+              //*  INPUT DECORATION FOR OTHER TEXTFIELD TYPE
+              : InputDecoration(
+                  hintText: hintText,
+                  contentPadding: contentPadding ??
+                      const EdgeInsets.symmetric(horizontal: 8)),
       controller: controller,
       focusNode: focusNode,
       textAlign: textFieldType == TextFieldType.otp
@@ -52,8 +68,9 @@ class MyTextField extends StatelessWidget {
           : TextAlign.start,
       cursorColor: AppColor.textColor, //? default theme
       cursorWidth: cursorWidth, //? default cursor width
-      keyboardType:
-          textFieldType == TextFieldType.otp ? TextInputType.number : keyboardType,
+      keyboardType: textFieldType == TextFieldType.otp
+          ? TextInputType.number
+          : keyboardType,
       inputFormatters: textFieldType == TextFieldType.otp
           ? [
               FilteringTextInputFormatter.digitsOnly,

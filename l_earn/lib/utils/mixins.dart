@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:l_earn/utils/colors.dart';
 
 mixin AppBarMixin {
@@ -19,18 +20,31 @@ mixin AppBarMixin {
                   color: AppColor.textColor, fontWeight: FontWeight.bold),
             )
           : null,
-      actions: actions ?? [
-
-        
-        //! If close and actions is included, don't show close, only show
-        //! actions
-        includeClose == true ? IconButton(
-            onPressed: () {
-               closeButtonOnpressed == null ? Navigator.pushNamedAndRemoveUntil(
-                  context, '/', (route) => false) : closeButtonOnpressed();
-            },
-            icon: const Icon(Icons.close_rounded)) : const SizedBox()
-      ],
+      actions: actions ??
+          [
+            //! If close and actions is included, don't show close, only show
+            //! actions
+            includeClose == true
+                ? IconButton(
+                    onPressed: () {
+                      closeButtonOnpressed == null
+                          ? Navigator.pushNamedAndRemoveUntil(
+                              context, '/', (route) => false)
+                          : closeButtonOnpressed();
+                    },
+                    icon: const Icon(Icons.close_rounded))
+                : const SizedBox()
+          ],
     );
+  }
+}
+
+mixin ImageMixin {
+  Future<XFile?> getSingleImageFromSource(BuildContext context) async {
+    XFile? pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+
+    return pickedImage;
   }
 }

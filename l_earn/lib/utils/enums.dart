@@ -1,3 +1,3 @@
 enum Role {user, admin}
 enum Gender {male, female}
-enum TextFieldType { otp }
+enum TextFieldType { otp, post }

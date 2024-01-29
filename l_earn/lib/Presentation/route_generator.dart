@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
-import 'package:l_earn/Presentation/Pages/emailVerification_page.dart';
+import 'package:l_earn/Presentation/Pages/Auth_Pages/emailVerification_page.dart';
+import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
+import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
+import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
+import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_an_event_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tutorial_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
 
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
-import 'package:l_earn/Presentation/Pages/error_page.dart';
-import 'package:l_earn/Presentation/Pages/forgot_password_page.dart';
-import 'package:l_earn/Presentation/Pages/login_page.dart';
-import 'package:l_earn/Presentation/Pages/reset_password_page.dart';
-import 'package:l_earn/Presentation/Pages/signup_page.dart';
+
 
 class RouteGenerator {
   static TimerCubit timerCubit = TimerCubit();
@@ -23,6 +26,23 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/login from route generator');
           return const LoginPage();
+        });
+      case '/make-post':
+        return MaterialPageRoute(builder: (_) {
+          print('${settings.name} from route generator');
+          return const MakePostPage();
+        });
+
+      case '/create-tutorial':
+        return MaterialPageRoute(builder: (_) {
+          print('${settings.name} from route generator');
+          return const CreateTutorialPage();
+        });
+
+      case '/create-event':
+        return MaterialPageRoute(builder: (_) {
+          print('/create-event from route generator');
+          return const CreateEventPage();
         });
 
       //? HOME PAGE

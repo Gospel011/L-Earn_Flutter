@@ -29,10 +29,12 @@ class _MyTextButtonState extends State<MyTextButton> {
       autofocus: true,
       onPressed: widget.onPressed,
       style: ButtonStyle(
+        padding: const MaterialStatePropertyAll(EdgeInsets.zero),
           foregroundColor:
               MaterialStatePropertyAll(widget.textcolor ?? AppColor.textColor),
           overlayColor: const MaterialStatePropertyAll(Colors.transparent),
           textStyle: MaterialStatePropertyAll(TextStyle(
+            
               decoration: widget.textDecoration,
               fontWeight: widget.fontWeight ?? FontWeight.w400,
               fontSize: widget.fontSize ?? 16,
