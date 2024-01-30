@@ -99,7 +99,7 @@ class _MakePostPageState extends State<MakePostPage> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  "Include at least three hashtags that describes your post",
+                  "Tip: Include at least three hashtags that describes your post",
                   style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
                 ),
               ),

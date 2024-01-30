@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                                     print("Make a post tapped");
                                     Navigator.pushNamed(context, '/make-post');
                                   },
-                                  leading: AppIcons.write,
+                                  leading: AppIcons.write32,
                                   title: const Text("Make a post"),
                                 ),
 
@@ -119,15 +119,15 @@ class _HomePageState extends State<HomePage> {
                                   title: const Text("Create a tutorial"),
                                 ),
 
-                                //* CREATE A TUTORIAL
-                                ListTile(
-                                  onTap: () {
-                                    print("Create an event tapped");
-                                    Navigator.pushNamed(context, '/create-event');
-                                  },
-                                  leading: AppIcons.eventsFill,
-                                  title: const Text("Create an event"),
-                                )
+                                //* CREATE AN EVENT
+                                // ListTile(
+                                //   onTap: () {
+                                //     print("Create an event tapped");
+                                //     Navigator.pushNamed(context, '/create-event');
+                                //   },
+                                //   leading: AppIcons.eventsFill,
+                                //   title: const Text("Create an event"),
+                                // )
                               ]);
                             });
                       }
@@ -179,7 +179,7 @@ class MyBottomModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadiusDirectional.only(
@@ -187,6 +187,7 @@ class MyBottomModalSheet extends StatelessWidget {
       // height: MediaQuery.of(context).size.height / 2.5,
       child: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: children,
         ),
       ),

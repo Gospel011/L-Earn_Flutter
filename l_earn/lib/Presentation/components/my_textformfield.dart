@@ -62,6 +62,9 @@ class MyTextFormField extends StatelessWidget {
     return TextFormField(
       obscureText: obscureText ?? false,
       enabled: enabled,
+      style: textFieldType == TextFieldType.post
+              ? Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)
+              : Theme.of(context).textTheme.bodyMedium,
       focusNode: focusNode,
       onChanged: onChanged,
       controller: controller,

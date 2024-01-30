@@ -39,6 +39,7 @@ class MyTextField extends StatelessWidget {
       obscureText: obscureText ?? false,
       maxLines: maxLines == 0 ? 1 : maxLines,
       maxLength: maxLength,
+      style: Theme.of(context).textTheme.bodyMedium,
       minLines: 1,
       maxLengthEnforcement:
           maxLength != null ? MaxLengthEnforcement.enforced : null,

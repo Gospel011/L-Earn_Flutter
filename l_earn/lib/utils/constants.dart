@@ -33,5 +33,6 @@ final class AppIcons {
   static final post = SvgPicture.asset('assets/svg_icons/post.svg');
   static final searchThin = SvgPicture.asset('assets/svg_icons/search-thin.svg');
   static final verifiedIcon = SvgPicture.asset('assets/svg_icons/verified_icon.svg');
+  static final write32 = SvgPicture.asset('assets/svg_icons/write.svg', width: 32, height: 32,);
   static final write = SvgPicture.asset('assets/svg_icons/write.svg');
 }
