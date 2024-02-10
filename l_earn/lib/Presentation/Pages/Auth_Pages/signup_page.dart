@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
@@ -49,8 +50,8 @@ class _SignupPageState extends State<SignupPage> {
                       context: context,
                       builder: (context) {
                         return MyDialog(
-                            title: state.error.title,
-                            content: state.error.content);
+                            title: state.error!.title,
+                            content: state.error!.content);
                       });
                 } else if (state is AuthSignedUp) {
                   print("Auth signed up from signup page");

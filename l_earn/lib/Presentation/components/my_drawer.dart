@@ -29,19 +29,7 @@ class MyDrawer extends StatelessWidget {
                   ),
 
                   //* Name
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${user.firstName} ${user.lastName}",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-
-                      //! Check if user is verified before displaying the verified icon beside their name
-                      const Text(" "),
-                      AppIcons.verifiedIcon
-                    ],
-                  )
+                  RenderUserName(user: user)
                 ],
               )),
 
@@ -78,6 +66,32 @@ class MyDrawer extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class RenderUserName extends StatelessWidget {
+  const RenderUserName({
+    super.key,
+    required this.user,
+  });
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "${user.firstName} ${user.lastName}",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+    
+        //! Check if user is verified before displaying the verified icon beside their name
+        if(user.isVerified == true) const Text(" "),
+        if(user.isVerified == true) AppIcons.verifiedIcon
+      ],
     );
   }
 }

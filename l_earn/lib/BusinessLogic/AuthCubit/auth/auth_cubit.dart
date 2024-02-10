@@ -1,20 +1,21 @@
 import 'package:bloc/bloc.dart';
-import 'package:http/http.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+
 import 'package:l_earn/DataLayer/Models/error_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/DataLayer/Repositories/auth_repo.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
 
-part 'auth_state.dart';
+import 'auth_state.dart';
 
-class AuthCubit extends Cubit<AuthState> {
+class AuthCubit extends HydratedCubit<AuthState> {
   AuthCubit() : super(const AuthInitial());
 
   //? METHODS
   //* Sign up
   Future<void> signUp() async {
     //* emit signing up
-    emit(AuthSigningUp());
+    emit(const AuthSigningUp());
 
     //* tell auth repo to sign user up
     final dynamic response = await AuthRepo.signup();
@@ -73,16 +74,33 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> resetPassword() async {
-    emit(AuthResetingPassword());
+    emit(const AuthResetingPassword());
 
     final dynamic response = await AuthRepo.resetPassword();
 
     if (response == 'success') {
       emit(AuthPasswordChanged(email: AuthHelper.userMap["email"]!));
     } else {
-      emit(AuthPasswordResetFailed(error: response as AppError, email: AuthHelper.userMap["email"]));
+      emit(AuthPasswordResetFailed(
+          error: response as AppError, email: AuthHelper.userMap["email"]));
     }
-
-
   }
+
+  @override
+  AuthState fromJson(Map<String, dynamic> json) {
+    print("Retrieved previously saved state");
+
+    return AuthState.fromMap(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(AuthState state) {
+    print("::: SAVED $state :::");
+    print("New state saved");
+
+    return state.toMap();
+  }
+
+
+
 }

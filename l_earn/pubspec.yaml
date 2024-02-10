@@ -37,6 +37,10 @@ dependencies:
   http: ^1.1.0
   file_picker: ^6.1.1
   image_picker: ^1.0.7
+  hydrated_bloc: ^9.1.3
+  path_provider: ^2.1.2
+  fl_chart: ^0.66.1
+  flutter_share: ^2.0.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -79,6 +83,12 @@ flutter:
     - assets/svg_icons/learn-thin_v2.svg
     - assets/svg_icons/post.svg
     - assets/svg_icons/search-thin.svg
+    - assets/svg_icons/share_icon.svg
+    - assets/svg_icons/comment_icon.svg
+    - assets/svg_icons/liked.svg
+    - assets/svg_icons/compact_like.svg
+    - assets/svg_icons/solid_compact_like.svg
+    - assets/svg_icons/like-default.svg
     - assets/svg_icons/verified_icon.svg
     - assets/svg_icons/write.svg
     - assets/svg_icons/app_logo.png

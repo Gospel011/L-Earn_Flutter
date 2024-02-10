@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
 
 import 'package:l_earn/Presentation/components/Functions/validators.dart';
@@ -30,12 +31,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    if (context.read<AuthCubit>().state is AuthLoggedIn) {
-      print('Navigating to home page');
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-    } else {
-      print('User is new');
-    }
+    // if (context.read<AuthCubit>().state is AuthLoggedIn) {
+    //   print('Navigating to home page');
+    //   Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+    // } else {
+    //   print('User is new');
+    // }
   }
 
   @override
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
               context: context,
               builder: (context) {
                 return MyDialog(
-                    title: state.error.title, content: state.error.content);
+                    title: state.error!.title, content: state.error!.content);
               });
         }
       },

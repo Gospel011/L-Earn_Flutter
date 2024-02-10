@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
@@ -45,8 +46,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       context: context,
                       builder: (context) {
                         return MyDialog(
-                            title: state.error.title,
-                            content: state.error.content);
+                            title: state.error!.title,
+                            content: state.error!.content);
                       });
                 } else if (state is AuthPasswordResetOtpSent) {
                   print("Auth password reset otp sent from /forgot-password page");

@@ -5,7 +5,8 @@ import 'package:l_earn/utils/colors.dart';
 final class AppTheme {
 //* MY APP THEME DATA
   static ThemeData myAppTheme = ThemeData(
-      primaryColor: AppColor.maincolorBlue,
+      primaryColor: AppColor.mainColorBlack,
+      
 
       //* My text themes
       textTheme: const TextTheme(

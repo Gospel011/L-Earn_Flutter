@@ -32,6 +32,12 @@ final class AppIcons {
   static final learnFill = SvgPicture.asset('assets/svg_icons/learn-fill.svg');
   static final post = SvgPicture.asset('assets/svg_icons/post.svg');
   static final searchThin = SvgPicture.asset('assets/svg_icons/search-thin.svg');
+  static final share = SvgPicture.asset('assets/svg_icons/share_icon.svg');
+  static final comment = SvgPicture.asset('assets/svg_icons/comment_icon.svg',);
+  static final liked = SvgPicture.asset('assets/svg_icons/liked.svg');
+  static final likeCompact = SvgPicture.asset('assets/svg_icons/compact_like.svg');
+  static final likeSolidCompact = SvgPicture.asset('assets/svg_icons/solid_compact_like.svg');
+  static final likeDefault = SvgPicture.asset('assets/svg_icons/like-default.svg');
   static final verifiedIcon = SvgPicture.asset('assets/svg_icons/verified_icon.svg');
   static final write32 = SvgPicture.asset('assets/svg_icons/write.svg', width: 32, height: 32,);
   static final write = SvgPicture.asset('assets/svg_icons/write.svg');

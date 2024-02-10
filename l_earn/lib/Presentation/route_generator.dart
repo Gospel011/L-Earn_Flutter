@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
+import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/emailVerification_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
@@ -12,15 +13,17 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tu
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
 
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
-
+import 'package:l_earn/Presentation/Pages/error_page.dart';
 
 class RouteGenerator {
-  static TimerCubit timerCubit = TimerCubit();
-  static VerificationCubit verificationCubit = VerificationCubit();
+  static final TimerCubit _timerCubit = TimerCubit();
+  static final VerificationCubit _verificationCubit = VerificationCubit();
+  static final PostCubit postCubit = PostCubit();
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     print('SETTING = $settings');
     switch (settings.name) {
+
       //? LOGIN PAGE
       case '/':
         return MaterialPageRoute(builder: (_) {
@@ -30,7 +33,9 @@ class RouteGenerator {
       case '/make-post':
         return MaterialPageRoute(builder: (_) {
           print('${settings.name} from route generator');
-          return const MakePostPage();
+          return BlocProvider.value(
+            value: postCubit,
+            child: const MakePostPage());
         });
 
       case '/create-tutorial':
@@ -49,14 +54,16 @@ class RouteGenerator {
       case '/home':
         return MaterialPageRoute(builder: (context) {
           print('/home from route generator');
-          return HomePage();
+          return BlocProvider.value(
+            value: postCubit,
+            child: HomePage());
         });
 
       case '/forgot-password':
         return MaterialPageRoute(builder: (context) {
           print('/forgot-password from route generator');
           return BlocProvider.value(
-            value: timerCubit,
+            value: _timerCubit,
             child: const ForgotPasswordPage(),
           );
         });
@@ -65,7 +72,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) {
           print('/home from route generator');
           return BlocProvider.value(
-            value: timerCubit,
+            value: _timerCubit,
             child: ResetPasswordPage(),
           );
         });
@@ -77,10 +84,10 @@ class RouteGenerator {
           return MultiBlocProvider(
             providers: [
               BlocProvider.value(
-                value: timerCubit,
+                value: _timerCubit,
               ),
               BlocProvider.value(
-                value: verificationCubit,
+                value: _verificationCubit,
               ),
             ],
             child: const SignupPage(),
@@ -94,10 +101,10 @@ class RouteGenerator {
           return MultiBlocProvider(
             providers: [
               BlocProvider.value(
-                value: timerCubit,
+                value: _timerCubit,
               ),
               BlocProvider.value(
-                value: verificationCubit,
+                value: _verificationCubit,
               ),
             ],
             child: EmailVerificationPage(),
@@ -105,8 +112,8 @@ class RouteGenerator {
         });
 
       //! ERROR PAGE
-      // default:
-      //   return MaterialPageRoute(builder: (context) => const ErrorPage());
+      default:
+        return MaterialPageRoute(builder: (context) => const ErrorPage());
     }
   }
 }
