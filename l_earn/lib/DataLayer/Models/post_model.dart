@@ -39,9 +39,6 @@ class Post {
     required this.dateCreated,
   });
 
-  
-
-
   Post copyWith({
     User? user,
     String? text,
@@ -81,22 +78,33 @@ class Post {
   }
 
   factory Post.fromMap(Map<String, dynamic> map) {
+    print("MAP IS = $map");
     return Post(
-      user: User.fromMap(map['user'] as Map<String,dynamic>),
-      text: map['text'] as String,
-      image: map['image'] != null ? map['image'] as String : null,
-      poll: map['poll'] != null ? List<Poll>.from((map['poll'] as List<dynamic>).map<Poll?>((x) => Poll.fromMap(x as Map<String,dynamic>),),) : null,
-      likes: map['likes'] as int,
-      comment: List<Comment>.from((map['comments'] as List<dynamic>).map<Comment>((x) => Comment.fromMap(x as Map<String,dynamic>),),),
-      shares: map['shares'] as int,
-      tags: List<String>.from((map['tags'] as List<dynamic>)),
-      dateCreated: map['dateCreated']
-    );
+        user: User.fromMap(map['user'] as Map<String, dynamic>),
+        text: map['text'] as String,
+        image: map['image'] != null ? map['image'] as String : null,
+        poll: map['poll'] != null
+            ? List<Poll>.from(
+                (map['poll'] as List<dynamic>).map<Poll?>(
+                  (x) => Poll.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+            : null,
+        likes: map['likes'] as int,
+        comment: List<Comment>.from(
+          (map['comments'] as List<dynamic>).map<Comment>(
+            (x) => Comment.fromMap(x as Map<String, dynamic>),
+          ),
+        ),
+        shares: map['shares'] as int,
+        tags: List<String>.from((map['tags'] as List<dynamic>)),
+        dateCreated: map['dateCreated']);
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Post.fromJson(String source) => Post.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Post.fromJson(String source) =>
+      Post.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -106,29 +114,28 @@ class Post {
   @override
   bool operator ==(covariant Post other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.user == user &&
-      other.text == text &&
-      other.image == image &&
-      listEquals(other.poll, poll) &&
-      other.likes == likes &&
-      listEquals(other.comment, comment) &&
-      other.shares == shares &&
-      listEquals(other.tags, tags) &&
-      other.dateCreated == dateCreated;
+
+    return other.user == user &&
+        other.text == text &&
+        other.image == image &&
+        listEquals(other.poll, poll) &&
+        other.likes == likes &&
+        listEquals(other.comment, comment) &&
+        other.shares == shares &&
+        listEquals(other.tags, tags) &&
+        other.dateCreated == dateCreated;
   }
 
   @override
   int get hashCode {
     return user.hashCode ^
-      text.hashCode ^
-      image.hashCode ^
-      poll.hashCode ^
-      likes.hashCode ^
-      comment.hashCode ^
-      shares.hashCode ^
-      tags.hashCode ^
-      dateCreated.hashCode;
+        text.hashCode ^
+        image.hashCode ^
+        poll.hashCode ^
+        likes.hashCode ^
+        comment.hashCode ^
+        shares.hashCode ^
+        tags.hashCode ^
+        dateCreated.hashCode;
   }
 }

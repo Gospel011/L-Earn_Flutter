@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:l_earn/DataLayer/Models/error_model.dart';
 import 'package:l_earn/utils/constants.dart';
 
 class PostSource {
@@ -22,23 +23,34 @@ class PostSource {
 
       return jsonDecode(await response.stream.bytesToString());
     } catch (e) {
-      
-      if (e is http.ClientException) {
-        String errno = "$e".split('errno = ')[1].split('),')[0];
-        print("E R R O R NUMBER IS $errno :::");
-        print(" E R R IS $e");
-        return {
-          "title": "Network Error",
-          "message": "Please check your internet connection"
-        };
-      } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
-      }
+      return AppError.handleError(e);
+    }
+  }
+
+  static createPost(String token, Map<String, dynamic> post) async {
+    var headers = {'Authorization': 'Bearer $token'};
+    var request = http.MultipartRequest('PUT',
+        Uri.parse('${NetWorkConstants.baseUrl}/posts?addon=${post['addon']}'));
+    request.fields.addAll({'text': post['text']});
+
+    if (post['poll'] != null) {
+      request.fields.addAll({'poll': post['poll']});
+    }
+
+    if (post['image'] != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('image', post['image']));
+    }
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      return jsonDecode(await response.stream.bytesToString());
+    } catch (e) {
+      // TODO
+      print(":::::::: e is $e");
+      return AppError.handleError(e);
     }
   }
 }

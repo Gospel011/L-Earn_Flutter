@@ -2,14 +2,14 @@
 part of 'post_cubit.dart';
 
 class PostState {
-  final int page;
+  final int? page;
   final Post? post; //* For getting post by id
   final AppError? error;
   final List<Post>? newPosts;
   final List<Post>? posts;
 
   const PostState(
-      {required this.page, this.posts, this.post, this.error, this.newPosts});
+      {this.page, this.posts, this.post, this.error, this.newPosts});
 
   PostState copyWith({
     int? page,
@@ -40,7 +40,7 @@ class NewPostsLoading extends PostState {
 }
 
 class NewPostsFailed extends PostState {
-  const NewPostsFailed({required super.page, required super.error});
+  const NewPostsFailed({super.page, required super.newPosts, required super.error});
 }
 
 class RequestingPostById extends PostState {
@@ -49,4 +49,16 @@ class RequestingPostById extends PostState {
 
 class RequestingPostByIdFailed extends PostState {
   const RequestingPostByIdFailed({required super.page, required super.error});
+}
+
+class CreatingNewPost extends PostState {
+  const CreatingNewPost({super.newPosts});
+}
+
+class NewPostCreated extends PostState {
+  const NewPostCreated({ required super.newPosts});
+}
+
+class CreatingNewPostFailed extends PostState {
+  const CreatingNewPostFailed({super.newPosts});
 }

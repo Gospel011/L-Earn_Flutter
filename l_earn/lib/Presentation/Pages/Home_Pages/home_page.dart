@@ -27,40 +27,43 @@ class HomePage extends StatelessWidget with AppBarMixin {
     // const ProfilePage()
   ];
 
-    // pagesTitles = ['Home', 'Learn', 'Post', 'Events', "Profile"];
-    late final List<String> pagesTitle = ['Home', 'Post', 'Learn']; //, 'Events', "Profile"];
+  // pagesTitles = ['Home', 'Learn', 'Post', 'Events', "Profile"];
+  late final List<String> pagesTitle = [
+    'Home',
+    'Post',
+    'Learn'
+  ]; //, 'Events', "Profile"];
 
-    late final List<Widget> pageIconsFill = [
-      AppIcons.homeFill,
-      AppIcons.post,
-      AppIcons.learnFill,
-      // AppIcons.eventsFill,
-      // BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
-      //   return state.user != null
-      //       ? MyProfilePicture(
-      //           user: state.user!,
-      //           radius: 16,
-      //           focus: true,
-      //         )
-      //       : const SizedBox();
-      // })
-    ];
+  late final List<Widget> pageIconsFill = [
+    AppIcons.homeFill,
+    AppIcons.post,
+    AppIcons.learnFill,
+    // AppIcons.eventsFill,
+    // BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+    //   return state.user != null
+    //       ? MyProfilePicture(
+    //           user: state.user!,
+    //           radius: 16,
+    //           focus: true,
+    //         )
+    //       : const SizedBox();
+    // })
+  ];
 
-    late final List<Widget> pageIconsThin = [
-      AppIcons.homeThin,
-      AppIcons.post,
-      AppIcons.learnThin,
-      // AppIcons.eventsThin,
-      // BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
-      //   return state.user != null
-      //       ? MyProfilePicture(user: state.user!, radius: 16)
-      //       : const SizedBox();
-      // })
-    ];
+  late final List<Widget> pageIconsThin = [
+    AppIcons.homeThin,
+    AppIcons.post,
+    AppIcons.learnThin,
+    // AppIcons.eventsThin,
+    // BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+    //   return state.user != null
+    //       ? MyProfilePicture(user: state.user!, radius: 16)
+    //       : const SizedBox();
+    // })
+  ];
 
   @override
   Widget build(BuildContext context) {
-
     context
         .read<PostCubit>()
         .getNewPosts(context.read<AuthCubit>().state.user?.token);
@@ -136,6 +139,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
                     ListTile(
                       onTap: () {
                         print("Make a post tapped");
+                        Navigator.pop(context);
                         Navigator.pushNamed(context, '/make-post');
                       },
                       leading: AppIcons.write32,
@@ -146,6 +150,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
                     ListTile(
                       onTap: () {
                         print("Create a tutorial tapped");
+                        Navigator.pop(context);
                         Navigator.pushNamed(context, '/create-tutorial');
                       },
                       leading: AppIcons.learnFill,

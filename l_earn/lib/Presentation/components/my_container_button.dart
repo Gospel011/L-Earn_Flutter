@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:l_earn/Presentation/components/my_circularProgressIndicator.dart';
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 
 class MyContainerButton extends StatelessWidget {
   const MyContainerButton(
-      {super.key, required this.text, required this.onPressed});
+      {super.key, required this.text, required this.onPressed, this.loading});
 
+  final bool? loading;
   final String text;
   final void Function() onPressed;
 
@@ -29,12 +31,18 @@ class MyContainerButton extends StatelessWidget {
                   blurRadius: 5),
             ],
             borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            child: MyTextButton(text: text, onPressed: onPressed, textcolor: Colors.white,)),
-        ),
+        child: loading == true
+            ? const MyCircularProgressIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                    height: 24,
+                    child: MyTextButton(
+                      text: text,
+                      onPressed: onPressed,
+                      textcolor: Colors.white,
+                    )),
+              ),
       ),
     );
   }

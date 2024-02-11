@@ -4,7 +4,8 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_profile_picture.dart';
-import 'package:l_earn/utils/constants.dart';
+import 'package:l_earn/Presentation/components/render_user_name.dart';
+
 
 class MyDrawer extends StatelessWidget {
   final User user;
@@ -70,28 +71,4 @@ class MyDrawer extends StatelessWidget {
   }
 }
 
-class RenderUserName extends StatelessWidget {
-  const RenderUserName({
-    super.key,
-    required this.user,
-  });
 
-  final User user;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${user.firstName} ${user.lastName}",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-    
-        //! Check if user is verified before displaying the verified icon beside their name
-        if(user.isVerified == true) const Text(" "),
-        if(user.isVerified == true) AppIcons.verifiedIcon
-      ],
-    );
-  }
-}

@@ -14,7 +14,9 @@ class PostCubit extends Cubit<PostState> {
   PostCubit() : super(const NewPostsLoading(page: 1));
 
   Future<void> getNewPosts(token) async {
-    int currentPage = state.page;
+    int currentPage = state.page ?? 1;
+    final List<Post> newPosts = state.newPosts ?? [];
+
     emit(NewPostsLoading(page: currentPage));
 
     final response =
@@ -24,7 +26,29 @@ class PostCubit extends Cubit<PostState> {
       print("E M I T T I N G   N E W   S T A T E");
       emit(NewPostsLoaded(page: currentPage, newPosts: response));
     } else {
-      emit(NewPostsFailed(page: --currentPage, error: response as AppError));
+      emit(NewPostsFailed(
+          page: --currentPage,
+          newPosts: newPosts,
+          error: response as AppError));
+    }
+  }
+
+  Future<void> createNewPosts(String token, Map<String, dynamic> post) async {
+    final List<Post> newPosts = state.newPosts ?? [];
+
+    emit(CreatingNewPost(newPosts: newPosts));
+
+    final response = await PostRepo.createNewPost(token, post);
+
+    if (response is Post) {
+      print("E M I T T I N G   N E W   S T A T E");
+      newPosts.add(response);
+      emit(NewPostCreated(newPosts: newPosts));
+
+    } else {
+      emit(NewPostsFailed(
+          newPosts: newPosts,
+          error: response as AppError));
     }
   }
 }

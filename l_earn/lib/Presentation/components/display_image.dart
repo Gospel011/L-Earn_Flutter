@@ -15,12 +15,13 @@ class DisplayImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: double.maxFinite,
+        
         constraints: const BoxConstraints(maxHeight: 500),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: _pickedImage != null ? Image.file(
               File(_pickedImage!.path),
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
             ): const SizedBox()));
   }
 }

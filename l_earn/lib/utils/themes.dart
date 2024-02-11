@@ -13,8 +13,8 @@ final class AppTheme {
         bodyMedium: TextStyle(
             color: AppColor.textColor,
             fontFamily: 'Nunito',
-            fontSize: 16,
-            height: 24 / 16,
+            fontSize: 17,
+            height: 24 / 17,
             fontWeight: FontWeight.w400),
         bodyLarge: TextStyle(
             color: AppColor.textColor,

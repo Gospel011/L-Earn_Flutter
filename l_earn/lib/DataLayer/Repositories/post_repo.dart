@@ -28,9 +28,19 @@ class PostRepo {
         posts.add(Post.fromMap(postMap));
 
         print("POSTS = $posts");
-
       }
-        return posts;
+      return posts;
+    } else {
+      return AppError(
+          title: response["title"] ?? 'Error', content: response["message"]);
+    }
+  }
+
+  static createNewPost(String token, Map<String, dynamic> post) async {
+    final response = await PostSource.createPost(token, post);
+
+    if (response['status'] == 'success') {
+      return Post.fromMap(response['newPost']);
     } else {
       return AppError(
           title: response["title"] ?? 'Error', content: response["message"]);

@@ -2,7 +2,11 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
+import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
 import 'package:l_earn/Presentation/components/display_image.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
@@ -42,11 +46,33 @@ class _MakePostPageState extends State<MakePostPage> {
           Align(
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: MyContainerButton(
-                  text: 'post',
-                  onPressed: () {
-                    print("::: Posting your content ::::");
-                  }),
+              child:
+                  BlocBuilder<PostCubit, PostState>(builder: (context, state) {
+                return MyContainerButton(
+                    text: 'post',
+                    loading: state is CreatingNewPost,
+                    onPressed: () {
+                      print("::: Posting your content ::::");
+                      final String text = _postText.text.trim();
+
+                      if (text == '') {
+                        print("can't make a post without a body");
+                        return;
+                      }
+
+                      final Map<String, dynamic> post = {
+                        'text': text,
+                      };
+
+                      if (_pickedImage != null) {
+                        post.addAll(
+                            {'addon': 'image', 'image': _pickedImage!.path});
+                      }
+
+                      context.read<PostCubit>().createNewPosts(
+                          context.read<AuthCubit>().state.user!.token!, post);
+                    });
+              }),
             ),
           )
         ]),
@@ -63,9 +89,12 @@ class _MakePostPageState extends State<MakePostPage> {
                   link: _layerLink,
                   offset: Offset(-200, -120),
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [BoxShadow(color: AppColor.mainColorBlack.withOpacity(0.25), spreadRadius: 3, blurRadius: 3)]),
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      BoxShadow(
+                          color: AppColor.mainColorBlack.withOpacity(0.25),
+                          spreadRadius: 3,
+                          blurRadius: 3)
+                    ]),
                     child: const Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

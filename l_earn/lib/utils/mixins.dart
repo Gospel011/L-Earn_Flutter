@@ -44,6 +44,7 @@ mixin ImageMixin {
     XFile? pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
+    
 
     return pickedImage;
   }
