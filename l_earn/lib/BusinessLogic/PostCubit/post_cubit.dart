@@ -13,14 +13,14 @@ part 'post_state.dart';
 class PostCubit extends Cubit<PostState> {
   PostCubit() : super(const NewPostsLoading(page: 1));
 
-  Future<void> getNewPosts(token) async {
+  Future<void> getNewPosts( userId, token ) async {
     int currentPage = state.page ?? 1;
     final List<Post> newPosts = state.newPosts ?? [];
 
     emit(NewPostsLoading(page: currentPage));
 
     final response =
-        await PostRepo.loadNewPosts(page: ++currentPage, token: token);
+        await PostRepo.loadNewPosts(page: ++currentPage, userId: userId, token: token);
 
     if (response is List<Post>) {
       print("E M I T T I N G   N E W   S T A T E");

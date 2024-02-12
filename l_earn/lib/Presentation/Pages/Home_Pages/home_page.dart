@@ -5,6 +5,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/pages/page_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
+import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/events_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/home.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/learn_page.dart';
@@ -64,9 +65,9 @@ class HomePage extends StatelessWidget with AppBarMixin {
 
   @override
   Widget build(BuildContext context) {
-    context
-        .read<PostCubit>()
-        .getNewPosts(context.read<AuthCubit>().state.user?.token);
+    final User? user = context.read<AuthCubit>().state.user;
+
+    context.read<PostCubit>().getNewPosts(user?.id, user?.token);
 
     //* BLOC LISTENER
     return BlocListener<AuthCubit, AuthState>(

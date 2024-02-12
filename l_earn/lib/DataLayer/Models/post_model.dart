@@ -12,7 +12,8 @@ class Post {
   //* text --> required
   //* image --> optional
   //* poll --> optional
-  //* likes --> not user controlled, default 0
+  //* likes --> number of likes for this post
+  //* liked --> if the user has liked this post or not
   //* comment --> ObjectId, ref "Comment"
   //* shares --> default 0,
   //* tags --> user defined, not mandatory
@@ -22,17 +23,21 @@ class Post {
   final String? image;
   final List<Poll>? poll;
   final int likes;
+  final bool liked;
   final List<Comment> comment;
   final int shares;
   final List<String> tags;
+  final String id;
   final String dateCreated;
 
   Post({
+    required this.id,
     required this.user,
     required this.text,
     this.image,
     this.poll,
     required this.likes,
+    required this.liked,
     required this.comment,
     required this.shares,
     required this.tags,
@@ -40,11 +45,13 @@ class Post {
   });
 
   Post copyWith({
+    String? id,
     User? user,
     String? text,
     String? image,
     List<Poll>? poll,
     int? likes,
+    bool? liked,
     List<Comment>? comment,
     int? shares,
     List<String>? tags,
@@ -52,10 +59,12 @@ class Post {
   }) {
     return Post(
       user: user ?? this.user,
+      id: id ?? this.id,
       text: text ?? this.text,
       image: image ?? this.image,
       poll: poll ?? this.poll,
       likes: likes ?? this.likes,
+      liked: liked ?? this.liked,
       comment: comment ?? this.comment,
       shares: shares ?? this.shares,
       tags: tags ?? this.tags,
@@ -66,10 +75,12 @@ class Post {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'user': user.toMap(),
+      '_id': text,
       'text': text,
       'image': image,
       'poll': poll?.map((x) => x.toMap()).toList(),
       'likes': likes,
+      'liked': liked,
       'comments': comment.map((x) => x.toMap()).toList(),
       'shares': shares,
       'tags': tags,
@@ -78,27 +89,31 @@ class Post {
   }
 
   factory Post.fromMap(Map<String, dynamic> map) {
-    print("MAP IS = $map");
     return Post(
-        user: User.fromMap(map['user'] as Map<String, dynamic>),
-        text: map['text'] as String,
-        image: map['image'] != null ? map['image'] as String : null,
-        poll: map['poll'] != null
-            ? List<Poll>.from(
-                (map['poll'] as List<dynamic>).map<Poll?>(
-                  (x) => Poll.fromMap(x as Map<String, dynamic>),
-                ),
-              )
-            : null,
-        likes: map['likes'] as int,
-        comment: List<Comment>.from(
-          (map['comments'] as List<dynamic>).map<Comment>(
-            (x) => Comment.fromMap(x as Map<String, dynamic>),
-          ),
+      user: User.fromMap(map['user'] as Map<String, dynamic>),
+      id: map['_id'] as String,
+      text: map['text'] as String,
+      image: map['image'] != null ? map['image'] as String : null,
+      poll: map['poll'] != null
+          ? List<Poll>.from(
+              (map['poll'] as List<dynamic>).map<Poll?>(
+                (x) => Poll.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
+      likes: map['likes'] as int,
+      liked: map['liked'] as bool,
+      comment: List<Comment>.from(
+        (map['comments'] as List<dynamic>).map<Comment>(
+          (x) => Comment.fromMap(x as Map<String, dynamic>),
         ),
-        shares: map['shares'] as int,
-        tags: List<String>.from((map['tags'] as List<dynamic>)),
-        dateCreated: map['dateCreated']);
+      ),
+      shares: map['shares'] as int,
+      tags: List<String>.from(
+        (map['tags'] as List<dynamic>),
+      ),
+      dateCreated: map['dateCreated'] as String,
+    );
   }
 
   String toJson() => json.encode(toMap());
@@ -108,7 +123,7 @@ class Post {
 
   @override
   String toString() {
-    return 'Post(user: $user, text: $text, image: $image, poll: $poll, likes: $likes, comment: $comment, shares: $shares, tags: $tags, dateCreated: $dateCreated)';
+    return 'Post(_id: $id, user: $user, text: $text, image: $image, poll: $poll, likes: $likes, liked: $liked, comment: $comment, shares: $shares, tags: $tags, dateCreated: $dateCreated)';
   }
 
   @override
@@ -120,6 +135,7 @@ class Post {
         other.image == image &&
         listEquals(other.poll, poll) &&
         other.likes == likes &&
+        other.liked == liked &&
         listEquals(other.comment, comment) &&
         other.shares == shares &&
         listEquals(other.tags, tags) &&
@@ -133,6 +149,7 @@ class Post {
         image.hashCode ^
         poll.hashCode ^
         likes.hashCode ^
+        liked.hashCode ^
         comment.hashCode ^
         shares.hashCode ^
         tags.hashCode ^

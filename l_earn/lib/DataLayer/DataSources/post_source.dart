@@ -53,4 +53,25 @@ class PostSource {
       return AppError.handleError(e);
     }
   }
+
+
+
+  //? HANDLES THE NETWORK REQUEST REGARDING LIKING AND UNLIKING A POST
+  static likePost(String token, String resourceId, String resource) async {
+    NetWorkConstants.defaultHeader.addAll({'Authorization': 'Bearer $token'});
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${NetWorkConstants.baseUrl}/$resource/$resourceId/like'));
+
+    request.headers.addAll(NetWorkConstants.defaultHeader);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      
+      return jsonDecode(await response.stream.bytesToString());
+    } catch (e) {
+      return AppError.handleError(e);
+    }
+  }
 }

@@ -23,48 +23,7 @@ class MyPostWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //? ROW WITH PROFILE PICTURE, NAME, HANDLE AND MORE ICON
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  //? PROFILE PICTURE
-                  MyProfilePicture(
-                    user: post.user,
-                    radius: 24,
-                  ),
-
-                  const SizedBox(
-                    width: 5,
-                  ),
-
-                  MyListTile(
-                    children: [
-                      //? FULL NAME
-                      RenderUserName(
-                          user: post.user, fontWeight: FontWeight.bold),
-
-                      //? HANDLE
-                      Text(
-                        post.user.handle ?? '',
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColor.textColor.withOpacity(0.7)),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-
-              //? MORE
-              IconButton(
-                  splashRadius: 30,
-                  onPressed: () {
-                    print("More Icon for $fullName pressed");
-                  },
-                  icon: const Icon(Icons.more_vert_outlined))
-            ],
-          ),
+          MyPostHeader(post: post),
 
           //? TEXT
           Padding(
@@ -87,6 +46,64 @@ class MyPostWidget extends StatelessWidget {
           MyLikeCommentShareWidget(post: post)
         ],
       ),
+    );
+  }
+}
+
+class MyPostHeader extends StatelessWidget {
+  const MyPostHeader({
+    super.key,
+    required this.post,
+    
+  });
+
+  final Post post;
+  
+
+  @override
+  Widget build(BuildContext context) {
+    final String fullName = '${post.user.firstName} ${post.user.lastName}';
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            //? PROFILE PICTURE
+            MyProfilePicture(
+              user: post.user,
+              radius: 24,
+            ),
+    
+            const SizedBox(
+              width: 5,
+            ),
+    
+            MyListTile(
+              children: [
+                //? FULL NAME
+                RenderUserName(
+                    user: post.user, fontWeight: FontWeight.bold),
+    
+                //? HANDLE
+                Text(
+                  post.user.handle ?? '',
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColor.textColor.withOpacity(0.7)),
+                )
+              ],
+            ),
+          ],
+        ),
+    
+        //? MORE
+        IconButton(
+            splashRadius: 30,
+            onPressed: () {
+              print("More Icon for $fullName pressed");
+            },
+            icon: const Icon(Icons.more_vert_outlined))
+      ],
     );
   }
 }
