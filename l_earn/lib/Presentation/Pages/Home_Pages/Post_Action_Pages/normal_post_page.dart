@@ -41,107 +41,119 @@ class _MakePostPageState extends State<MakePostPage> {
       },
     );
 
-    return Scaffold(
-        appBar: widget.buildAppBar(context, actions: [
-          Align(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child:
-                  BlocBuilder<PostCubit, PostState>(builder: (context, state) {
-                return MyContainerButton(
-                    text: 'post',
-                    loading: state is CreatingNewPost,
-                    onPressed: () {
-                      print("::: Posting your content ::::");
-                      final String text = _postText.text.trim();
+    return BlocListener<PostCubit, PostState>(
+      listener: (context, state) {
+        if (state is NewPostCreated) {
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        }
+      },
+      child: Scaffold(
+          appBar: widget.buildAppBar(context, actions: [
+            Align(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: BlocBuilder<PostCubit, PostState>(
+                    builder: (context, state) {
+                  return MyContainerButton(
+                      text: 'post',
+                      loading: state is CreatingNewPost,
+                      onPressed: () {
+                        print("::: Posting your content ::::");
+                        final String text = _postText.text.trim();
 
-                      if (text == '') {
-                        print("can't make a post without a body");
-                        return;
-                      }
+                        if (text == '') {
+                          context.read<PostCubit>().emitNewPostsFailed(
+                              title: 'Failed',
+                              content: 'Can\'t create post with empty body');
+                          return;
+                        }
 
-                      final Map<String, dynamic> post = {
-                        'text': text,
-                      };
+                        final Map<String, dynamic> post = {
+                          'text': text,
+                        };
 
-                      if (_pickedImage != null) {
-                        post.addAll(
-                            {'addon': 'image', 'image': _pickedImage!.path});
-                      }
+                        if (_pickedImage != null) {
+                          post.addAll(
+                              {'addon': 'image', 'image': _pickedImage!.path});
+                        }
 
-                      context.read<PostCubit>().createNewPosts(
-                          context.read<AuthCubit>().state.user!.token!, post);
-                    });
-              }),
-            ),
-          )
-        ]),
-        floatingActionButton: CompositedTransformTarget(
-          link: _layerLink,
-          child: FloatingActionButton(
-            backgroundColor: AppColor.mainColorBlack,
-            onPressed: _getSingleImageFromSource,
-            child: OverlayPortal(
-              controller: _overlayPortalController,
-              overlayChildBuilder: (context) {
-                return Align(
-                    child: CompositedTransformFollower(
-                  link: _layerLink,
-                  offset: Offset(-200, -120),
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                      BoxShadow(
-                          color: AppColor.mainColorBlack.withOpacity(0.25),
-                          spreadRadius: 3,
-                          blurRadius: 3)
-                    ]),
-                    child: const Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // ListTile(
-                        //   leading: Icon(Icons.camera), title: Text("Camera"),),
-                        // Divider(),
-                        // ListTile(leading: Icon(Icons.image), title: Text("Gallery"))
-                      ],
+                        context.read<PostCubit>().createNewPosts(
+                            context.read<AuthCubit>().state.user!.id!,
+                            context.read<AuthCubit>().state.user!.token!,
+                            post);
+                      });
+                }),
+              ),
+            )
+          ]),
+          floatingActionButton: CompositedTransformTarget(
+            link: _layerLink,
+            child: FloatingActionButton(
+              backgroundColor: AppColor.mainColorBlack,
+              onPressed: _getSingleImageFromSource,
+              child: OverlayPortal(
+                controller: _overlayPortalController,
+                overlayChildBuilder: (context) {
+                  return Align(
+                      child: CompositedTransformFollower(
+                    link: _layerLink,
+                    offset: Offset(-200, -120),
+                    child: Container(
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(
+                            color: AppColor.mainColorBlack.withOpacity(0.25),
+                            spreadRadius: 3,
+                            blurRadius: 3)
+                      ]),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // ListTile(
+                          //   leading: Icon(Icons.camera), title: Text("Camera"),),
+                          // Divider(),
+                          // ListTile(leading: Icon(Icons.image), title: Text("Gallery"))
+                        ],
+                      ),
                     ),
-                  ),
-                ));
-              },
-              child: const Icon(Icons.image),
+                  ));
+                },
+                child: const Icon(Icons.image),
+              ),
             ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              //? TEXT
-              MyTextField(
-                hintText: "Write something... #hashtag",
-                focusNode: _focusNode,
-                controller: _postText,
-                maxLines: 20,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                textFieldType: TextFieldType.post,
-              ),
-
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  "Tip: Include at least three hashtags that describes your post",
-                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                //? TEXT
+                MyTextField(
+                  hintText: "Write something...",
+                  focusNode: _focusNode,
+                  controller: _postText,
+                  maxLines: 20,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  textFieldType: TextFieldType.post,
                 ),
-              ),
 
-              //? IMAGE
+                // const Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 16.0),
+                //   child: Text(
+                //     "Tip: Include at least three hashtags that describes your post",
+                //     style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
+                //   ),
+                // ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: DisplayImage(pickedImage: _pickedImage),
-              )
-            ],
-          ),
-        ));
+                //? IMAGE
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: DisplayImage(pickedImage: _pickedImage),
+                )
+              ],
+            ),
+          )),
+    );
   }
 
   Future<void> _getSingleImageFromSource() async {

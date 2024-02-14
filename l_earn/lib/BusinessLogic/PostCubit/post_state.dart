@@ -5,11 +5,11 @@ class PostState {
   final int? page;
   final Post? post; //* For getting post by id
   final AppError? error;
-  final List<Post>? newPosts;
+  final List<Post> newPosts;
   final List<Post>? posts;
 
   const PostState(
-      {this.page, this.posts, this.post, this.error, this.newPosts});
+      {this.page, this.posts, this.post, this.error, required this.newPosts});
 
   PostState copyWith({
     int? page,
@@ -36,7 +36,7 @@ class NewPostsLoaded extends PostState {
 }
 
 class NewPostsLoading extends PostState {
-  const NewPostsLoading({required super.page});
+  const NewPostsLoading({required super.page, required super.newPosts});
 }
 
 class NewPostsFailed extends PostState {
@@ -44,15 +44,15 @@ class NewPostsFailed extends PostState {
 }
 
 class RequestingPostById extends PostState {
-  const RequestingPostById({required super.page, required super.post});
+  const RequestingPostById({required super.page, required super.post, required super.newPosts});
 }
 
 class RequestingPostByIdFailed extends PostState {
-  const RequestingPostByIdFailed({required super.page, required super.error});
+  const RequestingPostByIdFailed({required super.page, required super.error, required super.newPosts});
 }
 
 class CreatingNewPost extends PostState {
-  const CreatingNewPost({super.newPosts});
+  const CreatingNewPost({required super.newPosts});
 }
 
 class NewPostCreated extends PostState {
@@ -60,5 +60,5 @@ class NewPostCreated extends PostState {
 }
 
 class CreatingNewPostFailed extends PostState {
-  const CreatingNewPostFailed({super.newPosts});
+  const CreatingNewPostFailed({required super.newPosts});
 }

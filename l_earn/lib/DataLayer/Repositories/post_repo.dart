@@ -1,4 +1,5 @@
 import 'package:l_earn/DataLayer/DataSources/post_source.dart';
+import 'package:l_earn/DataLayer/Models/comment_model.dart';
 import 'package:l_earn/DataLayer/Models/error_model.dart';
 import 'package:l_earn/DataLayer/Models/like_model.dart';
 import 'package:l_earn/DataLayer/Models/poll_model.dart';
@@ -29,6 +30,7 @@ class PostRepo {
         var likesArray = postMap['likes'];
         postMap['likes'] = likesArray.length;
         postMap['liked'] = likesArray.contains(userId);
+        postMap['comments'] = postMap['comments'].length;
 
         print("PostMap = $postMap");
 
@@ -43,23 +45,24 @@ class PostRepo {
     }
   }
 
-  static createNewPost(String token, Map<String, dynamic> post) async {
+  static createNewPost(
+      String userId, String token, Map<String, dynamic> post) async {
     final response = await PostSource.createPost(token, post);
+    final newPost = response['post'];
 
     print("::; R E S P O N S E    I S    $response :::;");
 
     if (response['status'] == 'success') {
-      try {
-        return Post.fromMap(response['newPost']);
-      } catch (e) {
-        response['status'] = 'fail';
-        response['message'] =
-            'Some error occured, please contact us with a description of what you were doing before you saw this message';
-        return AppError(title: 'Error', content: response['content']);
-      }
+      newPost['user'] = newPost['userId'];
+      newPost['userId'] = null;
+
+      newPost['liked'] = newPost['likes'].contains(userId);
+      newPost['likes'] = newPost['likes'].length;
+
+      print("UPDATED USER : $response");
+      return Post.fromMap(response['post']);
     } else {
-      return AppError(
-          title: response["title"] ?? 'Error', content: response["message"]);
+      return AppError.errorObject(response);
     }
   }
 
@@ -72,6 +75,57 @@ class PostRepo {
       return Like.fromMap(response['likes']);
     } else {
       return AppError(title: 'Fail', content: response['message']);
+    }
+  }
+
+  static loadComments(
+      {required id, required userId, required token, required int page}) async {
+    final dynamic response = await PostSource.loadComments(
+        id: id, userId: userId, token: token, page: page);
+
+    List<Comment> comments = [];
+
+    if (response['status'] == 'success') {
+      for (int i = 0; i < response['comments'].length; i++) {
+        Map<String, dynamic> comment = response['comments'][i];
+        print("C O M M E N T   IS   $comment");
+        print("L I K E S   IS   ${comment['likes']}");
+
+        final List<dynamic> likesArray = comment['likes'] = comment['likes'];
+
+        comment['likes'] = comment['likes'].length;
+        comment['liked'] = likesArray.contains(userId);
+
+        print("likes = ${comment['likes']}");
+
+        print("$i.) ${Comment.fromMap(comment)}");
+
+        comments.add(Comment.fromMap(comment));
+      }
+
+      return comments;
+    } else {
+      print(response);
+      return AppError.errorObject(response);
+    }
+  }
+
+  static postNewComment(
+      String userId, String token, String endpoint, String comment) async {
+    final response = await PostSource.makePostRequest(
+        endpoint: endpoint, token: token, body: {"comment": comment});
+
+    print('response $response');
+
+    if (response['status'] == 'success') {
+      final comment = response['newComment'];
+      print("LIKES = $comment");
+      final likesArray = comment['likes'];
+      comment['likes'] = likesArray.length;
+      comment['liked'] = likesArray.contains(userId);
+      return Comment.fromMap(comment);
+    } else {
+      return AppError.errorObject(response as AppError);
     }
   }
 }

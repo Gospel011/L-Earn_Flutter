@@ -15,6 +15,7 @@ class MyListTile extends StatelessWidget {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: children);
   }
 }

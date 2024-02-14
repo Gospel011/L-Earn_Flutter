@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:l_earn/Presentation/route_generator.dart';
@@ -31,8 +32,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(),
+    return MultiBlocProvider(
+      providers: [
+        // BlocProvider<CommentCubit>(
+        //   create: (context) => CommentCubit(),
+        // ),
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(),
+        ),
+      ],
+      
       child: Builder(builder: (context) {
         print('Current state is ${context.read<AuthCubit>().state}');
         return MaterialApp(

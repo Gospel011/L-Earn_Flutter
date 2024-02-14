@@ -11,44 +11,63 @@ import 'package:l_earn/Helpers/auth_helper.dart';
 part 'post_state.dart';
 
 class PostCubit extends Cubit<PostState> {
-  PostCubit() : super(const NewPostsLoading(page: 1));
+  PostCubit() : super(const NewPostsLoading(page: 0, newPosts: []));
+  int currentPage = 0;
 
-  Future<void> getNewPosts( userId, token ) async {
-    int currentPage = state.page ?? 1;
-    final List<Post> newPosts = state.newPosts ?? [];
+  Future<void> getNewPosts(userId, token, {int? page}) async {
+    currentPage++;
 
-    emit(NewPostsLoading(page: currentPage));
+    List<Post> newPosts = [...state.newPosts];
 
-    final response =
-        await PostRepo.loadNewPosts(page: ++currentPage, userId: userId, token: token);
+    emit(NewPostsLoading(page: currentPage, newPosts: newPosts));
+
+    final response = await PostRepo.loadNewPosts(
+        page: currentPage, userId: userId, token: token);
 
     if (response is List<Post>) {
-      print("E M I T T I N G   N E W   S T A T E");
-      emit(NewPostsLoaded(page: currentPage, newPosts: response));
+      print("E M I T T I N G   N E W   S T A T E ${newPosts.length}");
+
+      newPosts.addAll(response);
+
+      print("E M I T T I N G   N E W   S T A T E ${newPosts.length}");
+      emit(NewPostsLoaded(
+          page: newPosts.isEmpty ? currentPage - 1 : currentPage,
+          newPosts: newPosts));
+
+      if (state.newPosts.length < 20 && currentPage > 2) --currentPage;
+
+      print('C U R R E N T   P A G E   I S   $currentPage');
     } else {
+      currentPage--;
       emit(NewPostsFailed(
-          page: --currentPage,
+          page: currentPage - 1,
           newPosts: newPosts,
           error: response as AppError));
     }
   }
 
-  Future<void> createNewPosts(String token, Map<String, dynamic> post) async {
-    final List<Post> newPosts = state.newPosts ?? [];
+  Future<void> createNewPosts(
+      String userId, String token, Map<String, dynamic> post) async {
+    final List<Post> newPosts = state.newPosts;
 
     emit(CreatingNewPost(newPosts: newPosts));
 
-    final response = await PostRepo.createNewPost(token, post);
+    final response = await PostRepo.createNewPost(userId, token, post);
 
     if (response is Post) {
       print("E M I T T I N G   N E W   S T A T E");
-      newPosts.add(response);
+      // newPosts.add(response);
+      newPosts.insert(0, response);
       emit(NewPostCreated(newPosts: newPosts));
-
     } else {
-      emit(NewPostsFailed(
-          newPosts: newPosts,
-          error: response as AppError));
+      print("Emitting Failed");
+      emit(NewPostsFailed(newPosts: newPosts, error: response as AppError));
     }
+  }
+
+  void emitNewPostsFailed({required String title, required String content}) {
+    emit(NewPostsFailed(
+        newPosts: state.newPosts,
+        error: AppError(title: title, content: content)));
   }
 }

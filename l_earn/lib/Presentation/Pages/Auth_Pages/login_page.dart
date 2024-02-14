@@ -28,17 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _obscureText = true;
 
-  @override
-  void initState() {
-    super.initState();
-    // if (context.read<AuthCubit>().state is AuthLoggedIn) {
-    //   print('Navigating to home page');
-    //   Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-    // } else {
-    //   print('User is new');
-    // }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     //? Update email controller

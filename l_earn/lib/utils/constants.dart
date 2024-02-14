@@ -7,7 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class NetWorkConstants {
   static const String baseUrl =
       "https://l-earn.onrender.com/api/v1"; //? [PRODUCTION]
-  // static const String baseUrl = "http://127.0.0.1:5000/api/v1"; //? [DEVELOPMENT]
+  // static const String baseUrl = "http://127.0.0.1:5000/api/v1"; //? [DEVELOPMENT -> laptop]
+  // static const String baseUrl = "https://d0ab-2c0f-2a80-9-a110-8cb4-564d-7c8b-4bcf.ngrok-free.app/api/v1"; //? [DEVELOPMENT -> phone]
   static final Map<String, String> defaultHeader = {
     "Content-Type": "application/json"
   };

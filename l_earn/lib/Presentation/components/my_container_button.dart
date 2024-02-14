@@ -31,14 +31,14 @@ class MyContainerButton extends StatelessWidget {
                   blurRadius: 5),
             ],
             borderRadius: BorderRadius.circular(12)),
-        child: loading == true
-            ? const MyCircularProgressIndicator()
-            : Padding(
+        child: 
+            Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
                     height: 24,
                     child: MyTextButton(
                       text: text,
+                      loading: loading,
                       onPressed: onPressed,
                       textcolor: Colors.white,
                     )),

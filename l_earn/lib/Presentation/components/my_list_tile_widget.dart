@@ -15,14 +15,17 @@ class MyListTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      //? ICON
       IconButton(
           padding: EdgeInsets.zero,
           onPressed: onPressed,
           visualDensity: VisualDensity.compact,
+          splashRadius: 25,
           isSelected: true,
-          iconSize: 10,
           selectedIcon: AppIcons.likeSolidCompact,
           icon: title),
+
+      //? TEXT
       subtitle
     ]);
   }

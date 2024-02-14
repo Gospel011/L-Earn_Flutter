@@ -6,10 +6,13 @@ part of 'like_cubit.dart';
 abstract class LikeState {
   final int likes;
   final bool liked;
+  final int index;
   final AppError? error;
+
   const LikeState({
     required this.likes,
     required this.liked,
+    required this.index,
     this.error
   });
 
@@ -28,17 +31,17 @@ abstract class LikeState {
 }
 
 class LikeInitial extends LikeState {
-  const LikeInitial({required super.likes, required super.liked});
+  const LikeInitial({required super.likes, required super.liked, required super.index});
 }
 
 class Liking extends LikeState {
-  const Liking({required super.likes, required super.liked});
+  const Liking({required super.likes, required super.liked, required super.index});
 }
 
 class Liked extends LikeState {
-  const Liked({required super.likes, required super.liked});
+  const Liked({required super.likes, required super.liked, required super.index});
 }
 
 class LikingFailed extends LikeState {
-  const LikingFailed({required super.likes, required super.liked, super.error});
+  const LikingFailed({required super.likes, required super.liked, super.error, required super.index});
 }

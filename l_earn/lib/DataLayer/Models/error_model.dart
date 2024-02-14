@@ -14,6 +14,11 @@ class AppError {
     };
   }
 
+  static AppError errorObject(response) {
+    return AppError(
+        title: response["title"] ?? 'Error', content: response["message"]);
+  }
+
   factory AppError.fromMap(Map<String, dynamic> map) {
     return AppError(
       title: map['title'] as String,

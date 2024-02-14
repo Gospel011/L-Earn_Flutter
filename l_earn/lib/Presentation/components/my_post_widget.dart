@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:l_earn/DataLayer/Models/post_model.dart';
+import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/components/my_like_comment_share_widget.dart';
 import 'package:l_earn/Presentation/components/my_list_tile.dart';
 import 'package:l_earn/Presentation/components/my_profile_picture.dart';
 import 'package:l_earn/Presentation/components/render_user_name.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
 
 class MyPostWidget extends StatelessWidget {
   const MyPostWidget({
     super.key,
     required this.post,
+    required this.index,
   });
 
   final Post post;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +27,10 @@ class MyPostWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //? ROW WITH PROFILE PICTURE, NAME, HANDLE AND MORE ICON
-          MyPostHeader(post: post),
+          MyPostHeader(user: post.user),
 
           //? TEXT
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Text(post.text),
-          ),
+          MyExpandableText(text: post.text),
 
           //? [POLL -- > next launch] OR IMAGE
           // BarChart()
@@ -43,59 +44,105 @@ class MyPostWidget extends StatelessWidget {
               : const SizedBox(),
 
           //? LIKES COMMENTS SHARES
-          MyLikeCommentShareWidget(post: post)
+          MyLikeCommentShareWidget(post: post, index: index)
         ],
       ),
     );
   }
 }
 
-class MyPostHeader extends StatelessWidget {
-  const MyPostHeader({
+class MyExpandableText extends StatefulWidget {
+  const MyExpandableText({
     super.key,
-    required this.post,
-    
+    required this.text,
   });
 
-  final Post post;
-  
+  final String text;
+
+  @override
+  State<MyExpandableText> createState() => _MyExpandableTextState();
+}
+
+class _MyExpandableTextState extends State<MyExpandableText> {
+  int? maxLines = 4;
+  bool isExpanded = false;
+  @override
+  Widget build(BuildContext context) {
+    print("Expanded: $isExpanded");
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            isExpanded = !isExpanded;
+          });
+        },
+        child: Text(
+          widget.text,
+          maxLines: isExpanded ? null : maxLines,
+          overflow: isExpanded ? null : TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
+}
+
+class MyPostHeader extends StatelessWidget {
+  const MyPostHeader(
+      {super.key,
+      required this.user,
+      this.tagOnly,
+      this.radius,
+      this.fontSize});
+
+  final User user;
+  final bool? tagOnly;
+  final double? radius;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
-    final String fullName = '${post.user.firstName} ${post.user.lastName}';
+    final String fullName = '${user.firstName} ${user.lastName}';
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //? PROFILE PICTURE
             MyProfilePicture(
-              user: post.user,
-              radius: 24,
+              user: user,
+              radius: radius ?? 24,
             ),
-    
+
             const SizedBox(
               width: 5,
             ),
-    
+
             MyListTile(
               children: [
                 //? FULL NAME
-                RenderUserName(
-                    user: post.user, fontWeight: FontWeight.bold),
-    
+                tagOnly == true
+                    ? const SizedBox()
+                    : RenderUserName(user: user, fontWeight: FontWeight.bold),
+
                 //? HANDLE
-                Text(
-                  post.user.handle ?? '',
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColor.textColor.withOpacity(0.7)),
-                )
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    user.handle ?? '',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColor.textColor.withOpacity(0.7),
+                        fontSize: fontSize ?? 16),
+                  ),
+                ),
               ],
             ),
+
           ],
         ),
-    
+
         //? MORE
         IconButton(
             splashRadius: 30,

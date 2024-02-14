@@ -40,6 +40,12 @@ class MyTextFormField extends StatelessWidget {
   /// The textfield type
   final TextFieldType? textFieldType;
 
+  /// The maxLines for this TextFormField. By default it is 1
+  final int? maxLines;
+
+  /// Them minLines for this TextFormField. By default it is null
+  final int? minLines;
+
   /// This filters the users input and accepts only the valid ones.
   final List<TextInputFormatter>? inputFormatters;
   const MyTextFormField(
@@ -49,6 +55,8 @@ class MyTextFormField extends StatelessWidget {
       required this.validator,
       this.suffixIcon,
       this.suffixOnpressed,
+      this.maxLines = 1,
+      this.minLines,
       this.obscureText,
       this.enabled,
       this.keyboardType,
@@ -61,6 +69,8 @@ class MyTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscureText ?? false,
+      maxLines: maxLines,
+      minLines: minLines,
       enabled: enabled,
       style: textFieldType == TextFieldType.post
               ? Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)

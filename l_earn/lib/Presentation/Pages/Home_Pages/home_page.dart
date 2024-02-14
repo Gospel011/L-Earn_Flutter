@@ -81,6 +81,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
 
         //* SCAFFOLD
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           bottomNavigationBar: BottomAppBar(child: Builder(builder: (context) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -135,7 +136,9 @@ class HomePage extends StatelessWidget with AppBarMixin {
                 backgroundColor: const Color.fromARGB(0, 255, 193, 193),
                 context: context,
                 builder: (context) {
-                  return MyBottomModalSheet(children: [
+                  return MyBottomModalSheet(
+                    
+                    children: [
                     //* POST
                     ListTile(
                       onTap: () {
@@ -186,12 +189,14 @@ class HomePage extends StatelessWidget with AppBarMixin {
 
 class MyBottomModalSheet extends StatelessWidget {
   final List<Widget> children;
-  const MyBottomModalSheet({super.key, required this.children});
+  const MyBottomModalSheet({super.key, required this.children, this.height});
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
+      height: height,
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadiusDirectional.only(

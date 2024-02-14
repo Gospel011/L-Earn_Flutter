@@ -8,6 +8,7 @@ mixin AppBarMixin {
       bool automaticallyImplyLeading = false,
       bool includeClose = false,
       List<Widget>? actions,
+      TextStyle? titleTextStyle,
       void Function()? closeButtonOnpressed,
       bool centerTitle = false}) {
     return AppBar(
@@ -16,7 +17,7 @@ mixin AppBarMixin {
       title: title != null
           ? Text(
               title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              style: titleTextStyle ?? Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppColor.textColor, fontWeight: FontWeight.bold),
             )
           : null,
