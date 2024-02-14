@@ -4,6 +4,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
 import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
+import 'package:l_earn/BusinessLogic/learnCubit/content_cubit.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/emailVerification_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
@@ -21,6 +22,7 @@ class RouteGenerator {
   static final VerificationCubit _verificationCubit = VerificationCubit();
   static final PostCubit postCubit = PostCubit();
   static final CommentCubit commentCubit = CommentCubit();
+  static final ContentCubit contentCubit = ContentCubit();
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     print('SETTING = $settings');
@@ -58,6 +60,7 @@ class RouteGenerator {
           return MultiBlocProvider(
             providers: [
               BlocProvider.value(value: postCubit),
+              BlocProvider.value(value: contentCubit)
             ],
             child: HomePage()
             );

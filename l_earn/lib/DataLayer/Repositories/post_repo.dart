@@ -58,6 +58,7 @@ class PostRepo {
 
       newPost['liked'] = newPost['likes'].contains(userId);
       newPost['likes'] = newPost['likes'].length;
+      newPost['comments'] = newPost['comments'].length;
 
       print("UPDATED USER : $response");
       return Post.fromMap(response['post']);
@@ -123,6 +124,7 @@ class PostRepo {
       final likesArray = comment['likes'];
       comment['likes'] = likesArray.length;
       comment['liked'] = likesArray.contains(userId);
+      // comment['comments'] = comment['comments'].length
       return Comment.fromMap(comment);
     } else {
       return AppError.errorObject(response as AppError);

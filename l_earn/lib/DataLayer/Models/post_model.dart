@@ -8,16 +8,7 @@ import 'package:l_earn/DataLayer/Models/poll_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 
 class Post {
-  //* userId --> ObjectId, ref "User"
-  //* text --> required
-  //* image --> optional
-  //* poll --> optional
-  //* likes --> number of likes for this post
-  //* liked --> if the user has liked this post or not
-  //* comment --> ObjectId, ref "Comment"
-  //* shares --> default 0,
-  //* tags --> user defined, not mandatory
-  //* dateCreated --> Not user defined
+  
   final User user;
   final String text;
   final String? image;

@@ -5,6 +5,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/pages/page_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
+import 'package:l_earn/BusinessLogic/learnCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/events_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/home.dart';
@@ -68,6 +69,9 @@ class HomePage extends StatelessWidget with AppBarMixin {
     final User? user = context.read<AuthCubit>().state.user;
 
     context.read<PostCubit>().getNewPosts(user?.id, user?.token);
+    context
+        .read<ContentCubit>()
+        .loadContents(context.read<AuthCubit>().state.user?.token);
 
     //* BLOC LISTENER
     return BlocListener<AuthCubit, AuthState>(
@@ -98,7 +102,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
                   onPressed: () {
                     Scaffold.of(context).openEndDrawer();
                   },
-                  icon: const Icon(Icons.menu_rounded));
+                  icon: const SizedBox(height: 40, child: Icon(Icons.menu_rounded)));
             })
           ]),
 
@@ -136,9 +140,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
                 backgroundColor: const Color.fromARGB(0, 255, 193, 193),
                 context: context,
                 builder: (context) {
-                  return MyBottomModalSheet(
-                    
-                    children: [
+                  return MyBottomModalSheet(children: [
                     //* POST
                     ListTile(
                       onTap: () {
@@ -153,23 +155,23 @@ class HomePage extends StatelessWidget with AppBarMixin {
                     //* CREATE A TUTORIAL
                     ListTile(
                       onTap: () {
-                        print("Create a tutorial tapped");
+                        print("Write a book tapped");
                         Navigator.pop(context);
                         Navigator.pushNamed(context, '/create-tutorial');
                       },
                       leading: AppIcons.learnFill,
-                      title: const Text("Create a tutorial"),
+                      title: const Text("Write a book"),
                     ),
 
                     //* CREATE AN EVENT
-                    // ListTile(
-                    //   onTap: () {
-                    //     print("Create an event tapped");
-                    //     Navigator.pushNamed(context, '/create-event');
-                    //   },
-                    //   leading: AppIcons.eventsFill,
-                    //   title: const Text("Create an event"),
-                    // )
+                    ListTile(
+                      onTap: () {
+                        print("Create a playlist tapped");
+                        // Navigator.pushNamed(context, '/create-event');
+                      },
+                      leading: AppIcons.eventsFill,
+                      title: const Text("Create a playlist"),
+                    )
                   ]);
                 });
           }

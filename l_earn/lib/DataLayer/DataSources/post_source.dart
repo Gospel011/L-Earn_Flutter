@@ -100,7 +100,7 @@ class PostSource {
       {required String endpoint,
       required String token,
       required Map<String, String> body,
-      Map<String, dynamic>? file}) async {
+      }) async {
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'

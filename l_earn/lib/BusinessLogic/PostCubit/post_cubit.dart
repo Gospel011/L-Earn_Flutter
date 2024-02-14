@@ -21,22 +21,27 @@ class PostCubit extends Cubit<PostState> {
 
     emit(NewPostsLoading(page: currentPage, newPosts: newPosts));
 
+    print("::: R E Q U E S T I N G   F O R   P A G E   $currentPage");
+
     final response = await PostRepo.loadNewPosts(
         page: currentPage, userId: userId, token: token);
 
     if (response is List<Post>) {
-      print("E M I T T I N G   N E W   S T A T E ${newPosts.length}");
+      print(
+          "E M I T T I N G   N E W   S T A T E ${newPosts.length}, RESPONSE LENGTH: ${response.length}");
 
       newPosts.addAll(response);
 
       print("E M I T T I N G   N E W   S T A T E ${newPosts.length}");
-      emit(NewPostsLoaded(
-          page: newPosts.isEmpty ? currentPage - 1 : currentPage,
-          newPosts: newPosts));
+      emit(NewPostsLoaded(page: currentPage, newPosts: newPosts));
 
-      if (state.newPosts.length < 20 && currentPage > 2) --currentPage;
+      if (response.isEmpty) {
+        print("decreasing page count to ${currentPage - 1}");
+        currentPage--;
+      }
 
-      print('C U R R E N T   P A G E   I S   $currentPage');
+      print(
+          'C U R R E N T   P A G E   I S   $currentPage, response is Empty: ${response.isEmpty}, currentPage == state.page! + 1: ${currentPage == state.page! + 1}, state.page: ${state.page}');
     } else {
       currentPage--;
       emit(NewPostsFailed(

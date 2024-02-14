@@ -1,37 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-//   /**
-//      * ## FIRST NAME
-//      * @param {String} firstName This is the user's first name
-//      */
 
-//      * ## LAST NAME
-//      * @param {String} lastName This is the user's last name
-//      */
-
-//   /**
-//      * ## EMAIL
-//      * @param {String} email is the user's email adress
-//      */
-
-//   /**
-//      * ## EMAIL VERIFIED
-//      * @param {Boolean} emailVerified This is a tag that shows if the user's email address has been verified or not
-//      */
-
-//   /**
-//      * ## PROFILE PICTURE
-//      * @param {String} profilePicture this is the user's profile picture
-//      */
-//   profilePicture: {
-//     type: String,
-//     default: 'default.png',
-//   },
-
-//   //* GENDER
-
-//   //* SCHOOL
-
-//   //* ROLE
 
 import 'dart:convert';
 

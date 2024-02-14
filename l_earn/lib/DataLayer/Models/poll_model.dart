@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-// "option": "Tmothy Eberechukwu",
-// "votes": 0,
-//! "voters": [],
-// "_id": "65c66a76bb1264b2e80167f5"
+
 
 class Poll {
   final String option;
