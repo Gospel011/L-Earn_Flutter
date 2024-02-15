@@ -20,6 +20,12 @@ class NetWorkConstants {
 const double cursorWidth = 1.0;
 
 final class AppIcons {
+  static final arrowDown = SvgPicture.asset('assets/svg_icons/arrow_down-thin.svg');
+  static final book = SvgPicture.asset('assets/svg_icons/book_icon.svg');
+  static final appLogo = SvgPicture.asset('assets/svg_icons/app_logo.svg');
+  static final close = SvgPicture.asset('assets/svg_icons/light_close.svg');
+  static final starOutline = SvgPicture.asset('assets/svg_icons/star_outline.svg');
+  static final starSolid = SvgPicture.asset('assets/svg_icons/star_solid.svg');
   static final homeThin = SvgPicture.asset('assets/svg_icons/home-thin.svg');
   static final homeFill = SvgPicture.asset('assets/svg_icons/home-fill.svg');
   static final bookFill = SvgPicture.asset('assets/svg_icons/book-filled.svg');

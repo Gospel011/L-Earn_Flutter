@@ -17,8 +17,9 @@ mixin AppBarMixin {
       title: title != null
           ? Text(
               title,
-              style: titleTextStyle ?? Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColor.textColor, fontWeight: FontWeight.bold),
+              style: titleTextStyle ??
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppColor.textColor, fontWeight: FontWeight.bold),
             )
           : null,
       actions: actions ??
@@ -45,8 +46,71 @@ mixin ImageMixin {
     XFile? pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
+    return pickedImage;
+  }
+}
+
+mixin TimeParserMixin {
+  String calculateTimeDifference(String timestamp) {
+  DateTime now = DateTime.now();
+  DateTime pastTime = DateTime.parse(timestamp);
+
+  pastTime = pastTime.toLocal();
+  
+  Duration difference = now.difference(pastTime);
+
+  int months = now.month - pastTime.month + (12 * (now.year - pastTime.year));
+  int days = difference.inDays;
+  int hours = difference.inHours;
+  int minutes = difference.inMinutes;
+  int seconds = difference.inSeconds;
+
+  print('Months passed: $months');
+  print('Days passed: $days');
+  print('Hours passed: $hours');
+  print('Minutes passed: $minutes');
+
+  late String res;
+
+  if (months != 0) {
+    res = '$months mo';
+  } else if (days != 0) {
+    res = '$days days';
+  }
+  else if (hours != 0) {
+    res = '$hours hours';
+  }
+  else if (minutes != 0) {
+    res = '$minutes minutes';
+  }
+  else {
+    res = '$seconds seconds';
+  }
+
+  return res;
+}
+
+}
+
+mixin PriceParserMixin {
+  String parsePrice(String price) {
+
+    price = price.replaceAll(',', '');
+
+    String reversedNumberString = price.split('').reversed.join('');
+
+    List<String> parts = [];
+    for (int i = 0; i < reversedNumberString.length; i += 3) {
+      int end = i + 3;
+      if (end > reversedNumberString.length) {
+        end = reversedNumberString.length;
+      }
+      parts.add(reversedNumberString.substring(i, end));
+    }
+
     
 
-    return pickedImage;
+    String result = parts.join(',').split('').reversed.join('');
+    return result;
   }
 }

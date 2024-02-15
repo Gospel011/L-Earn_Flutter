@@ -10,6 +10,7 @@ import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/content_description_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_an_event_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tutorial_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
@@ -33,12 +34,13 @@ class RouteGenerator {
           print('/login from route generator');
           return const LoginPage();
         });
+
+      //? MAKE A POST PAGE
       case '/make-post':
         return MaterialPageRoute(builder: (_) {
           print('${settings.name} from route generator');
           return BlocProvider.value(
-              value: postCubit, 
-              child: const MakePostPage());
+              value: postCubit, child: const MakePostPage());
         });
 
       case '/create-tutorial':
@@ -57,13 +59,19 @@ class RouteGenerator {
       case '/home':
         return MaterialPageRoute(builder: (context) {
           print('/home from route generator');
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: postCubit),
-              BlocProvider.value(value: contentCubit)
-            ],
-            child: HomePage()
-            );
+          return MultiBlocProvider(providers: [
+            BlocProvider.value(value: postCubit),
+            BlocProvider.value(value: contentCubit)
+          ], child: HomePage());
+        });
+
+      case '/content-description':
+        print('content-discription from route generator');
+        return MaterialPageRoute(builder: (context) {
+          return BlocProvider.value(
+            value: contentCubit,
+            child: const ContentDescriptionPage(),
+          );
         });
 
       case '/forgot-password':

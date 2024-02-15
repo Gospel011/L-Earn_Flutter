@@ -32,12 +32,12 @@ class PostRepo {
         postMap['liked'] = likesArray.contains(userId);
         postMap['comments'] = postMap['comments'].length;
 
-        print("PostMap = $postMap");
+        // print("PostMap = $postMap");
 
         posts.add(Post.fromMap(postMap));
 
-        print("POSTS = $posts");
       }
+        print("POSTS = $posts");
       return posts;
     } else {
       return AppError(
