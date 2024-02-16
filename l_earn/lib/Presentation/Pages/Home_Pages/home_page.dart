@@ -5,15 +5,16 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/pages/page_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
-import 'package:l_earn/BusinessLogic/learnCubit/content_cubit.dart';
+import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
+
 import 'package:l_earn/DataLayer/Models/user_model.dart';
-import 'package:l_earn/Presentation/Pages/Home_Pages/events_page.dart';
+
 import 'package:l_earn/Presentation/Pages/Home_Pages/home.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/learn_page.dart';
-import 'package:l_earn/Presentation/Pages/Home_Pages/profile_page.dart';
+
 import 'package:l_earn/Presentation/components/my_bottom_app_bar_item.dart';
 import 'package:l_earn/Presentation/components/my_drawer.dart';
-import 'package:l_earn/Presentation/components/my_profile_picture.dart';
+
 import 'package:l_earn/utils/constants.dart';
 
 import 'package:l_earn/utils/mixins.dart';

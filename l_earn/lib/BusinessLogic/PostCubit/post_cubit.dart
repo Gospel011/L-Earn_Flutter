@@ -16,6 +16,7 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> getNewPosts(userId, token, {int? page}) async {
     currentPage++;
+    if(page != null) currentPage = page;
 
     List<Post> newPosts = [...state.newPosts];
 
@@ -30,10 +31,10 @@ class PostCubit extends Cubit<PostState> {
       print(
           "E M I T T I N G   N E W   S T A T E ${newPosts.length}, RESPONSE LENGTH: ${response.length}");
 
-      newPosts.addAll(response);
+      if ( page == null ) newPosts.addAll(response);
 
       print("E M I T T I N G   N E W   S T A T E ${newPosts.length}");
-      emit(NewPostsLoaded(page: currentPage, newPosts: newPosts));
+      emit(NewPostsLoaded(page: currentPage, newPosts: page != null ? response : newPosts));
 
       if (response.isEmpty) {
         print("decreasing page count to ${currentPage - 1}");

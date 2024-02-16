@@ -311,7 +311,7 @@ class MyCommentItem extends StatelessWidget {
                           fontSize: 14,
                           color: AppColor.textColor.withOpacity(0.8)),
                     ),
-                    SizedBox(height: 14, child: AppIcons.verifiedIcon)
+                    SizedBox(height: 14, child: comment.user.isVerified == true ? AppIcons.verifiedIcon : const SizedBox())
                   ],
                 ),
 

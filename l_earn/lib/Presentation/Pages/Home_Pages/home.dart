@@ -4,6 +4,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/Presentation/components/my_circularProgressIndicator.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_post_widget.dart';
+import 'package:l_earn/utils/colors.dart';
 
 import '../../../BusinessLogic/PostCubit/post_cubit.dart';
 import '../../../DataLayer/Models/post_model.dart';
@@ -44,12 +45,12 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void getPosts() {
+  Future<void> getPosts({int? page}) async {
     print("::: geting posts :::");
-    context.read<PostCubit>().getNewPosts(
+    await context.read<PostCubit>().getNewPosts(
         context.read<AuthCubit>().state.user!.id,
         context.read<AuthCubit>().state.user!.token,
-        );
+        page: page);
   }
 
   @override
@@ -67,51 +68,55 @@ class _HomeState extends State<Home> {
           // page++;
         }
       }),
-      child: Scaffold(
-        body: BlocBuilder<PostCubit, PostState>(
-          builder: (context, state) {
-            return CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                //? TOP SPACING
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 16,
+      child: RefreshIndicator(
+        color: AppColor.mainColorBlack,
+        onRefresh: () async {
+          await getPosts(page: 1);
+        },
+        child: Scaffold(
+          body: BlocBuilder<PostCubit, PostState>(
+            builder: (context, state) {
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  //? TOP SPACING
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 16,
+                    ),
                   ),
-                ),
 
-                //? SCROLLABLE LIST OF POSTS
-                SliverList.builder(
-                    itemCount: state.newPosts?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final Post post = state.newPosts![index];
+                  //? SCROLLABLE LIST OF POSTS
+                  SliverList.builder(
+                      itemCount: state.newPosts?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final Post post = state.newPosts![index];
 
-                      return MyPostWidget(post: post, index: index);
-                    }),
+                        return MyPostWidget(post: post, index: index);
+                      }),
 
-                SliverToBoxAdapter(
-                    child: state is NewPostsLoading
-                        ? const MyCircularProgressIndicator()
-                        : state is NewPostsFailed
-                        ? Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: MyElevatedButton(
-                                text: 'Reload',
-                                onPressed: () {
-                                  print('RELOADING');
-                                  getPosts();
-                                },
-                              ),
-                            ),
-                          )
-                        : const SizedBox()),
-
-                
-              ],
-            );
-          },
+                  SliverToBoxAdapter(
+                      child: state is NewPostsLoading
+                          ? const MyCircularProgressIndicator()
+                          : state is NewPostsFailed
+                              ? Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0),
+                                    child: MyElevatedButton(
+                                      text: 'Reload',
+                                      onPressed: () {
+                                        print('RELOADING');
+                                        getPosts();
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox()),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -2,14 +2,26 @@
 part of 'content_cubit.dart';
 
 abstract class ContentState {
+
+  /// This is the list of contents found, it is required for ALL content states
   final List<Content> contents;
+
+  /// This is the content found when it is was requested by it's id
   final Content? content;
+
+  /// This is the type for the content, whether playlist or book
   final String? type;
+
+  /// This is a chapter for a book
   final Article? article;
+
+  /// This is a chapter fo a playlist
   final Video? video;
+
+  /// This is the error encountered when making network request
   final AppError? error;
-  //article
-  //video
+
+
   const ContentState(
       {required this.contents,
       this.content,
@@ -56,4 +68,25 @@ class ContentFound extends ContentState {
 /// State indicating that the requested content was not foundd
 class ContentNotFound extends ContentState {
   const ContentNotFound({required super.contents, required super.error});
+}
+
+/// State indicating that a chapter is being requested by it's id
+class RequestingChapterById extends ContentState {
+  const RequestingChapterById({required super.contents, required super.content});
+}
+
+/// State indicating that the requested chapter was found
+class ChapterFound extends ContentState {
+  const ChapterFound(
+      {required super.contents,
+      required super.content,
+      required super.type,
+      super.article,
+      super.video
+      });
+}
+
+/// State indicating that the requested chapter was not foundd
+class ChapterNotFound extends ContentState {
+  const ChapterNotFound({required super.contents, required super.content, required super.error});
 }

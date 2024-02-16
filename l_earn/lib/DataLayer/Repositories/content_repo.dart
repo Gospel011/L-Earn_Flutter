@@ -1,11 +1,14 @@
 import 'package:l_earn/DataLayer/DataSources/backend_source.dart';
+import 'package:l_earn/DataLayer/Models/article_model.dart';
+import 'package:l_earn/DataLayer/Models/video_model.dart';
 
 import '../Models/content_model.dart';
 import '../Models/error_model.dart';
 
 class ContentRepo {
-  static loadContents(String token, int page) async {
-    final endpoint = 'contents?page=$page&sort=-dateCreated';
+  static loadContents(String token, int page, {String? type}) async {
+    final endpoint =
+        'contents?page=$page&sort=-dateCreated&${type != null ? 'type=$type' : ''}';
     final response = await BackendSource.makeGETRequest(token, endpoint);
 
     if (response['status'] == 'success') {
@@ -31,8 +34,9 @@ class ContentRepo {
     }
   }
 
-  static getContentById(token, id) async {
-    final endpoint = 'contents/$id';
+  static getContentById(token, contentId) async {
+    final endpoint = 'contents/$contentId';
+
     final response = await BackendSource.makeGETRequest(token, endpoint);
 
     print(" C O N T E N T   R E S P O N S E   I S   $response");
@@ -53,6 +57,29 @@ class ContentRepo {
       final Content content = Content.fromMap(contentMap);
 
       return content;
+    } else {
+      return AppError.errorObject(response);
+    }
+  }
+
+  static getChapterById(
+      {required token,
+      required contentId,
+      required chapterId,
+      required type}) async {
+    final endpoint = 'contents/$contentId/chapters/$chapterId?type=$type';
+    final response = await BackendSource.makeGETRequest(token, endpoint);
+
+    print('R E S P O N S E   F R O M   S O U R C E  IS  $response');
+
+    if (response['status'] == 'success') {
+      if (type == 'book') {
+        final Article article = Article.fromMap(response['chapter']);
+
+        return article;
+      } else {
+        return Video.fromMap(response['chapter']);
+      }
     } else {
       return AppError.errorObject(response);
     }
