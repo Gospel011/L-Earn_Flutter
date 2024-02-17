@@ -12,6 +12,7 @@ import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/chapter_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_editor.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/content_description_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_an_event_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tutorial_page.dart';
@@ -81,7 +82,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) {
           return BlocProvider.value(
             value: contentCubit,
-            child: const ChapterPage(),
+            child: ChapterPage(quillEditor: settings.arguments as MyQuillEditor,),
           );
         });
 

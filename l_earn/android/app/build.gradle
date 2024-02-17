@@ -61,11 +61,12 @@ android {
         }
     }
 
-    compileSdkVersion 33
+    compileSdkVersion 34
+    ndkVersion "25.1.8937393"
     
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 34
     }
 }
