@@ -77,6 +77,7 @@ class RouteGenerator {
                 price: args?['price'].toString() ?? '',
                 genre: args?['genre'] ?? '',
                 thumbnailUrl: args?['thumbnailUrl'],
+                bookId: args?['id'],
               ));
         });
 

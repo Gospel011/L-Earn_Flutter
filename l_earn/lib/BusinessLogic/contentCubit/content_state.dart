@@ -118,3 +118,25 @@ class InitializingContentFailed extends ContentState {
   /// State indicating that the content creation failed
   InitializingContentFailed({required super.contents, required super.myContents, required super.error});
 }
+
+/// State indicating that a content is being edited. For example, if it is 
+/// a book, this state is saying that the book is being edited on the server.
+class EditingContent extends ContentState {
+
+
+  EditingContent({required super.contents, required super.myContents});
+}
+
+class ContentEdited extends ContentState {
+
+
+/// State indicating that a content has been edited. Again, if it is a book,
+/// this state is saying that it has been edited on the server.
+  ContentEdited({required super.contents, required super.myContents});
+}
+
+class EditingContentFailed extends ContentState {
+
+  /// State indicating that the content edit operation failed
+  EditingContentFailed({required super.contents, required super.myContents, required super.error});
+}

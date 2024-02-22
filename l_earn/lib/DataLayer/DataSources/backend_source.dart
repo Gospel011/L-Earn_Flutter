@@ -48,9 +48,10 @@ class BackendSource {
     }
   }
 
-  static makeMultiPartPUTRequest(String token, String endpoint,
-      {required Map<String, String> body, required File file}) async {
-    
+  static makeMultiPartRequest(String token, String endpoint,
+      {required String method,
+      required Map<String, String> body,
+      required File file}) async {
     //? SETUP REQUEST HEADER
     var headers = {'Authorization': 'Bearer $token'};
 
@@ -58,13 +59,18 @@ class BackendSource {
     final Uri url = Uri.parse('${NetWorkConstants.baseUrl}/$endpoint');
 
     //? INITIALIZE MULTI-PART REQUEST
-    var request = http.MultipartRequest('PUT', url);
+    var request = http.MultipartRequest(method.toUpperCase(), url);
 
     //? ADD REQUEST BODY
     request.fields.addAll(body);
 
     //? ADD ANY FILES
-    request.files.add(await http.MultipartFile.fromPath(file.name, file.path));
+    try {
+      request.files
+          .add(await http.MultipartFile.fromPath(file.name, file.path));
+    } catch (e) {
+      print(e);
+    }
 
     request.headers.addAll(headers);
 

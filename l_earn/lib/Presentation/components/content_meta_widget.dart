@@ -31,7 +31,7 @@ class ContentMetaWidget extends StatelessWidget with TimeParserMixin, PriceParse
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           
           children: [
-            MyPriceContainer(
+            content.price.toString() == '0' ? const SizedBox() : MyPriceContainer(
                 price: parsePrice(content.price.toString())),
             Expanded(
                 child: Text(

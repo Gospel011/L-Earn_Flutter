@@ -143,4 +143,22 @@ class ContentCubit extends Cubit<ContentState> {
           error: response as AppError));
     }
   }
+
+  Future<void> editBook(token, Map<String, dynamic> details,
+      {String method = 'PUT', required String id}) async {
+    emit(EditingContent(
+        contents: state.contents, myContents: state.myContents));
+
+    final response = await ContentRepo.initializeBook(token, details, method: 'PATCH', id: id);
+
+    if (response == 'success') {
+      emit(ContentEdited(
+          contents: state.contents, myContents: state.myContents));
+    } else {
+      emit(EditingContentFailed(
+          contents: state.contents,
+          myContents: state.myContents,
+          error: response as AppError));
+    }
+  }
 }

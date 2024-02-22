@@ -24,6 +24,7 @@ class CreateTutorialPage extends StatefulWidget
       this.thumbnailUrl,
       this.title = '',
       this.description = '',
+      this.bookId,
       this.genre = '',
       this.price = ''});
 
@@ -32,6 +33,7 @@ class CreateTutorialPage extends StatefulWidget
   final String genre;
   final String price;
   final String? thumbnailUrl;
+  final String? bookId;
 
   @override
   State<CreateTutorialPage> createState() => _CreateTutorialPageState();
@@ -43,6 +45,7 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  String? thumbnailUrl;
 
   @override
   void initState() {
@@ -51,6 +54,7 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
     _descriptionController.text = widget.description;
     _genreController.text = widget.genre;
     _priceController.text = widget.price;
+    thumbnailUrl = widget.thumbnailUrl;
   }
 
   @override
@@ -65,6 +69,10 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
 
   @override
   Widget build(BuildContext context) {
+    //? UNFOCUS ANY FOCUSED TEXTFIELD --> USEFUL WHEN DIALOG IS POPPED AND
+    //? WIDGET IS REBUILT
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final ThemeData themeData = ThemeData(
         textTheme: TextTheme(
             bodyMedium: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -80,7 +88,8 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
           print("::::: $state :::::");
 
           //? SHOW DIALOG FOR INITIALIZING CONTENT FAILED
-          if (state is InitializingContentFailed) {
+          if (state is InitializingContentFailed ||
+              state is EditingContentFailed) {
             showDialog(
                 context: context,
                 builder: (context) {
@@ -94,98 +103,126 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
             await showDialog(
                 context: context,
                 builder: (context) {
-                  return MyDialog(
+                  return const MyDialog(
                       title: 'Successful',
                       content:
                           'Your book has been created.\nTo add chapters, go to your profile and click on the three dots above your book.');
                 });
 
-            Navigator.pushNamed(context, '/profile-page',
-                arguments: context.read<AuthCubit>().state.user!);
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            }
+          } else if (state is ContentEdited) {
+            await showDialog(
+                context: context,
+                builder: (context) {
+                  return const MyDialog(
+                      title: 'Successful',
+                      content:
+                          'Your book has been edited.\nTo add chapters, go to your profile and click on the three dots above your book.');
+                });
+
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+            }
           }
         },
         child: Scaffold(
-            appBar: widget.buildAppBar(context, title: 'Create Book', actions: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                child: BlocBuilder<ContentCubit, ContentState>(
-                    builder: (context, state) {
-                  return MyContainerButton(
-                      text: 'Create',
-                      loading: state is InitializingContent,
-                      onPressed: () {
-                        print(
-                            "::: G E N R E  IS  ${_genreController.text.split(', ').length}");
-                        if (state is InitializingContent) return;
+            appBar: widget.buildAppBar(context,
+                title: widget.bookId != null ? 'Edit Book' : 'Create Book',
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
+                    child: BlocBuilder<ContentCubit, ContentState>(
+                        builder: (context, state) {
+                      return MyContainerButton(
+                          text: widget.bookId != null ? 'Edit' : 'Create',
+                          loading: state is InitializingContent ||
+                              state is EditingContent,
+                          onPressed: () {
+                            print(
+                                "::: G E N R E  IS  ${_genreController.text.split(', ').length}");
+                            if (state is InitializingContent) return;
 
-                        if (_pickedImage?.path == null) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const MyDialog(
-                                    title: 'Fail',
-                                    content:
-                                        'Please choose an image for your book cover');
-                              });
+                            if (_pickedImage?.path == null &&
+                                thumbnailUrl == '') {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const MyDialog(
+                                        title: 'Fail',
+                                        content:
+                                            'Please choose an image for your book cover');
+                                  });
 
-                          return;
-                        } else if (_titleController.text.trim() == '' ||
-                            _descriptionController.text.trim() == '') {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const MyDialog(
-                                    title: 'Fail',
-                                    content:
-                                        'Your title and description cannot be empty');
-                              });
+                              return;
+                            } else if (_titleController.text.trim() == '' ||
+                                _descriptionController.text.trim() == '') {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const MyDialog(
+                                        title: 'Fail',
+                                        content:
+                                            'Your title and description cannot be empty');
+                                  });
 
-                          return;
-                        } else if (_genreController.text.trim() == '' ||
-                            _genreController.text.split(', ').length < 3) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const MyDialog(
-                                    title: 'Fail',
-                                    content:
-                                        'Please add atleast three genres that describe your book');
-                              });
+                              return;
+                            } else if (_genreController.text.trim() == '' ||
+                                _genreController.text.split(', ').length < 3) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const MyDialog(
+                                        title: 'Fail',
+                                        content:
+                                            'Please add atleast three genres that describe your book');
+                                  });
 
-                          return;
-                        }
+                              return;
+                            }
 
-                        final Map<String, dynamic> details = {
-                          'file':
-                              File(name: 'thumbnail', path: _pickedImage!.path),
-                          'title': _titleController.text.trim(),
-                          'price': _priceController.text == ''
-                              ? '0'
-                              : _priceController.text,
-                          'tags':
-                              _genreController.text.toLowerCase().split(', '),
-                          'description': _descriptionController.text.trim()
-                          // '[{"insert": "${_descriptionController.text.trim()}\n"}]'
-                        };
-                        print("About to create book with details: $details");
+                            final Map<String, dynamic> details = {
+                              'file': File(
+                                  name: 'thumbnail',
+                                  path: _pickedImage?.path ?? ''),
+                              'title': _titleController.text.trim(),
+                              'price': _priceController.text == ''
+                                  ? '0'
+                                  : _priceController.text,
+                              'tags': _genreController.text.toLowerCase(),
+                              'description': _descriptionController.text.trim()
+                              // '[{"insert": "${_descriptionController.text.trim()}\n"}]'
+                            };
+                            print(
+                                "About to create book with details: $details");
 
-                        //? ASKING BLOC TO CREATE THE CONTENT
-                        context.read<ContentCubit>().initializeBook(
-                            context.read<AuthCubit>().state.user?.token,
-                            details);
-                      });
-                }),
-              )
-            ]),
+                            //? ASKING BLOC TO CREATE THE CONTENT
+                            widget.bookId != null
+                                ? context.read<ContentCubit>().editBook(
+                                    context.read<AuthCubit>().state.user?.token,
+                                    details,
+                                    id: widget.bookId!)
+                                : context.read<ContentCubit>().initializeBook(
+                                    context.read<AuthCubit>().state.user?.token,
+                                    details);
+                          });
+                    }),
+                  )
+                ]),
             body: SingleChildScrollView(
               child: Column(
                 children: [
                   //? Thumbnail
-                  widget.thumbnailUrl != null
-                      ? MyImageWidget(
-                          image: widget.thumbnailUrl!,
-                          borderRadius: 0,
+                  thumbnailUrl != null && thumbnailUrl != ''
+                      ? GestureDetector(
+                          onTap: _getSingleImageFromSource,
+                          child: MyImageWidget(
+                            image: thumbnailUrl!,
+                            borderRadius: 0,
+                          ),
                         )
                       : _pickedImage == null
                           ? GestureDetector(
@@ -335,7 +372,9 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
     _pickedImage = await widget.getSingleImageFromSource(context);
 
     if (_pickedImage != null) {
-      setState(() {});
+      setState(() {
+        thumbnailUrl = '';
+      });
     } else if (context.mounted) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("No file recieved")));

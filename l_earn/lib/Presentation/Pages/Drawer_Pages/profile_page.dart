@@ -260,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               //TODO: HANDLE EDIT CONTENT
                                               print("Edit content pressed");
                                               print(
-                                                  "POST TAG LENGT ${jsonDecode(content.tags?[0] ?? '')?.length}");
+                                                  "POST TAG LENGT ${content.tags}");
 
                                               Navigator.pushNamed(
                                                   context, '/create-tutorial',
@@ -272,7 +272,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     'genre':
                                                         content.tags?.join(''),
                                                     'thumbnailUrl':
-                                                        content.thumbnailUrl
+                                                        content.thumbnailUrl,
+                                                     'id': content.id
                                                   });
                                             },
                                             child: Text('Edit ${content.type}'),

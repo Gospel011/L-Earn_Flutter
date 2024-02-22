@@ -13,7 +13,7 @@ class MyExpandableText extends StatefulWidget {
 }
 
 class _MyExpandableTextState extends State<MyExpandableText> {
-  int? maxLines = 4;
+  int? maxLines = 5;
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
