@@ -9,6 +9,7 @@ class MyPostHeader extends StatelessWidget {
   const MyPostHeader(
       {super.key,
       required this.user,
+      this.moreActions,
       this.tagOnly,
       this.radius,
       this.fontSize});
@@ -17,6 +18,7 @@ class MyPostHeader extends StatelessWidget {
   final bool? tagOnly;
   final double? radius;
   final double? fontSize;
+  final List<PopupMenuEntry<String>>? moreActions;
 
   @override
   Widget build(BuildContext context) {
@@ -45,29 +47,40 @@ class MyPostHeader extends StatelessWidget {
                     : RenderUserName(user: user, fontWeight: FontWeight.bold),
 
                 //? HANDLE
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    user.handle ?? '',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColor.textColor.withOpacity(0.7),
-                        fontSize: fontSize ?? 16),
-                  ),
+                Text(
+                  user.handle ?? '',
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColor.textColor.withOpacity(0.7),
+                      fontSize: fontSize ?? 16),
                 ),
               ],
             ),
-
           ],
         ),
 
         //? MORE
-        IconButton(
-            splashRadius: 30,
-            onPressed: () {
-              print("More Icon for $fullName pressed");
-            },
-            icon: const Icon(Icons.more_vert_outlined))
+        PopupMenuButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            offset: Offset(-10, 0),
+            itemBuilder: (context) {
+              return [
+                ...?moreActions
+                // PopupMenuItem(
+                //   child: Text('Edit'),
+                //   value: 'Edit',
+                // ),
+                // PopupMenuItem(
+                //   child: Text('Add chapter'),
+                //   value: 'Add',
+                // ),
+                // PopupMenuItem(
+                //   child: Text('Delete'),
+                //   value: 'Delete',
+                // ),
+              ];
+            })
       ],
     );
   }

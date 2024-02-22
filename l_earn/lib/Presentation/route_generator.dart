@@ -5,14 +5,20 @@ import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.d
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
 import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
+import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
+import 'package:l_earn/DataLayer/Models/content_model.dart';
+import 'package:l_earn/DataLayer/Models/user_model.dart';
 
 import 'package:l_earn/Presentation/Pages/Auth_Pages/emailVerification_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
+import 'package:l_earn/Presentation/Pages/Drawer_Pages/profile_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/create_a_chapter.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/write_a_book_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/chapter_page.dart';
-import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_editor.dart';
+
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/content_description_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_an_event_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tutorial_page.dart';
@@ -49,7 +55,29 @@ class RouteGenerator {
       case '/create-tutorial':
         return MaterialPageRoute(builder: (_) {
           print('${settings.name} from route generator');
-          return const CreateTutorialPage();
+          Map<String, dynamic>? args;
+          try {
+            args = settings.arguments as Map<String, dynamic>?;
+          } catch (e) {
+            print(e);
+          }
+          // {
+          //                                       'title': content.title,
+          //                                       'description': content.description,
+          //                                       'price': content.price,
+          //                                       'genre': content.tags?.join(','),
+          //                                       'thumbnailUrl': content.thumbnailUrl
+          //                                     }
+
+          return BlocProvider.value(
+              value: contentCubit,
+              child: CreateTutorialPage(
+                title: args?['title'] ?? '',
+                description: args?['description'] ?? '',
+                price: args?['price'].toString() ?? '',
+                genre: args?['genre'] ?? '',
+                thumbnailUrl: args?['thumbnailUrl'],
+              ));
         });
 
       case '/create-event':
@@ -73,7 +101,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) {
           return BlocProvider.value(
             value: contentCubit,
-            child: const ContentDescriptionPage(),
+            child: ContentDescriptionPage(
+              content: settings.arguments as Content,
+            ),
           );
         });
 
@@ -82,8 +112,37 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) {
           return BlocProvider.value(
             value: contentCubit,
-            child: ChapterPage(quillEditor: settings.arguments as MyQuillEditor,),
+            child: const ChapterPage(),
           );
+        });
+
+      case '/write-a-book-page':
+        print('write-a-book-page from route generator');
+        return MaterialPageRoute(builder: (context) {
+          return BlocProvider.value(
+            value: contentCubit,
+            child: const WriteABookPage(),
+          );
+        });
+
+      case '/profile-page':
+        print('profile-page from route generator');
+        return MaterialPageRoute(builder: (context) {
+          return MultiBlocProvider(
+              providers: [
+                BlocProvider<TabCubit>(create: (context) => TabCubit()),
+                BlocProvider.value(value: contentCubit)
+                // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),
+              ],
+              child: ProfilePage(
+                user: settings.arguments as User,
+              ));
+        });
+
+      case '/create-a-chapter-page':
+        print('create-a-chapter-page from route generator');
+        return MaterialPageRoute(builder: (context) {
+          return const CreateAChapterPage();
         });
 
       case '/forgot-password':

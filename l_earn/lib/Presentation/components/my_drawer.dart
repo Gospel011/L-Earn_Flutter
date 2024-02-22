@@ -39,8 +39,10 @@ class MyDrawer extends StatelessWidget {
             child: MyDrawerItem(
               text: "View profile",
               onPressed: () {
-                print("Logout button pressed");
-                //TODO: IMPLEMENT PROFILE
+                print("View profile button pressed");
+                Navigator.pop(context);
+
+                Navigator.pushNamed(context, '/profile-page', arguments: context.read<AuthCubit>().state.user!);
               },
             ),
           ),

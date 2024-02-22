@@ -30,12 +30,15 @@ class _LearnPageState extends State<LearnPage>
   @override
   void initState() {
     super.initState();
+
+    //? ADD LISTENER TO SCROLL LISTENER TO LISTEN FOR WHEN THE USER REACHES
+    //? THE BOTTOM OF THE PAGE
     _scrollController.addListener(_scrollListener);
   }
 
   void _scrollListener() {
-    print(
-        'Offset: ${_scrollController.offset}, maxScrollEXtent: ${_scrollController.position.maxScrollExtent}');
+    // print(
+    //     'Offset: ${_scrollController.offset}, maxScrollEXtent: ${_scrollController.position.maxScrollExtent}');
 
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent - 10 &&
@@ -47,20 +50,31 @@ class _LearnPageState extends State<LearnPage>
 
   Future<void> getPosts({int? page}) async {
     print("::: geting posts :::");
-    await context.read<ContentCubit>().loadContents(
-        context.read<AuthCubit>().state.user!.token,
-        page: page);
+    await context
+        .read<ContentCubit>()
+        .loadContents(context.read<AuthCubit>().state.user!.token, page: page);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<ContentCubit, ContentState>(
       listener: (context, state) {
-        if (state is ContentLoadingFailed || state is ContentNotFound) {
+        print('STATE IS $state');
+        if (state is RequestingContentById) {
+          showDialog(
+              context: context,
+              builder: (context) => const Center(
+                  child: CircularProgressIndicator(color: Colors.blueGrey)));
+        } else if (state is ContentLoadingFailed || state is ContentNotFound) {
           showDialog(
               context: context,
               builder: ((context) => MyDialog(
                   title: state.error!.title, content: state.error!.content)));
+        } else if (state is ContentFound) {
+          Navigator.pop(context);
+          //? NAVIGATE TO CONTENT DESCRIPTION PAGE
+          Navigator.of(context)
+              .pushNamed('/content-description', arguments: state.content!);
         }
       },
       child: RefreshIndicator(
@@ -93,10 +107,6 @@ class _LearnPageState extends State<LearnPage>
                           context.read<ContentCubit>().getContentById(
                               context.read<AuthCubit>().state.user?.token,
                               content.id);
-
-                          //? NAVIGATE TO CONTENT DESCRIPTION PAGE
-                          Navigator.of(context)
-                              .pushNamed('/content-description');
                         },
                         onMetaPressed: () {
                           print('${content.title} meta pressed');

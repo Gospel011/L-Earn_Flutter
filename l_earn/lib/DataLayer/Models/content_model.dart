@@ -126,6 +126,6 @@ class Content {
 
   @override
   String toString() {
-    return 'Content(id: $id, author: $author, type: $type, title: $title, thumbnailUrl: $thumbnailUrl, description: $description, averageRating: $averageRating, numberOfRatings: $numberOfRatings, price: $price, videos: $videos, articles: $articles, videoChapters: $videoChapters, bookChapters: $bookChapters, students: $students, dateCreated: $dateCreated, tags: $tags)';
+    return 'Content(id: $id, author: $author, type: $type, title: $title, thumbnailUrl: $thumbnailUrl, averageRating: $averageRating, numberOfRatings: $numberOfRatings, price: $price, videos: $videos, articles: $articles, videoChapters: $videoChapters, bookChapters: $bookChapters, students: $students, dateCreated: $dateCreated, tags: $tags)';
   }
 }

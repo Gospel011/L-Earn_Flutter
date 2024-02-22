@@ -1,14 +1,18 @@
 import 'package:l_earn/DataLayer/DataSources/backend_source.dart';
 import 'package:l_earn/DataLayer/Models/article_model.dart';
+import 'package:l_earn/DataLayer/Models/file_model.dart';
 import 'package:l_earn/DataLayer/Models/video_model.dart';
 
 import '../Models/content_model.dart';
 import '../Models/error_model.dart';
 
 class ContentRepo {
-  static loadContents(String token, int page, {String? type}) async {
+  static loadContents(String token, int page,
+      {String? type, String? userId}) async {
     final endpoint =
-        'contents?page=$page&sort=-dateCreated&${type != null ? 'type=$type' : ''}';
+        'contents${userId != null ? '/info/user-contents' : ''}?page=$page&sort=-dateCreated${type != null ? '&type=$type' : ''}${userId != null ? '&id=$userId' : ''}';
+
+    print("::: R E Q U E S T   E N D P O I N T   $endpoint");
     final response = await BackendSource.makeGETRequest(token, endpoint);
 
     if (response['status'] == 'success') {
@@ -80,6 +84,33 @@ class ContentRepo {
       } else {
         return Video.fromMap(response['chapter']);
       }
+    } else {
+      return AppError.errorObject(response);
+    }
+  }
+
+  /// This method communicates with the backend to  create a new book on the
+  /// server. The [details] parameter should be a Map and have a file field
+  /// named [file] that contains the thumbnail for the book.
+  static initializeBook(token, Map<String, dynamic> details) async {
+    const String endpoint = 'contents?type=book';
+    final File file = details['file'];
+    details.remove('file');
+
+    final Map<String, String> body = Map<String, String>.from(details.map((key, value) => MapEntry(key, value.toString())));
+
+    print("B O D Y   $body, $file");
+    // return;
+
+    final response = await BackendSource.makeMultiPartPUTRequest(
+        token, endpoint,
+        body: body, file: file);
+
+    print(
+        ":::::::; R E S O N S E   F R O M   B A C K E N D S O U R C E   I S   $response");
+
+    if (response['status'] == 'success') {
+      return 'success';
     } else {
       return AppError.errorObject(response);
     }

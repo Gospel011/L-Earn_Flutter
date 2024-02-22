@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:l_earn/DataLayer/Models/post_model.dart';
 
@@ -12,10 +13,12 @@ class MyPostWidget extends StatelessWidget {
     super.key,
     required this.post,
     required this.index,
+    this.moreActions
   });
 
   final Post post;
   final int index;
+  final List<PopupMenuEntry<String>>? moreActions;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,9 @@ class MyPostWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //? ROW WITH PROFILE PICTURE, NAME, HANDLE AND MORE ICON
-          MyPostHeader(user: post.user),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/profile-page', arguments: post.user),
+            child: MyPostHeader(user: post.user, moreActions: moreActions)),
 
           //? TEXT
           MyExpandableText(text: post.text),
@@ -46,5 +51,3 @@ class MyPostWidget extends StatelessWidget {
     );
   }
 }
-
-

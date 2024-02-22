@@ -11,13 +11,16 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_edit
 import 'package:l_earn/Presentation/components/content_meta_widget.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_content_thumbnail.dart';
+import 'package:l_earn/Presentation/components/my_dialog.dart';
 
 import 'package:l_earn/utils/colors.dart';
 
 import 'package:flutter_quill/flutter_quill.dart';
 
 class ContentDescriptionPage extends StatelessWidget {
-  const ContentDescriptionPage({super.key});
+  const ContentDescriptionPage({super.key, required this.content});
+
+  final Content content;
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +44,14 @@ class ContentDescriptionPage extends StatelessWidget {
                             //? Thumbnail
                             SliverToBoxAdapter(
                                 child: MyContentThumbnail(
-                                    content: state.content!, borderRadius: 0)),
+                                    content: content, borderRadius: 0)),
 
                             //? title
                             SliverToBoxAdapter(
                                 child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8),
-                              child: ContentMetaWidget(content: state.content!),
+                              child: ContentMetaWidget(content: content),
                             )),
 
                             //? tab with description, chapters, reviews
@@ -59,6 +62,7 @@ class ContentDescriptionPage extends StatelessWidget {
                             SliverToBoxAdapter(
                               child: BlocBuilder<TabCubit, TabState>(
                                   builder: (context, tabState) {
+                                print("B U I L D I N G   $content");
                                 return Column(
                                   children: [
                                     //* TAB
@@ -104,17 +108,16 @@ class ContentDescriptionPage extends StatelessWidget {
 
                                         //? D E S C R I P T I O N   P A G E
                                         ? BuildDescription(
-                                            content: state.content!,
+                                            content: content,
                                           )
 
                                         //? C H A P T E R S   T A B
                                         : BuildChapters(
-                                            chapters: state.content!.type ==
-                                                    'book'
-                                                ? state.content!.bookChapters!
-                                                : state.content!.videoChapters!,
-                                            contentId: state.content!.id,
-                                            type: state.content!.type,
+                                            chapters: content.type == 'book'
+                                                ? content.bookChapters!
+                                                : content.videoChapters!,
+                                            contentId: content.id,
+                                            type: content.type,
                                           )
                                   ],
                                 );
@@ -160,18 +163,17 @@ class _BuildDescriptionState extends State<BuildDescription> {
   late final QuillController _controller;
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    try{
+
     _controller = QuillController(
         document:
             Document.fromJson(jsonDecode(widget.content.description ?? '[]')),
         selection: const TextSelection.collapsed(offset: 0));
-  }
 
-  @override
-  Widget build(BuildContext context) {
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+      padding: const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
       child: Row(
         children: [
           Expanded(
@@ -185,18 +187,18 @@ class _BuildDescriptionState extends State<BuildDescription> {
                 locale: Locale('en'),
               ),
             ),
-          )
-              //     Text(
-              //   widget.content.description!,
-              //   style: Theme.of(context)
-              //       .textTheme
-              //       .bodyMedium
-              //       ?.copyWith(fontSize: 18, fontWeight: FontWeight.w500),
-              // )
-              )
+          ))
         ],
       ),
     );
+    } catch (e) {
+      print(':::: E R R O R   I S   $e');
+
+      return Padding(
+        padding: const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
+        child: Text(widget.content.description!)
+        );
+    }
   }
 }
 
@@ -213,32 +215,46 @@ class BuildChapters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChaptersColumn(
+      chapters: chapters,
+      contentId: contentId,
+      type: type,
+      preRequestAction: () => Navigator.pushNamed(context, '/chapter-page'),
+    );
+  }
+}
+
+class ChaptersColumn extends StatelessWidget {
+  const ChaptersColumn({
+    super.key,
+    required this.chapters,
+    required this.contentId,
+    required this.preRequestAction,
+    required this.type,
+  });
+
+  final List chapters;
+  final String contentId;
+  final String type;
+  final void Function() preRequestAction;
+
+  @override
+  Widget build(BuildContext context) {
     return BlocListener<ContentCubit, ContentState>(
       listener: (context, state) {
-        if (state is RequestingChapterById) {
+        if (state is ChapterNotFound) {
+          //? return to description page
+          Navigator.pop(context);
+
+          //? show error message
           showDialog(
               context: context,
-              builder: (context) => const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.blueGrey,
-                    ),
-                  ));
-        } else if (state is ChapterFound) {
-          if (state.type == 'book') {
-            final String defaultContent = state.article?.content ?? '';
-
-            final QuillController controller = QuillController.basic();
-
-            const bool readOnly = true;
-
-            final MyQuillEditor quillEditor = MyQuillEditor(
-              controller: controller,
-              defaultContent: defaultContent,
-              readOnly: readOnly,
-            );
-
-            Navigator.pushNamed(context, '/chapter-page', arguments: quillEditor);
-          }
+              builder: (context) => MyDialog(
+                  title: state.error!.content ==
+                          'Please complete checkout to continue'
+                      ? 'Payment required'
+                      : state.error!.title,
+                  content: state.error!.content));
         }
       },
       child: Column(
@@ -248,11 +264,14 @@ class BuildChapters extends StatelessWidget {
           ),
           ...List<Widget>.generate(
               chapters.length,
-              //? C H A P T E R
+              //? C H A P T E R  __________________
               (index) => GestureDetector(
                     onTap: () {
                       print(
                           "R E Q U E S T I N G   C H A P T E R   W I T H  ID: ${chapters[index].id}   A N D   N A M E  ${chapters[index].title}");
+
+                      preRequestAction();
+
                       context.read<ContentCubit>().getChapterById(
                           token: context.read<AuthCubit>().state.user!.token,
                           chapterId: chapters[index].id,
@@ -287,7 +306,8 @@ class BuildChapters extends StatelessWidget {
                                         color: Colors.black.withOpacity(0.8)))),
                       ),
                     ),
-                  ))
+                  )),
+          const SizedBox(height: 24)
         ],
       ),
     );

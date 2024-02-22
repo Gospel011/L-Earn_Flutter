@@ -13,6 +13,7 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/home.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/learn_page.dart';
 
 import 'package:l_earn/Presentation/components/my_bottom_app_bar_item.dart';
+import 'package:l_earn/Presentation/components/my_bottom_modal_sheet.dart';
 import 'package:l_earn/Presentation/components/my_drawer.dart';
 
 import 'package:l_earn/utils/constants.dart';
@@ -103,7 +104,8 @@ class HomePage extends StatelessWidget with AppBarMixin {
                   onPressed: () {
                     Scaffold.of(context).openEndDrawer();
                   },
-                  icon: const SizedBox(height: 40, child: Icon(Icons.menu_rounded)));
+                  icon: const SizedBox(
+                      height: 40, child: Icon(Icons.menu_rounded)));
             })
           ]),
 
@@ -160,19 +162,20 @@ class HomePage extends StatelessWidget with AppBarMixin {
                         Navigator.pop(context);
                         Navigator.pushNamed(context, '/create-tutorial');
                       },
-                      leading: AppIcons.learnFill,
-                      title: const Text("Write a book"),
+                      leading:
+                          SizedBox(height: 32, width: 32, child: AppIcons.learnFill),
+                      title: const Text("Create content"),
                     ),
 
                     //* CREATE AN EVENT
-                    ListTile(
-                      onTap: () {
-                        print("Create a playlist tapped");
-                        // Navigator.pushNamed(context, '/create-event');
-                      },
-                      leading: AppIcons.eventsFill,
-                      title: const Text("Create a playlist"),
-                    )
+                    // ListTile(
+                    //   onTap: () {
+                    //     print("Create a playlist tapped");
+                    //     // Navigator.pushNamed(context, '/create-event');
+                    //   },
+                    //   leading: AppIcons.learnFill,
+                    //   title: const Text("Create a playlist"),
+                    // )
                   ]);
                 });
           }
@@ -190,27 +193,3 @@ class HomePage extends StatelessWidget with AppBarMixin {
   }
 }
 
-class MyBottomModalSheet extends StatelessWidget {
-  final List<Widget> children;
-  const MyBottomModalSheet({super.key, required this.children, this.height});
-  final double? height;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      height: height,
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.only(
-              topStart: Radius.circular(16), topEnd: Radius.circular(16))),
-      // height: MediaQuery.of(context).size.height / 2.5,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: children,
-        ),
-      ),
-    );
-  }
-}

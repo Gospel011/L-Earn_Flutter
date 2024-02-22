@@ -14,11 +14,13 @@ class MyImageWidget extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 16.0)),
         child: Image.network(
           image,
-          loadingBuilder: (context, child, progress) {            
-            if (progress == null) return child; 
-            return const ImageLoadingPlaceHolderWidget(); 
+          loadingBuilder: (context, child, progress) {
+            if (progress == null) return child;
+            return const ImageLoadingPlaceHolderWidget();
+          },
+          errorBuilder: (context, child, stacktrace) {
+            return const ImageLoadingPlaceHolderWidget();
           },
         ));
   }
 }
-

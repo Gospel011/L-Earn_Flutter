@@ -88,9 +88,9 @@ class _HomeState extends State<Home> {
 
                   //? SCROLLABLE LIST OF POSTS
                   SliverList.builder(
-                      itemCount: state.newPosts?.length ?? 0,
+                      itemCount: state.newPosts.length,
                       itemBuilder: (context, index) {
-                        final Post post = state.newPosts![index];
+                        final Post post = state.newPosts[index];
 
                         return MyPostWidget(post: post, index: index);
                       }),

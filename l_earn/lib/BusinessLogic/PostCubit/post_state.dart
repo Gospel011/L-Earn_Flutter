@@ -62,3 +62,16 @@ class NewPostCreated extends PostState {
 class CreatingNewPostFailed extends PostState {
   const CreatingNewPostFailed({required super.newPosts});
 }
+
+class GettingMyPost extends PostState {
+  const GettingMyPost({required super.newPosts, required super.posts});
+}
+
+class MyPostFound extends PostState {
+  const MyPostFound({required super.newPosts, required super.posts});
+}
+
+
+class GettingMyPostFailed extends PostState {
+  const GettingMyPostFailed({required super.newPosts, required super.posts});
+}

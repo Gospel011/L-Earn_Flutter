@@ -6,6 +6,9 @@ abstract class ContentState {
   /// This is the list of contents found, it is required for ALL content states
   final List<Content> contents;
 
+  /// This is the list of contents posted by a specified user found, it is required for ALL content states
+  final List<Content>? myContents;
+
   /// This is the content found when it is was requested by it's id
   final Content? content;
 
@@ -24,6 +27,7 @@ abstract class ContentState {
 
   const ContentState(
       {required this.contents,
+      required this.myContents,
       this.content,
       this.type,
       this.article,
@@ -33,27 +37,27 @@ abstract class ContentState {
 
 /// Initial state when ContentCubit is first initialized
 class ContentInitial extends ContentState {
-  const ContentInitial({required super.contents});
+  const ContentInitial({required super.contents, required super.myContents});
 }
 
 /// State indicating that some content is loading
 class ContentLoading extends ContentState {
-  const ContentLoading({required super.contents});
+  const ContentLoading({required super.contents, required super.myContents});
 }
 
 /// State indicating that comments is loaded
 class ContentLoaded extends ContentState {
-  const ContentLoaded({required super.contents});
+  const ContentLoaded({required super.contents, super.content, required super.myContents});
 }
 
 /// State indicating that content loading failed
 class ContentLoadingFailed extends ContentState {
-  const ContentLoadingFailed({required super.contents, required super.error});
+  const ContentLoadingFailed({required super.contents, required super.error, required super.myContents});
 }
 
 /// State indicating that a content is being requested by it's id
 class RequestingContentById extends ContentState {
-  const RequestingContentById({required super.contents});
+  const RequestingContentById({required super.contents, required super.myContents});
 }
 
 /// State indicating that the requested content was found
@@ -61,24 +65,26 @@ class ContentFound extends ContentState {
   const ContentFound(
       {required super.contents,
       required super.type,
-      required super.content
+      required super.content,
+      required super.myContents
       });
 }
 
 /// State indicating that the requested content was not foundd
 class ContentNotFound extends ContentState {
-  const ContentNotFound({required super.contents, required super.error});
+  const ContentNotFound({required super.contents, required super.error, required super.myContents});
 }
 
 /// State indicating that a chapter is being requested by it's id
 class RequestingChapterById extends ContentState {
-  const RequestingChapterById({required super.contents, required super.content});
+  const RequestingChapterById({required super.contents, required super.content, super.article, super.video, required super.myContents});
 }
 
 /// State indicating that the requested chapter was found
 class ChapterFound extends ContentState {
   const ChapterFound(
       {required super.contents,
+      required super.myContents,
       required super.content,
       required super.type,
       super.article,
@@ -86,7 +92,29 @@ class ChapterFound extends ContentState {
       });
 }
 
-/// State indicating that the requested chapter was not foundd
+/// State indicating that the requested chapter was not found
 class ChapterNotFound extends ContentState {
-  const ChapterNotFound({required super.contents, required super.content, required super.error});
+  const ChapterNotFound({required super.contents, required super.myContents, required super.content, required super.error, super.article, super.video});
+}
+
+/// State indicating that a content is being initialized. For example, if it is 
+/// a book, this state is saying that the book is being created.
+class InitializingContent extends ContentState {
+
+
+  InitializingContent({required super.contents, required super.myContents});
+}
+
+class ContentCreated extends ContentState {
+
+
+/// State indicating that a content has been created. Again, if it is a book,
+/// this state is saying that it has been created on the server.
+  ContentCreated({required super.contents, required super.myContents});
+}
+
+class InitializingContentFailed extends ContentState {
+
+  /// State indicating that the content creation failed
+  InitializingContentFailed({required super.contents, required super.myContents, required super.error});
 }

@@ -10,17 +10,19 @@ class MyContent extends StatelessWidget {
       {super.key,
       required this.content,
       required this.onThumbnailPressed,
-      required this.onMetaPressed});
+      required this.onMetaPressed,
+      this.moreActions});
 
   final Content content;
   final void Function() onThumbnailPressed;
   final void Function() onMetaPressed;
+  final List<PopupMenuEntry<String>>? moreActions;
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       //? Content Header
-      MyPostHeader(user: content.author),
+      MyPostHeader(user: content.author, moreActions: moreActions,),
 
       //? Content thumbnail
       GestureDetector(

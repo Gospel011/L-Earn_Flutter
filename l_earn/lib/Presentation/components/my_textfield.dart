@@ -15,12 +15,16 @@ class MyTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final String? hintText;
   final bool? obscureText;
+  final bool? showCursor;
+  final bool enabled;
   final int? maxLines;
   final int? maxLength;
+  final int? minLines;
 
   const MyTextField(
       {super.key,
       this.textFieldType,
+      this.enabled = true,
       required this.controller,
       this.maxLength,
       this.focusNode,
@@ -28,31 +32,35 @@ class MyTextField extends StatelessWidget {
       this.keyboardType,
       this.contentPadding,
       this.textAlign = TextAlign.start,
+      this.showCursor = true,
       this.onChanged,
       this.hintText,
       this.maxLines = 0,
+      this.minLines,
       this.obscureText});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      showCursor: showCursor,
+      enabled: showCursor == false ? showCursor : enabled,
       obscureText: obscureText ?? false,
       maxLines: maxLines == 0 ? 1 : maxLines,
       maxLength: maxLength,
       style: Theme.of(context).textTheme.bodyMedium,
-      minLines: 1,
+      minLines: minLines ?? 1,
       maxLengthEnforcement:
           maxLength != null ? MaxLengthEnforcement.enforced : null,
       decoration: textFieldType == TextFieldType.otp
-            //*  INPUT DECORATION FOR OTP
+          //*  INPUT DECORATION FOR OTP
           ? InputDecoration(
               contentPadding:
                   contentPadding ?? const EdgeInsets.symmetric(horizontal: 8))
           : textFieldType == TextFieldType.post
               //*  INPUT DECORATION FOR POST
               ? InputDecoration(
-                contentPadding: contentPadding,
-                hintText: hintText,
+                  contentPadding: contentPadding,
+                  hintText: hintText,
                   enabledBorder:
                       const OutlineInputBorder(borderSide: BorderSide.none),
                   focusedBorder:

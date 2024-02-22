@@ -10,18 +10,21 @@ import 'package:l_earn/DataLayer/Repositories/content_repo.dart';
 part 'content_state.dart';
 
 class ContentCubit extends Cubit<ContentState> {
-  ContentCubit() : super(const ContentInitial(contents: []));
+  ContentCubit() : super(const ContentInitial(contents: [], myContents: []));
   int currentPage = 0;
 
-  Future<void> loadContents(token, {int? page}) async {
+  Future<void> loadContents(token,
+      {int? page, String? userId, int userPage = 1}) async {
     currentPage++;
     if (page != null) currentPage = page;
 
     List<Content> contents = [...state.contents];
 
-    emit(ContentLoading(contents: contents));
+    emit(ContentLoading(contents: contents, myContents: state.myContents));
 
-    final response = await ContentRepo.loadContents(token, currentPage);
+    final response = await ContentRepo.loadContents(
+        token, userId != null ? userPage : currentPage,
+        userId: userId);
 
     print("________CONTENT CUBIT RESOPONSE $response");
 
@@ -29,21 +32,37 @@ class ContentCubit extends Cubit<ContentState> {
       print("contents____________$contents");
       print("page______$currentPage");
 
-      if (page == null) contents.addAll(response);
+      if (page == null && userId == null) contents.addAll(response);
 
-      emit(ContentLoaded(contents: page != null ? response : contents));
+      List<Content> userContents = [...?state.myContents] ?? [];
+
+      if (userId != null) userContents.addAll(response);
+
+      if (userId == null) {
+        emit(ContentLoaded(
+            contents: page != null ? response : contents,
+            myContents: state.myContents));
+      } else {
+        emit(ContentLoaded(
+            contents: page != null ? response : contents,
+            myContents: response));
+      }
+
       if (response.isEmpty) {
         currentPage--;
       }
     } else {
       currentPage--;
       emit(ContentLoadingFailed(
-          contents: contents, error: response as AppError));
+          contents: contents,
+          error: response as AppError,
+          myContents: state.myContents));
     }
   }
 
   Future<void> getContentById(token, id) async {
-    emit(RequestingContentById(contents: state.contents));
+    emit(RequestingContentById(
+        contents: state.contents, myContents: state.myContents));
 
     final response = await ContentRepo.getContentById(token, id);
 
@@ -53,10 +72,13 @@ class ContentCubit extends Cubit<ContentState> {
       emit(ContentFound(
           contents: state.contents,
           type: response is Article ? 'book' : 'video',
+          myContents: state.myContents,
           content: response));
     } else {
       emit(ContentNotFound(
-          contents: state.contents, error: response as AppError));
+          contents: state.contents,
+          error: response as AppError,
+          myContents: state.myContents));
     }
   }
 
@@ -66,7 +88,10 @@ class ContentCubit extends Cubit<ContentState> {
       required contentId,
       required type}) async {
     emit(RequestingChapterById(
-        contents: state.contents, content: state.content));
+        contents: state.contents,
+        myContents: state.myContents,
+        content: state.content,
+        article: state.article));
 
     print("T O K E N   I S   $token");
 
@@ -81,14 +106,41 @@ class ContentCubit extends Cubit<ContentState> {
       emit(ChapterFound(
           contents: state.contents,
           content: state.content,
+          myContents: state.myContents,
           type: type,
           article: response));
     } else if (response is Video) {
       emit(ChapterFound(
           contents: state.contents,
+          myContents: state.myContents,
           content: state.content,
           type: type,
           video: response));
+    } else {
+      emit(ChapterNotFound(
+          contents: state.contents,
+          content: state.content,
+          myContents: state.myContents,
+          error: response as AppError,
+          article: state.article,
+          video: state.video));
+    }
+  }
+
+  Future<void> initializeBook(token, Map<String, dynamic> details) async {
+    emit(InitializingContent(
+        contents: state.contents, myContents: state.myContents));
+
+    final response = await ContentRepo.initializeBook(token, details);
+
+    if (response == 'success') {
+      emit(ContentCreated(
+          contents: state.contents, myContents: state.myContents));
+    } else {
+      emit(InitializingContentFailed(
+          contents: state.contents,
+          myContents: state.myContents,
+          error: response as AppError));
     }
   }
 }

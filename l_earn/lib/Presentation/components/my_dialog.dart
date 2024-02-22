@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class MyDialog extends StatelessWidget {
   final String title;
-  final String content;
-  const MyDialog({super.key, required this.title, required this.content});
+  final dynamic content;
+  final List<Widget>? actions;
+  const MyDialog({super.key, required this.title, required this.content, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +14,18 @@ class MyDialog extends StatelessWidget {
       title: Center(
           child: Text(
         title,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+        style: Theme.of(context)
+            .textTheme
+            .bodyMedium
+            ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
       )),
-      content: Text(
-        content,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
+      content: content is! String
+          ? content
+          : Text(
+              content as String,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+      actions: actions,
     );
   }
 }

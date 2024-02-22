@@ -1,4 +1,5 @@
 import 'package:l_earn/DataLayer/Models/error_model.dart';
+import 'package:l_earn/DataLayer/Models/file_model.dart';
 import 'package:l_earn/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,10 +44,36 @@ class BackendSource {
 
       return jsonDecode(await response.stream.bytesToString());
     } catch (e) {
-      AppError.handleError(e);
+      return AppError.handleError(e);
     }
   }
 
+  static makeMultiPartPUTRequest(String token, String endpoint,
+      {required Map<String, String> body, required File file}) async {
+    
+    //? SETUP REQUEST HEADER
+    var headers = {'Authorization': 'Bearer $token'};
 
-  
+    //? SETUP URL
+    final Uri url = Uri.parse('${NetWorkConstants.baseUrl}/$endpoint');
+
+    //? INITIALIZE MULTI-PART REQUEST
+    var request = http.MultipartRequest('PUT', url);
+
+    //? ADD REQUEST BODY
+    request.fields.addAll(body);
+
+    //? ADD ANY FILES
+    request.files.add(await http.MultipartFile.fromPath(file.name, file.path));
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      return jsonDecode(await response.stream.bytesToString());
+    } catch (e) {
+      return AppError.handleError(e);
+    }
+  }
 }
