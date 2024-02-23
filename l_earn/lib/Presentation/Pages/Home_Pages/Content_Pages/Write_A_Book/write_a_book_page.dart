@@ -42,10 +42,19 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
                   builder: (context) {
                     return MyDialog(
                         title: "Successful",
-                        content: "A new chapter has been added to \"${content?.title}\"");
+                        content:
+                            "A new chapter has been added to \"${content?.title}\"");
                   });
 
-                  Navigator.pop(context);
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, '/profile-page',
+                    arguments: context.read<AuthCubit>().state.user);
+              }
+
+              _titleController.text = '';
+              _contentController.document = Document.fromJson([
+                {"insert": "\n"}
+              ]);
             }
           },
           child: Scaffold(
@@ -70,16 +79,15 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
                               print(
                                   ":::::::::::::::::: P R I N T I N G   U S E R   C O N T E N T :::::::::::::::::::::::::");
 
-                              final Map<String, String> body = {
+                              Map<String, String> body = {
                                 "title": _titleController.text,
-                                "content": _contentController.document
-                                    .toDelta()
-                                    .toJson()
-                                    .toString(),
                               };
 
-                              print(
-                                  "Title: ${_titleController.text}\nContent: ${jsonEncode(_contentController.document.toDelta().toJson())}\nid: ${content?.id}");
+                              var encodedBody = jsonEncode(_contentController
+                                  .document
+                                  .toDelta()
+                                  .toJson());
+                              body['content'] = encodedBody;
 
                               context.read<ContentCubit>().createChapter(
                                   token: context

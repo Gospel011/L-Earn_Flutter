@@ -286,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               //TODO: HANDLE ADD CONTENT
                                               print("Add chapter pressed");
 
-                                              Navigator.of(context).pushNamed(
+                                              Navigator.of(context).pushReplacementNamed(
                                                   '/write-book-page', arguments: {"content": content});
                                             },
                                             child: const Text('Add chapter'),

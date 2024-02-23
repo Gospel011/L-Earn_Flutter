@@ -12,7 +12,6 @@ import 'package:l_earn/Presentation/components/my_outline_button.dart';
 
 import '../../../../utils/mixins.dart';
 
-
 class ChapterPage extends StatefulWidget with AppBarMixin {
   const ChapterPage({super.key});
 
@@ -30,13 +29,12 @@ class _ChapterPageState extends State<ChapterPage> {
     super.dispose();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Drawer(
-        child: SingleChildScrollView(child: Column(
+        child: SingleChildScrollView(
+            child: Column(
           children: [
             DrawerHeader(
                 child: Center(
@@ -68,7 +66,8 @@ class _ChapterPageState extends State<ChapterPage> {
                       onPressed: () {
                         Scaffold.of(context).openEndDrawer();
                       },
-                      text: 'Chapter ${ state is RequestingChapterById ? '_' : state.article!.chapter}'),
+                      text:
+                          'Chapter ${state is RequestingChapterById ? '_' : state.article!.chapter}'),
                 )
               : const SizedBox();
         }),
@@ -79,15 +78,36 @@ class _ChapterPageState extends State<ChapterPage> {
       body: BlocBuilder<ContentCubit, ContentState>(builder: (context, state) {
         if (state is RequestingChapterById) {
           return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blueGrey,
-                ),
-              );
+            child: CircularProgressIndicator(
+              color: Colors.blueGrey,
+            ),
+          );
         } else {
-        quillController.document =
-            Document.fromJson(jsonDecode(state.article?.content ?? '[]'));
-        textEditingController.text = 'Chapter ${state.article?.chapter}: ${state.article?.title}';
-          return MyQuillEditor(controller: quillController, textEditingController: textEditingController, user: state.content?.author);
+          List<dynamic>? parsedContent;
+
+          // if (state.article?.content != null) {
+          //   parsedContent = List<Map<String, String>>.from(
+          //       (jsonDecode(state.article!.content!) as List).map((obj) =>
+          //           Map<String, String>.from(obj.map((key, value) =>
+          //               MapEntry(key.toString(), value.toString())))));
+
+          // print("PARSED CONTENT IS $parsedContent");
+          // }
+
+          parsedContent = jsonDecode(state.article?.content! ?? '[]');
+          List<Map<String, dynamic>> deltaList =
+              List<Map<String, dynamic>>.from(parsedContent!);
+          print('Decoded Delta: $deltaList');
+
+          
+          quillController.document =
+              Document.fromJson(jsonDecode(state.article?.content ?? '[]'));
+          textEditingController.text =
+              'Chapter ${state.article?.chapter}: ${state.article?.title}';
+          return MyQuillEditor(
+              controller: quillController,
+              textEditingController: textEditingController,
+              user: state.content?.author);
         }
       }),
     );

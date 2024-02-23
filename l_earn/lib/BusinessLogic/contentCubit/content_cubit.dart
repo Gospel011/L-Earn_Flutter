@@ -29,8 +29,8 @@ class ContentCubit extends Cubit<ContentState> {
     print("________CONTENT CUBIT RESOPONSE $response");
 
     if (response is List<Content>) {
-      print("contents____________$contents");
-      print("page______$currentPage");
+      // print("contents____________$contents");
+      // print("page______$currentPage");
 
       if (page == null && userId == null) contents.addAll(response);
 
@@ -66,7 +66,7 @@ class ContentCubit extends Cubit<ContentState> {
 
     final response = await ContentRepo.getContentById(token, id);
 
-    print("::: T A R G E T   C O N T E N T   IS   $response");
+    // print("::: T A R G E T   C O N T E N T   IS   $response");
 
     if (response is Content) {
       emit(ContentFound(
@@ -93,7 +93,7 @@ class ContentCubit extends Cubit<ContentState> {
         content: state.content,
         article: state.article));
 
-    print("T O K E N   I S   $token");
+    // print("T O K E N   I S   $token");
 
     final response = await ContentRepo.getChapterById(
         token: token, chapterId: chapterId, contentId: contentId, type: type);
@@ -102,7 +102,7 @@ class ContentCubit extends Cubit<ContentState> {
         "R E S P O N S E   F R O M   C O N T E N T   C U B I T   I S   $response");
 
     if (response is Article) {
-      print("::::: E M I T T I N G   S T A T E");
+      // print("::::: E M I T T I N G   S T A T E");
       emit(ChapterFound(
           contents: state.contents,
           content: state.content,

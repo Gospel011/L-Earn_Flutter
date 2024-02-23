@@ -62,7 +62,7 @@ class ContentDescriptionPage extends StatelessWidget {
                             SliverToBoxAdapter(
                               child: BlocBuilder<TabCubit, TabState>(
                                   builder: (context, tabState) {
-                                print("B U I L D I N G   $content");
+                                // print("B U I L D I N G   $content");
                                 return Column(
                                   children: [
                                     //* TAB
@@ -267,8 +267,8 @@ class ChaptersColumn extends StatelessWidget {
               //? C H A P T E R  __________________
               (index) => GestureDetector(
                     onTap: () {
-                      print(
-                          "R E Q U E S T I N G   C H A P T E R   W I T H  ID: ${chapters[index].id}   A N D   N A M E  ${chapters[index].title}");
+                      // print(
+                      //     "R E Q U E S T I N G   C H A P T E R   W I T H  ID: ${chapters[index].id}   A N D   N A M E  ${chapters[index].title}");
 
                       preRequestAction();
 
