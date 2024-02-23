@@ -273,7 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         content.tags?.join(''),
                                                     'thumbnailUrl':
                                                         content.thumbnailUrl,
-                                                     'id': content.id
+                                                    'id': content.id
                                                   });
                                             },
                                             child: Text('Edit ${content.type}'),
@@ -285,6 +285,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                             onTap: () {
                                               //TODO: HANDLE ADD CONTENT
                                               print("Add chapter pressed");
+
+                                              Navigator.of(context).pushNamed(
+                                                  '/write-book-page', arguments: {"content": content});
                                             },
                                             child: const Text('Add chapter'),
                                           ),

@@ -117,14 +117,30 @@ class RouteGenerator {
           );
         });
 
-      case '/write-a-book-page':
-        print('write-a-book-page from route generator');
+      case '/write-book-page':
+        print('chapter-page from route generator');
         return MaterialPageRoute(builder: (context) {
+          final args = settings.arguments as Map? ?? {};
           return BlocProvider.value(
             value: contentCubit,
-            child: const WriteABookPage(),
+            child: WriteABookPage(
+                content: args['content'], chapterId: args['chapterId']),
           );
         });
+
+      // case '/write-a-book-page':
+      //   print('write-a-book-page from route generator');
+
+      //   final args = settings.arguments as Map? ?? {};
+      //   return MaterialPageRoute(builder: (context) {
+      //     return BlocProvider.value(
+      //       value: contentCubit,
+      //       child: WriteABookPage(
+      //         content: args['content'],
+      //         chapterId: args['chapterId']
+      //       ),
+      //     );
+      //   });
 
       case '/profile-page':
         print('profile-page from route generator');

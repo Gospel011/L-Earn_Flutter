@@ -1,10 +1,11 @@
+import 'package:l_earn/DataLayer/DataSources/backend_source.dart';
 import 'package:l_earn/DataLayer/DataSources/post_source.dart';
 import 'package:l_earn/DataLayer/Models/comment_model.dart';
 import 'package:l_earn/DataLayer/Models/error_model.dart';
 import 'package:l_earn/DataLayer/Models/like_model.dart';
-import 'package:l_earn/DataLayer/Models/poll_model.dart';
+
 import 'package:l_earn/DataLayer/Models/post_model.dart';
-import 'package:l_earn/DataLayer/Models/user_model.dart';
+
 
 class PostRepo {
   static dynamic loadNewPosts(
@@ -113,7 +114,7 @@ class PostRepo {
 
   static postNewComment(
       String userId, String token, String endpoint, String comment) async {
-    final response = await PostSource.makePostRequest(
+    final response = await BackendSource.makeRequest(
         endpoint: endpoint, token: token, body: {"comment": comment});
 
     print('response $response');

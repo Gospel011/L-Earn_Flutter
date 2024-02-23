@@ -5,9 +5,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class BackendSource {
-  static makePostRequest({
+  static makeRequest({
     required String endpoint,
     required String token,
+    String method = 'POST',
     required Map<String, String> body,
   }) async {
     var headers = {
@@ -15,8 +16,8 @@ class BackendSource {
       'Authorization': 'Bearer $token'
     };
     var request = http.Request(
-        'POST', Uri.parse('${NetWorkConstants.baseUrl}/$endpoint'));
-    request.body = json.encode({"comment": body['comment']});
+        method.toUpperCase(), Uri.parse('${NetWorkConstants.baseUrl}/$endpoint'));
+    request.body = json.encode(body);
     request.headers.addAll(headers);
 
     try {

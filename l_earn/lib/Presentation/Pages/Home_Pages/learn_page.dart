@@ -100,6 +100,7 @@ class _LearnPageState extends State<LearnPage>
 
                       //* CONTENT
                       child: MyContent(
+                        onHeaderPressed: () => Navigator.pushNamed(context, '/profile-page', arguments: state.contents?[index].author),
                         content: content,
                         onThumbnailPressed: () {
                           //? REQUEST FOR A PARTICULAR CONTENT

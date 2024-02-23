@@ -196,7 +196,7 @@ class _BuildDescriptionState extends State<BuildDescription> {
 
       return Padding(
         padding: const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
-        child: Row(children: [Text(widget.content.description!)])
+        child: Row(children: [Expanded(child: Text(widget.content.description!))])
         );
     }
   }

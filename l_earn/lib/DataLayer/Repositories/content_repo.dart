@@ -94,20 +94,45 @@ class ContentRepo {
   /// named [file] that contains the thumbnail for the book. The [method]
   /// parameter specifies the kind of http method the request should be, whether
   /// POST, PUT OR PATCH
-  static initializeBook(token, Map<String, dynamic> details, {String? id, String method = 'PUT'}) async {
+  static initializeBook(token, Map<String, dynamic> details,
+      {String? id, String method = 'PUT'}) async {
     final String endpoint = 'contents${id != null ? '/$id' : ''}?type=book';
     final File file = details['file'];
     details.remove('file');
 
-    final Map<String, String> body = Map<String, String>.from(details.map((key, value) => MapEntry(key, value.toString())));
+    final Map<String, String> body = Map<String, String>.from(
+        details.map((key, value) => MapEntry(key, value.toString())));
 
     print("B O D Y   $body, $file");
     // return;
 
-    final response = await BackendSource.makeMultiPartRequest(
-        token, endpoint,
-        method: method,
-        body: body, file: file);
+    final response = await BackendSource.makeMultiPartRequest(token, endpoint,
+        method: method, body: body, file: file);
+
+    print(
+        ":::::::; R E S O N S E   F R O M   B A C K E N D S O U R C E   I S   $response");
+
+    if (response['status'] == 'success') {
+      return 'success';
+    } else {
+      return AppError.errorObject(response);
+    }
+  }
+
+  static createChapter(token, Map<String, String> details,
+      {required String contentId, String? chapterId}) async {
+    final String endpoint =
+        'contents/$contentId/chapters${chapterId != null ? '/$chapterId' : ''}?type=book';
+
+    print("E N D P O I N T   C H A P T E R   $endpoint");
+    // return;
+
+    final response = await BackendSource.makeRequest(
+      token: token,
+      endpoint: endpoint,
+      method: 'PUT',
+      body: details,
+    );
 
     print(
         ":::::::; R E S O N S E   F R O M   B A C K E N D S O U R C E   I S   $response");

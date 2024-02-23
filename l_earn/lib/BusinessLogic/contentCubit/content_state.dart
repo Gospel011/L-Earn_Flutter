@@ -105,17 +105,17 @@ class InitializingContent extends ContentState {
   InitializingContent({required super.contents, required super.myContents});
 }
 
+/// State indicating that a content has been created. Again, if it is a book,
+/// this state is saying that it has been created on the server.
 class ContentCreated extends ContentState {
 
 
-/// State indicating that a content has been created. Again, if it is a book,
-/// this state is saying that it has been created on the server.
   ContentCreated({required super.contents, required super.myContents});
 }
 
+  /// State indicating that the content creation failed
 class InitializingContentFailed extends ContentState {
 
-  /// State indicating that the content creation failed
   InitializingContentFailed({required super.contents, required super.myContents, required super.error});
 }
 
@@ -127,16 +127,36 @@ class EditingContent extends ContentState {
   EditingContent({required super.contents, required super.myContents});
 }
 
+/// State indicating that a content has been edited. Again, if it is a book,
+/// this state is saying that it has been edited on the server.
 class ContentEdited extends ContentState {
 
 
-/// State indicating that a content has been edited. Again, if it is a book,
-/// this state is saying that it has been edited on the server.
   ContentEdited({required super.contents, required super.myContents});
 }
 
+  /// State indicating that the content edit operation failed
 class EditingContentFailed extends ContentState {
 
-  /// State indicating that the content edit operation failed
   EditingContentFailed({required super.contents, required super.myContents, required super.error});
+}
+
+/// State indicating that a chapter is being added to a content
+class CreatingChapter extends ContentState {
+
+
+  CreatingChapter({required super.contents, required super.myContents});
+}
+
+/// State indicating that a chapter has been created
+class ChapterCreated extends ContentState {
+
+
+  ChapterCreated({required super.contents, required super.myContents});
+}
+
+  /// State indicating that the chapter creation operation failed
+class ChapterCreationFailed extends ContentState {
+
+  ChapterCreationFailed({required super.contents, required super.myContents, required super.error});
 }
