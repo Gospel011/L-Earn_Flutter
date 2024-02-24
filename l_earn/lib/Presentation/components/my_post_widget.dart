@@ -38,10 +38,15 @@ class MyPostWidget extends StatelessWidget {
           //? [POLL -- > next launch] OR IMAGE
           // BarChart()
           post.image != null
-              ? Container(
-                  width: double.maxFinite,
-                  constraints: const BoxConstraints(maxHeight: 500),
-                  child: MyImageWidget(image: post.image!))
+              ? GestureDetector(
+                onTap:() {
+                  Navigator.pushNamed(context, '/image-view-page', arguments: post.image!);
+                },
+                child: Container(
+                    width: double.maxFinite,
+                    constraints: const BoxConstraints(maxHeight: 500),
+                    child: MyImageWidget(image: post.image!)),
+              )
               : const SizedBox(),
 
           //? LIKES COMMENTS SHARES

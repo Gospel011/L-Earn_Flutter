@@ -25,6 +25,8 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tu
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
 
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
+import 'package:l_earn/Presentation/Pages/Profile_Pages/edit_profile_page.dart';
+import 'package:l_earn/Presentation/Pages/Utility_Pages/image_view_page.dart';
 import 'package:l_earn/Presentation/Pages/error_page.dart';
 
 class RouteGenerator {
@@ -85,6 +87,19 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/create-event from route generator');
           return const CreateEventPage();
+        });
+
+      case '/image-view-page':
+        return MaterialPageRoute(builder: (_) {
+          print('/image-view-page from route generator');
+          return ImageViewPage(image: settings.arguments as String,);
+        });
+
+      case '/edit-profile-page':
+        return MaterialPageRoute(builder: (_) {
+          print('/edit-profile-page from route generator');
+          
+          return const EditProfilePage();
         });
 
       //? HOME PAGE

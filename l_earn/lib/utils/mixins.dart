@@ -73,18 +73,18 @@ mixin TimeParserMixin {
   late String res;
 
   if (months != 0) {
-    res = '$months mo';
+    res = '$months month${months == 1 ? '' : 's'}';
   } else if (days != 0) {
-    res = '$days days';
+    res = '$days day${days == 1 ? '' : 's'}';
   }
   else if (hours != 0) {
-    res = '$hours hours';
+    res = '$hours hour${hours == 1 ? '' : 's'}';
   }
   else if (minutes != 0) {
-    res = '$minutes minutes';
+    res = '$minutes minute${minutes == 1 ? '' : 's'}';
   }
   else {
-    res = '$seconds seconds';
+    res = '$seconds second${seconds == 1 ? '' : 's'}';
   }
 
   return res;

@@ -46,11 +46,19 @@ class MyTextFormField extends StatelessWidget {
   /// Them minLines for this TextFormField. By default it is null
   final int? minLines;
 
+  /// This controlls whether the textfield is editable or not. Defaults to false
+  final bool readOnly;
+
+  /// This executes when the text form field is tapped
+  final void Function()? onTap;
+
   /// This filters the users input and accepts only the valid ones.
   final List<TextInputFormatter>? inputFormatters;
   const MyTextFormField(
       {super.key,
       this.hintText,
+      this.onTap,
+      this.readOnly = false,
       required this.controller,
       required this.validator,
       this.suffixIcon,
@@ -69,12 +77,19 @@ class MyTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscureText ?? false,
+      onTap: onTap,
       maxLines: maxLines,
+      readOnly: readOnly,
+      showCursor: !readOnly,
+      selectionControls: readOnly == true ? EmptyTextSelectionControls() : null,
       minLines: minLines,
       enabled: enabled,
       style: textFieldType == TextFieldType.post
-              ? Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)
-              : Theme.of(context).textTheme.bodyMedium,
+          ? Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.bold)
+          : Theme.of(context).textTheme.bodyMedium,
       focusNode: focusNode,
       onChanged: onChanged,
       controller: controller,

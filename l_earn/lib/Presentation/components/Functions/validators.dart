@@ -7,6 +7,15 @@ String? emailValidator(value) {
   }
 }
 
+///? Confirms if the handle is valid
+String? handleValidator(value) {
+  if (value.toString().replaceAll('@', '').trim() != '') {
+    return null;
+  } else {
+    return 'Pleae provide a valid handle';
+  }
+}
+
 ///? confirms if the password is valid
 String? passwordValidator(value) {
   if (value.split('').length != 8) {

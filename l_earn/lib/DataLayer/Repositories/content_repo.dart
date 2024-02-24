@@ -89,15 +89,16 @@ class ContentRepo {
     }
   }
 
-  /// This method communicates with the backend to  create a new book on the
-  /// server. The [details] parameter should be a Map and have a file field
+  /// This method communicates with the backend to  create a new book or
+  /// edit/delete one on the server.
+  /// The [details] parameter should be a Map and have a file field
   /// named [file] that contains the thumbnail for the book. The [method]
-  /// parameter specifies the kind of http method the request should be, whether
-  /// POST, PUT OR PATCH
+  /// parameter specifies the kind of http method the request should be,
+  /// whether [PUT], [PATCH] OR [DELETE]
   static initializeBook(token, Map<String, dynamic> details,
       {String? id, String method = 'PUT'}) async {
     final String endpoint = 'contents${id != null ? '/$id' : ''}?type=book';
-    final File file = details['file'];
+    final File? file = details['file'];
     details.remove('file');
 
     final Map<String, String> body = Map<String, String>.from(
@@ -106,8 +107,12 @@ class ContentRepo {
     print("B O D Y   $body, $file");
     // return;
 
+    print({"method": method, "endpoint": endpoint});
+
     final response = await BackendSource.makeMultiPartRequest(token, endpoint,
         method: method, body: body, file: file);
+
+    print("I N I T I A L I Z E   B O O K   R E S P O N S E   I S   $response");
 
     print(
         ":::::::; R E S O N S E   F R O M   B A C K E N D S O U R C E   I S   $response");

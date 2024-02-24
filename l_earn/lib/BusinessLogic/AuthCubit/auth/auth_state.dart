@@ -301,5 +301,17 @@ final class AuthSignedUp extends AuthState {
   }
 }
 
-//*
-///? Auth state when forgot
+/// Auth state when a user's profile is being edited
+class AuthEditingProfile extends AuthState {
+  AuthEditingProfile({required super.user});
+}
+
+/// Auth state when a user's profile has been edited
+class ProfileEdited extends AuthState {
+  ProfileEdited({required super.user});
+}
+
+/// Auth state when a user's profile editing operation failed
+class AuthEditingProfileFailed extends AuthState {
+  AuthEditingProfileFailed({required super.user});
+}

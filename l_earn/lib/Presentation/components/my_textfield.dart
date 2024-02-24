@@ -16,6 +16,7 @@ class MyTextField extends StatelessWidget {
   final String? hintText;
   final bool? obscureText;
   final bool? showCursor;
+  final bool readOnly;
   final bool enabled;
   final int? maxLines;
   final int? maxLength;
@@ -25,6 +26,7 @@ class MyTextField extends StatelessWidget {
       {super.key,
       this.textFieldType,
       this.enabled = true,
+      this.readOnly = false,
       required this.controller,
       this.maxLength,
       this.focusNode,
@@ -42,7 +44,9 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      showCursor: showCursor,
+      showCursor: readOnly == true ? false : showCursor,
+      readOnly: readOnly,
+      selectionControls: readOnly == true ? EmptyTextSelectionControls() : null,
       enabled: showCursor == false ? showCursor : enabled,
       obscureText: obscureText ?? false,
       maxLines: maxLines == 0 ? 1 : maxLines,

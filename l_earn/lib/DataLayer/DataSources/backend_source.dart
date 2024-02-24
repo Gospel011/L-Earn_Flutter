@@ -52,7 +52,7 @@ class BackendSource {
   static makeMultiPartRequest(String token, String endpoint,
       {required String method,
       required Map<String, String> body,
-      required File file}) async {
+      required File? file}) async {
     //? SETUP REQUEST HEADER
     var headers = {'Authorization': 'Bearer $token'};
 
@@ -67,8 +67,8 @@ class BackendSource {
 
     //? ADD ANY FILES
     try {
-      request.files
-          .add(await http.MultipartFile.fromPath(file.name, file.path));
+      file != null ? request.files
+          .add(await http.MultipartFile.fromPath(file.name, file.path)) : null;
     } catch (e) {
       print(e);
     }

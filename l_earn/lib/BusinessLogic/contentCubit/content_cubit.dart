@@ -145,11 +145,12 @@ class ContentCubit extends Cubit<ContentState> {
   }
 
   Future<void> editBook(token, Map<String, dynamic> details,
-      {String method = 'PUT', required String id}) async {
-    emit(EditingContent(
-        contents: state.contents, myContents: state.myContents));
+      {required String id}) async {
+    emit(
+        EditingContent(contents: state.contents, myContents: state.myContents));
 
-    final response = await ContentRepo.initializeBook(token, details, method: 'PATCH', id: id);
+    final response = await ContentRepo.initializeBook(token, details,
+        method: 'PATCH', id: id);
 
     if (response == 'success') {
       emit(ContentEdited(
@@ -162,18 +163,42 @@ class ContentCubit extends Cubit<ContentState> {
     }
   }
 
-  Future<void> createChapter({ required token, required Map<String, String> details,
-      required String contentId, String? chapterId}) async {
+  Future<void> createChapter(
+      {required token,
+      required Map<String, String> details,
+      required String contentId,
+      String? chapterId}) async {
     emit(CreatingChapter(
         contents: state.contents, myContents: state.myContents));
 
-    final response = await ContentRepo.createChapter(token, details, contentId: contentId, chapterId: chapterId);
+    final response = await ContentRepo.createChapter(token, details,
+        contentId: contentId, chapterId: chapterId);
 
     if (response == 'success') {
       emit(ChapterCreated(
           contents: state.contents, myContents: state.myContents));
     } else {
       emit(ChapterCreationFailed(
+          contents: state.contents,
+          myContents: state.myContents,
+          error: response as AppError));
+    }
+  }
+
+  Future<void> deleteBook(token, {required String id}) async {
+    emit(DeletingContent(
+        contents: state.contents, myContents: state.myContents));
+
+    final response =
+        await ContentRepo.initializeBook(token, {}, method: 'DELETE', id: id);
+
+    print("D E L E T E   R E S P O N S E   I S   $response");
+
+    if (response == 'success') {
+      emit(ContentDeleted(
+          contents: state.contents, myContents: state.myContents));
+    } else {
+      emit(DeletingContentFailed(
           contents: state.contents,
           myContents: state.myContents,
           error: response as AppError));

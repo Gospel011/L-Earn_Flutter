@@ -2,13 +2,15 @@
 
 import 'dart:convert';
 
-import 'package:l_earn/utils/enums.dart';
+
 
 class User {
   final String firstName;
   final String lastName;
   final int followers;
+  final int? level;
   final String? email;
+  final String? department;
   final bool? emailVerified;
   final bool? isVerified;
   final String? profilePicture;
@@ -24,7 +26,9 @@ class User {
       {required this.firstName,
       required this.lastName,
       required this.followers,
+      this.level,
       this.email,
+      this.department,
       this.emailVerified = false,
       this.isVerified = false,
       this.profilePicture,
@@ -40,6 +44,8 @@ class User {
       {String? firstName,
       String? lastName,
       String? email,
+      String? department,
+      int? level,
       bool? emailVerified,
       bool? isVerified,
       String? profilePicture,
@@ -52,6 +58,8 @@ class User {
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
         email: email ?? this.email,
+        department: department ?? this.department,
+        level: level ?? this.level,
         emailVerified: emailVerified ?? this.emailVerified,
         isVerified: isVerified ?? this.isVerified,
         profilePicture: profilePicture ?? this.profilePicture,
@@ -70,6 +78,8 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
+      'department': department,
+      'level': level,
       'emailVerified': emailVerified,
       'isVerified': isVerified,
       'profilePicture': profilePicture,
@@ -88,8 +98,10 @@ class User {
     return User(
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
+      level: map['level'],
       followers: map['followers'] ?? 0, //TODO: CONFIRM FROM BACKEND
       email: map['email'] != null ? map['email'] as String : null,
+      department: map['department'] != null ? map['department'] as String : null,
       emailVerified:
           map['emailVerified'] != null ? map['emailVerified'] as bool : null,
       isVerified: map['isVerified'] != null ? map['isVerified'] as bool : null,
@@ -115,7 +127,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(firstName: $firstName, lastName: $lastName, handle: $handle, isVerified: $isVerified, email: $email, emailVerified: $emailVerified, banner: $banner, profilePicture: $profilePicture, gender: $gender, school: $school, role: $role, token: $token, id $id)';
+    return 'User(firstName: $firstName, lastName: $lastName, level: $level, department: $department handle: $handle, isVerified: $isVerified, email: $email, emailVerified: $emailVerified, banner: $banner, profilePicture: $profilePicture, gender: $gender, school: $school, role: $role, token: $token, id $id)';
   }
 }
 

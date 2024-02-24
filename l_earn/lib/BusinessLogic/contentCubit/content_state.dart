@@ -160,3 +160,23 @@ class ChapterCreationFailed extends ContentState {
 
   ChapterCreationFailed({required super.contents, required super.myContents, required super.error});
 }
+
+/// State indicating that a content is being deleted
+class DeletingContent extends ContentState {
+
+
+  DeletingContent({required super.contents, required super.myContents});
+}
+
+/// State indicating that a content has been deleted
+class ContentDeleted extends ContentState {
+
+
+  ContentDeleted({required super.contents, required super.myContents});
+}
+
+  /// State indicating that the content delete operation failed
+class DeletingContentFailed extends ContentState {
+
+  DeletingContentFailed({required super.contents, required super.myContents, required super.error});
+}
