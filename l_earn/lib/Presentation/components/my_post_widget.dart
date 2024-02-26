@@ -22,6 +22,8 @@ class MyPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+          print("::: P O S T   U S E R   ${post.user}");
+          
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 10),
       child: Column(

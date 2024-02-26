@@ -1,5 +1,7 @@
 import 'package:l_earn/DataLayer/DataSources/auth_source.dart';
+import 'package:l_earn/DataLayer/DataSources/backend_source.dart';
 import 'package:l_earn/DataLayer/Models/error_model.dart';
+import 'package:l_earn/DataLayer/Models/file_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 
 class AuthRepo {
@@ -77,13 +79,25 @@ class AuthRepo {
   static Future<dynamic> resetPassword() async {
     final dynamic response = await AuthSource.resetPassword();
 
-
     if (response == 'success') {
       return "success";
     } else {
-      return AppError(
-          title: response["title"] ?? 'Error', content: response["message"]);
+      return AppError.errorObject(response);
     }
+  }
 
+  static editProfile(
+      token, Map<String, String> details, List<File>? imageFiles) async {
+    final response = await BackendSource.makeMultiPartRequest(
+        token, 'user/update-profile',
+        method: "PATCH", body: details, files: imageFiles);
+
+    print("::: R E S P O N S E   F R O M   A U T H R E P O   $response");
+
+    if (response['status'] == 'success') {
+      return User.fromMap(response['user']);
+    } else {
+      return AppError.errorObject(response);
+    }
   }
 }

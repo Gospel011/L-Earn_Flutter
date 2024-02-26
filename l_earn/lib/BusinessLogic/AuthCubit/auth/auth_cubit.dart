@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:l_earn/DataLayer/Models/error_model.dart';
+import 'package:l_earn/DataLayer/Models/file_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/DataLayer/Repositories/auth_repo.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
@@ -86,6 +87,24 @@ class AuthCubit extends HydratedCubit<AuthState> {
     }
   }
 
+  Future<void> editProfile(
+      {required Map<String, String> details, List<File>? imageFiles}) async {
+    emit(AuthEditingProfile(user: state.user));
+
+    String? token = state.user?.token;
+
+    final response = await AuthRepo.editProfile(token, details, imageFiles);
+
+    if (response is User) {
+      User user = response.copyWith(token: token);
+
+      emit(AuthProfileEdited(user: user));
+    } else {
+      emit(AuthEditingProfileFailed(
+          user: state.user, error: response as AppError));
+    }
+  }
+
   @override
   AuthState fromJson(Map<String, dynamic> json) {
     print("Retrieved previously saved state");
@@ -100,7 +119,4 @@ class AuthCubit extends HydratedCubit<AuthState> {
 
     return state.toMap();
   }
-
-
-
 }

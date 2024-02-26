@@ -15,8 +15,8 @@ class BackendSource {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     };
-    var request = http.Request(
-        method.toUpperCase(), Uri.parse('${NetWorkConstants.baseUrl}/$endpoint'));
+    var request = http.Request(method.toUpperCase(),
+        Uri.parse('${NetWorkConstants.baseUrl}/$endpoint'));
     request.body = json.encode(body);
     request.headers.addAll(headers);
 
@@ -52,7 +52,8 @@ class BackendSource {
   static makeMultiPartRequest(String token, String endpoint,
       {required String method,
       required Map<String, String> body,
-      required File? file}) async {
+      File? file,
+      List<File>? files}) async {
     //? SETUP REQUEST HEADER
     var headers = {'Authorization': 'Bearer $token'};
 
@@ -67,8 +68,17 @@ class BackendSource {
 
     //? ADD ANY FILES
     try {
-      file != null ? request.files
-          .add(await http.MultipartFile.fromPath(file.name, file.path)) : null;
+      if (file != null) {
+        request.files
+            .add(await http.MultipartFile.fromPath(file.name, file.path));
+      } else if (files != null && files.isNotEmpty) {
+        for (int i = 0; i < files.length; i++) {
+          request.files.add(
+              await http.MultipartFile.fromPath(files[i].name, files[i].path));
+        }
+      }
+
+      print("::: R E Q U E S T   F I L E S   ${request.files} :::");
     } catch (e) {
       print(e);
     }

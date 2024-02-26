@@ -29,12 +29,12 @@ class AppError {
 
   static Map<String, String> handleError(Object e) {
     if (e is http.ClientException) {
-      String errno = "$e".split('errno = ')[1].split('),')[0];
-      print("E R R O R NUMBER IS $errno :::");
-      print(" E R R IS $e");
+      // String errno = "$e".split('errno = ')[1].split('),')[0];
+      // print("E R R O R NUMBER IS $errno :::");
+      // print(" E R R IS $e");
       return {
         "title": "Network Error",
-        "message": "Please check your internet connection"
+        "message": "Please check your internet connection or switch to a different network."
       };
     } else {
       print("U N K N O W N ERROR IS $e");

@@ -9,13 +9,14 @@ class ImageViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text('Pinch to Zoom'),
       ),
       body: InteractiveViewer(
         maxScale: 8,
-        child: Center(child: MyImageWidget(image: image))),
+        child: Center(child: MyImageWidget(image: image, borderRadius: 0))),
     );
   }
 }

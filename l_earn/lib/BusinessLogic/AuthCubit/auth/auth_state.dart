@@ -307,11 +307,11 @@ class AuthEditingProfile extends AuthState {
 }
 
 /// Auth state when a user's profile has been edited
-class ProfileEdited extends AuthState {
-  ProfileEdited({required super.user});
+class AuthProfileEdited extends AuthState {
+  AuthProfileEdited({required super.user});
 }
 
 /// Auth state when a user's profile editing operation failed
 class AuthEditingProfileFailed extends AuthState {
-  AuthEditingProfileFailed({required super.user});
+  AuthEditingProfileFailed({required super.user, required super.error});
 }

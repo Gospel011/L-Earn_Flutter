@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
+import 'package:l_earn/Presentation/components/build_banner_and_user_description.dart';
 import 'package:l_earn/Presentation/components/my_content_widget.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
-import 'package:l_earn/Presentation/components/my_image_widget.dart';
 
-import 'package:l_earn/Presentation/components/my_profile_picture.dart';
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
-import 'package:l_earn/Presentation/components/render_user_name.dart';
+
 import 'package:l_earn/utils/colors.dart';
 
 import 'package:l_earn/utils/mixins.dart';
@@ -180,69 +180,20 @@ class _ProfilePageState extends State<ProfilePage> {
         body: CustomScrollView(
           // controller: _scrollController,
           slivers: [
-            //? BANNER
-            SliverToBoxAdapter(
-              child: SizedBox(
-                  width: double.maxFinite,
-                  height: 150,
-                  child: MyImageWidget(
-                    image: widget.user.banner ?? 'default.png',
-                    borderRadius: 0,
-                  )),
-            ),
-
-            const SliverPadding(padding: EdgeInsets.all(8)),
-
-            //? PROFILE PICTURE | MINI DESCRIPTION
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //* PROFILE PICTURE
-                      MyProfilePicture(user: widget.user, radius: 32),
-
-                      const SizedBox(
-                        width: 4,
-                      ),
-
-                      //* MINI DESCRIPTION
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //? username
-                            RenderUserName(
-                              user: widget.user,
-                              fontWeight: FontWeight.bold,
-                            ),
-
-                            //? handle
-                            Text(widget.user.handle!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                        color: Colors.black.withOpacity(0.7))),
-
-                            //? school
-                            widget.user.school != null
-                                ? Text(widget.user.school!)
-                                : const SizedBox(),
-
-                            Text('${widget.user.followers} followers',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold))
-                          ],
-                        ),
-                      ),
-                    ]),
-              ),
-            ),
+            //? BANNER AND USER DESCRIPTION
+            SliverToBoxAdapter(child:
+                BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+              late User profileUser;
+              if (widget.user.id != state.user!.id) {
+                print("\n\n\nIS NOT CURRENT USER\n\n\n");
+                profileUser = widget.user;
+              } else {
+                print("\n\n\nIS CURRENT USER\n\n\n");
+                profileUser = state.user!;
+              }
+              
+              return BuildBannerAndUserDescription(user: profileUser);
+            })),
 
             const SliverPadding(padding: EdgeInsets.all(8)),
 

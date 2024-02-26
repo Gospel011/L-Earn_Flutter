@@ -5,7 +5,11 @@ import 'package:image_picker/image_picker.dart';
 
 class DisplayImage extends StatelessWidget {
   const DisplayImage(
-      {super.key, required XFile? pickedImage, this.minHeight = 0.0, this.maxHeight = 500, this.borderRadius})
+      {super.key,
+      required XFile? pickedImage,
+      this.minHeight = 0.0,
+      this.maxHeight = 500,
+      this.borderRadius})
       : _pickedImage = pickedImage;
 
   final XFile? _pickedImage;
