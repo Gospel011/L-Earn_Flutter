@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,23 @@ class MyDrawer extends StatelessWidget {
                 print("View profile button pressed");
                 Navigator.pop(context);
 
-                Navigator.pushNamed(context, '/profile-page', arguments: context.read<AuthCubit>().state.user!);
+                Navigator.pushNamed(context, '/profile-page',
+                    arguments: context.read<AuthCubit>().state.user!);
+              },
+            ),
+          ),
+
+          //? VIEW PAYMENT HISTORY
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: MyDrawerItem(
+              text: "Payment history",
+              onPressed: () {
+                print("Payment history button pressed");
+                Navigator.pop(context);
+
+                
+                Navigator.pushNamed(context, '/payment-history-page');
               },
             ),
           ),

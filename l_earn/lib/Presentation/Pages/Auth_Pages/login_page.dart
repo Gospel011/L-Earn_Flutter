@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         validator: passwordValidator,
                         inputFormatters: [
-                          LengthLimitingTextInputFormatter(8)
+                          LengthLimitingTextInputFormatter(16)
                         ],
                         obscureText: _obscureText,
                         suffixIcon: Icon(_obscureText == false

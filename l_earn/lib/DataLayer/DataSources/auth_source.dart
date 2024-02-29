@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:l_earn/Helpers/auth_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:l_earn/utils/constants.dart';
+import '../Models/error_model.dart';
 
 class AuthSource {
   static dynamic signup() async {
@@ -40,12 +41,7 @@ class AuthSource {
           "message": "Please check your internet connection"
         };
       } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
+        return AppError.handleError(e);
       }
     }
   }
@@ -68,19 +64,7 @@ class AuthSource {
         return jsonDecode(serverResponse.body);
       }
     } catch (e) {
-      if (e is http.ClientException) {
-        return {
-          "title": "Network Error",
-          "message": "Please check your internet connection"
-        };
-      } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
-      }
+      return AppError.handleError(e);
     }
   }
 
@@ -103,20 +87,7 @@ class AuthSource {
         return jsonDecode(serverResponse.body);
       }
     } catch (e) {
-      if (e is http.ClientException) {
-        print(":::: RESPONSE FROM VERIFY EMAIL OTP ::: Exception $e");
-        return {
-          "title": "Network Error",
-          "message": "Please check your internet connection"
-        };
-      } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
-      }
+      return AppError.handleError(e);
     }
   }
 
@@ -131,23 +102,11 @@ class AuthSource {
     try {
       final http.Response serverResponse = await http.post(url,
           body: jsonEncode(body), headers: NetWorkConstants.defaultHeader);
+          
 
       return jsonDecode(serverResponse.body);
     } catch (e) {
-      if (e is http.ClientException) {
-        print(":::: RESPONSE FROM LOGIN IN AUTHSOURCE :::  Exception $e");
-        return {
-          "title": "Network Error",
-          "message": "Please check your internet connection"
-        };
-      } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
-      }
+      return AppError.handleError(e);
     }
   }
 
@@ -169,19 +128,7 @@ class AuthSource {
         return jsonDecode(serverResponse.body);
       }
     } catch (e) {
-      if (e is http.ClientException) {
-        return {
-          "title": "Network Error",
-          "message": "Please check your internet connection"
-        };
-      } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
-      }
+      return AppError.handleError(e);
     }
   }
 
@@ -209,19 +156,7 @@ class AuthSource {
         return jsonDecode(serverResponse.body);
       }
     } catch (e) {
-      if (e is http.ClientException) {
-        return {
-          "title": "Network Error",
-          "message": "Please check your internet connection"
-        };
-      } else {
-        print("U N K N O W N ERROR IS $e");
-        return {
-          "title": "Something went wrong",
-          "message":
-              "Please contact us with a description of what you were doing before you saw this message."
-        };
-      }
+      return AppError.handleError(e);
     }
   }
 }

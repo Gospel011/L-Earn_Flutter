@@ -119,6 +119,10 @@ class _SignupPageState extends State<SignupPage> {
                           Expanded(
                             child: MyTextFormField(
                               hintText: "First name",
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z]'))
+                              ],
                               controller: _firstNameController,
                               validator: firstNameFieldValidator,
                             ),
@@ -129,6 +133,10 @@ class _SignupPageState extends State<SignupPage> {
                           Expanded(
                             child: MyTextFormField(
                               hintText: "Last name",
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z]'))
+                              ],
                               controller: _lastNameController,
                               validator: lastNameFieldValidator,
                             ),
@@ -163,7 +171,7 @@ class _SignupPageState extends State<SignupPage> {
                         controller: _passwordController,
                         validator: passwordValidator,
                         inputFormatters: [
-                          LengthLimitingTextInputFormatter(8)
+                          LengthLimitingTextInputFormatter(16)
                         ],
                         obscureText: _obscureTextPassword,
                         suffixIcon: Icon(_obscureTextPassword == false
@@ -181,7 +189,7 @@ class _SignupPageState extends State<SignupPage> {
                       height: 16,
                     ),
 
-                    //? PASSWORD TEXT FIELD
+                    //? CONFIRM PASSWORD TEXT FIELD
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: MyTextFormField(
@@ -192,7 +200,7 @@ class _SignupPageState extends State<SignupPage> {
                               value, _passwordController.text);
                         },
                         inputFormatters: [
-                          LengthLimitingTextInputFormatter(8)
+                          LengthLimitingTextInputFormatter(16)
                         ],
                         obscureText: _obscureTextConfirmPassword,
                         suffixIcon: Icon(_obscureTextConfirmPassword == false

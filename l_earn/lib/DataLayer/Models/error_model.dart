@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -28,15 +29,17 @@ class AppError {
   }
 
   static Map<String, String> handleError(Object e) {
-    if (e is http.ClientException) {
+    if (e is http.ClientException || e is TlsException) {
       // String errno = "$e".split('errno = ')[1].split('),')[0];
       // print("E R R O R NUMBER IS $errno :::");
       // print(" E R R IS $e");
       return {
         "title": "Network Error",
-        "message": "Please check your internet connection or switch to a different network."
+        "message":
+            "Please check your internet connection or switch to a different network."
       };
     } else {
+      
       print("U N K N O W N ERROR IS $e");
       return {
         "title": "Something went wrong",

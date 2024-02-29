@@ -5,6 +5,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.d
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
 import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
+import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
 import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
@@ -14,6 +15,7 @@ import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
+import 'package:l_earn/Presentation/Pages/Drawer_Pages/payment_history_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/profile_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/create_a_chapter.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/write_a_book_page.dart';
@@ -25,6 +27,7 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tu
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
 
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
+import 'package:l_earn/Presentation/Pages/Payment_Page/payment_page.dart';
 import 'package:l_earn/Presentation/Pages/Profile_Pages/edit_profile_page.dart';
 import 'package:l_earn/Presentation/Pages/Utility_Pages/image_view_page.dart';
 import 'package:l_earn/Presentation/Pages/error_page.dart';
@@ -35,6 +38,7 @@ class RouteGenerator {
   static final PostCubit postCubit = PostCubit();
   static final CommentCubit commentCubit = CommentCubit();
   static final ContentCubit contentCubit = ContentCubit();
+  static final PaymentCubit paymentCubit = PaymentCubit();
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     print('SETTING = $settings');
@@ -44,6 +48,24 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/login from route generator');
           return const LoginPage();
+        });
+
+      //? PAYMENT PAGE
+      case '/payment-page':
+        return MaterialPageRoute(builder: (_) {
+          print('/payment-page from route generator');
+          return BlocProvider.value(
+            value: paymentCubit,
+            child: PaymentPage(content: settings.arguments as Content,));
+        });
+
+      //? PAYMENT PAGE
+      case '/payment-history-page':
+        return MaterialPageRoute(builder: (_) {
+          print('/payment-history-page from route generator');
+          return BlocProvider.value(
+            value: paymentCubit,
+            child: const PaymentHistoryPage());
         });
 
       //? MAKE A POST PAGE
@@ -115,8 +137,8 @@ class RouteGenerator {
       case '/content-description':
         print('content-discription from route generator');
         return MaterialPageRoute(builder: (context) {
-          return BlocProvider.value(
-            value: contentCubit,
+          return MultiBlocProvider(
+            providers: [BlocProvider.value(value: contentCubit), BlocProvider.value(value: paymentCubit)],
             child: ContentDescriptionPage(
               content: settings.arguments as Content,
             ),

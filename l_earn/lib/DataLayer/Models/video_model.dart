@@ -61,8 +61,8 @@ class Video {
       contentId: map['contentId'] != null ? map['contentId'] as String : null,
       content: map['content'] != null ? map['content'] as String : null,
       description: map['description'] != null ? map['description'] as String : null,
-      comments: map['comments'] != null ? List<Comment>.from((map['comments'] as List<int>).map<Comment?>((x) => Comment.fromMap(x as Map<String,dynamic>),),) : null,
-      tags: map['tags'] != null ? List<String>.from((map['tags'] as List<String>)) : null,
+      comments: map['comments'] != null ? List<Comment>.from((map['comments'] as List<dynamic>).map<Comment?>((x) => Comment.fromMap(x as Map<String,dynamic>),),) : null,
+      tags: map['tags'] != null ? List<String>.from((map['tags'] as List<dynamic>)) : null,
       dateCreated: map['dateCreated'] != null ? map['dateCreated'] as String : null,
     );
   }

@@ -191,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 print("\n\n\nIS CURRENT USER\n\n\n");
                 profileUser = state.user!;
               }
-              
+
               return BuildBannerAndUserDescription(user: profileUser);
             })),
 
@@ -207,8 +207,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ? MyContainerButton(
                             text: 'Contents',
                             showShadow: false,
+                            buttonColor: Colors.black.withOpacity(0.8),
                             onPressed: () {
-                              print('My Books pressed');
+                              print('My Contents pressed');
                             })
                         : MyTextButton(
                             text: 'Contents',
@@ -225,7 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
             //? Spacing from top
             const SliverPadding(padding: EdgeInsets.all(8)),
 
-            //? Scrollable list of contents
+            //? SCROLLABLE LIST OF CONTENTS
 
             BlocBuilder<ContentCubit, ContentState>(builder: (context, state) {
               final User user = context.read<AuthCubit>().state.user!;
@@ -241,188 +242,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                     color: Colors.blueGrey)))
                         : state.myContents != null &&
                                 state.myContents!.isNotEmpty
-                            ? SliverList.builder(
+
+                                //* BUILDING THE ACTUAL SCROLLABLE LIST OF CONTENTS
+                            ? buildListOfContents(context,
+                                contents: state.myContents!,
                                 itemCount: state.myContents!.length,
-                                itemBuilder: (content, index) {
-                                  final Content content =
-                                      state.myContents![index];
-                                  const padding = EdgeInsets.only(
-                                      left: 16.0, right: 16, bottom: 16);
-
-                                  return Padding(
-                                    padding: padding,
-
-                                    //* CONTENT
-                                    child: MyContent(
-                                      content: content,
-                                      moreActions: user.id == content.author.id
-                                          ? [
-                                              //? EDIT CONTENT
-                                              PopupMenuItem(
-                                                value: 'edit',
-                                                onTap: () {
-                                                  //TODO: HANDLE EDIT CONTENT
-                                                  print("Edit content pressed");
-                                                  print(
-                                                      "POST TAG LENGT ${content.tags}");
-
-                                                  Navigator.pushNamed(context,
-                                                      '/create-tutorial',
-                                                      arguments: {
-                                                        'title': content.title,
-                                                        'description':
-                                                            content.description,
-                                                        'price': content.price,
-                                                        'genre': content.tags
-                                                            ?.join(''),
-                                                        'thumbnailUrl': content
-                                                            .thumbnailUrl,
-                                                        'id': content.id
-                                                      });
-                                                },
-                                                child: Text(
-                                                    'Edit ${content.type}'),
-                                              ),
-
-                                              //? ADD CHAPTER
-                                              PopupMenuItem(
-                                                value: 'add',
-                                                onTap: () {
-                                                  //TODO: HANDLE ADD CONTENT
-                                                  print("Add chapter pressed");
-
-                                                  Navigator.of(context)
-                                                      .pushReplacementNamed(
-                                                          '/write-book-page',
-                                                          arguments: {
-                                                        "content": content
-                                                      });
-                                                },
-                                                child:
-                                                    const Text('Add chapter'),
-                                              ),
-
-                                              //? DELETE CONTENT
-                                              PopupMenuItem(
-                                                value: 'delete',
-                                                onTap: () {
-                                                  //TODO: HANDLE DELETE CONTENT
-                                                  print(
-                                                      "Delete content pressed pressed");
-
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return MyDialog(
-                                                          title: "Delete Book?",
-                                                          content: RichText(
-                                                            text: TextSpan(
-                                                                text:
-                                                                    'Are you sure you want to delete ',
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodyMedium,
-                                                                children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                          '"${content.title}"',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .bodyMedium
-                                                                          ?.copyWith(
-                                                                              fontStyle: FontStyle.italic)),
-                                                                  const TextSpan(
-                                                                      text:
-                                                                          '? This operation is '),
-                                                                  TextSpan(
-                                                                      text:
-                                                                          'irreversible',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .bodyMedium
-                                                                          ?.copyWith(
-                                                                              color: Colors.red,
-                                                                              fontWeight: FontWeight.bold))
-                                                                ]),
-                                                          ),
-                                                          actions: [
-                                                            //! Yes
-                                                            MyContainerButton(
-                                                                text: 'yes',
-                                                                showShadow:
-                                                                    false,
-                                                                textColor:
-                                                                    Colors
-                                                                        .black,
-                                                                buttonColor: Colors
-                                                                    .transparent,
-                                                                onPressed: () {
-                                                                  deleteBook(
-                                                                      content
-                                                                          .id);
-                                                                }),
-
-                                                            //?No
-                                                            MyContainerButton(
-                                                                text: "No",
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  print(
-                                                                      "User clicked No");
-                                                                })
-                                                          ],
-                                                        );
-                                                      });
-                                                },
-                                                child: Text(
-                                                  'Delete ${content.type}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
-                                                          color: Colors.red),
-                                                ),
-                                              ),
-                                            ]
-                                          : [
-                                              //? DELETE CONTENT
-                                              PopupMenuItem(
-                                                value: 'report',
-                                                onTap: () {
-                                                  //TODO: HANDLE DELETE CONTENT
-                                                  print(
-                                                      "Delete content pressed pressed");
-                                                },
-                                                child: Text(
-                                                    'Report ${content.type}'),
-                                              ),
-                                            ],
-                                      onThumbnailPressed: () {
-                                        //? REQUEST FOR A PARTICULAR CONTENT
-                                        print(
-                                            '${content.title} thumbnail pressed');
-                                        context
-                                            .read<ContentCubit>()
-                                            .getContentById(
-                                                context
-                                                    .read<AuthCubit>()
-                                                    .state
-                                                    .user
-                                                    ?.token,
-                                                content.id);
-                                      },
-                                      onMetaPressed: () {
-                                        print('${content.title} meta pressed');
-                                      },
-                                    ),
-                                  );
-                                })
-                            : const SliverToBoxAdapter(
-                                child: Center(child: Text('No content yet')))
+                                user: user
+                                )
+                            : SliverToBoxAdapter(
+                                child: Center(
+                                    child: Text(
+                                        '${widget.user.firstName} has not created any books yet')))
                     : const SizedBox();
               });
             })
@@ -430,5 +260,154 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+//* M E T H O D S
+  SliverList buildListOfContents(BuildContext context,
+      {required List<Content> contents, required int itemCount, required User user}) {
+    return SliverList.builder(
+        itemCount: itemCount,
+        itemBuilder: (content, index) {
+          final Content content = contents[index];
+          const padding = EdgeInsets.only(left: 16.0, right: 16, bottom: 16);
+
+          return Padding(
+            padding: padding,
+
+            //* CONTENT
+            child: MyContent(
+              content: content,
+              moreActions: user.id == content.author.id
+                  ? [
+                      //? EDIT CONTENT
+                      PopupMenuItem(
+                        value: 'edit',
+                        onTap: () {
+                          //TODO: HANDLE EDIT CONTENT
+                          print("Edit content pressed");
+                          print("POST TAG LENGT ${content.tags}");
+
+                          Navigator.pushNamed(context, '/create-tutorial',
+                              arguments: {
+                                'title': content.title,
+                                'description': content.description,
+                                'price': content.price,
+                                'genre': content.tags?.join(''),
+                                'thumbnailUrl': content.thumbnailUrl,
+                                'id': content.id
+                              });
+                        },
+                        child: Text('Edit ${content.type}'),
+                      ),
+
+                      //? ADD CHAPTER
+                      PopupMenuItem(
+                        value: 'add',
+                        onTap: () {
+                          //TODO: HANDLE ADD CONTENT
+                          print("Add chapter pressed");
+
+                          Navigator.of(context).pushReplacementNamed(
+                              '/write-book-page',
+                              arguments: {"content": content});
+                        },
+                        child: const Text('Add chapter'),
+                      ),
+
+                      //? DELETE CONTENT
+                      PopupMenuItem(
+                        value: 'delete',
+                        onTap: () {
+                          //TODO: HANDLE DELETE CONTENT
+                          print("Delete content pressed pressed");
+
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return MyDialog(
+                                  title: "Delete Book?",
+                                  content: RichText(
+                                    text: TextSpan(
+                                        text:
+                                            'Are you sure you want to delete ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        children: [
+                                          TextSpan(
+                                              text: '"${content.title}"',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      fontStyle:
+                                                          FontStyle.italic)),
+                                          const TextSpan(
+                                              text: '? This operation is '),
+                                          TextSpan(
+                                              text: 'irreversible',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold))
+                                        ]),
+                                  ),
+                                  actions: [
+                                    //! Yes
+                                    MyContainerButton(
+                                        text: 'yes',
+                                        showShadow: false,
+                                        textColor: Colors.black,
+                                        buttonColor: Colors.transparent,
+                                        onPressed: () {
+                                          deleteBook(content.id);
+                                        }),
+
+                                    //?No
+                                    MyContainerButton(
+                                        text: "No",
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          print("User clicked No");
+                                        })
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text(
+                          'Delete ${content.type}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.red),
+                        ),
+                      ),
+                    ]
+                  : [
+                      //? DELETE CONTENT
+                      PopupMenuItem(
+                        value: 'report',
+                        onTap: () {
+                          //TODO: HANDLE DELETE CONTENT
+                          print("Delete content pressed pressed");
+                        },
+                        child: Text('Report ${content.type}'),
+                      ),
+                    ],
+              onThumbnailPressed: () {
+                //? REQUEST FOR A PARTICULAR CONTENT
+                print('${content.title} thumbnail pressed');
+                context.read<ContentCubit>().getContentById(
+                    context.read<AuthCubit>().state.user?.token, content.id);
+              },
+              onMetaPressed: () {
+                print('${content.title} meta pressed');
+              },
+            ),
+          );
+        });
   }
 }

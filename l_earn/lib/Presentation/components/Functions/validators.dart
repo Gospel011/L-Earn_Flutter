@@ -18,10 +18,10 @@ String? handleValidator(value) {
 
 ///? confirms if the password is valid
 String? passwordValidator(value) {
-  if (value.split('').length != 8) {
-    return 'Your password must be 8 characters long';
-  } else {
+  if (value.split('').length >= 8 && value.split('').length <= 16) {
     return null;
+  } else {
+    return 'Your password must be 8 to 16 characters long';
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:l_earn/DataLayer/Models/content_model.dart';
 
 import 'package:l_earn/Presentation/components/content_meta_widget.dart';
 import 'package:l_earn/Presentation/components/my_content_thumbnail.dart';
+import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_post_header.dart';
 
 class MyContent extends StatelessWidget {
@@ -25,8 +26,11 @@ class MyContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       //? Content Header
       GestureDetector(
-        onTap: onHeaderPressed,
-        child: MyPostHeader(user: content.author, moreActions: moreActions,)),
+          onTap: onHeaderPressed,
+          child: MyPostHeader(
+            user: content.author,
+            moreActions: moreActions,
+          )),
 
       //? Content thumbnail
       GestureDetector(
@@ -39,7 +43,7 @@ class MyContent extends StatelessWidget {
         child: ContentMetaWidget(
           content: content,
         ),
-      )
+      ),
     ]);
   }
 }

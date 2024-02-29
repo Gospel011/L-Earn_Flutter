@@ -6,6 +6,7 @@ mixin AppBarMixin {
   AppBar buildAppBar(BuildContext context,
       {String? title = 'L-EARN',
       bool automaticallyImplyLeading = false,
+      Color? backgroundColor,
       bool includeClose = false,
       List<Widget>? actions,
       TextStyle? titleTextStyle,
@@ -13,6 +14,7 @@ mixin AppBarMixin {
       bool centerTitle = false}) {
     return AppBar(
       automaticallyImplyLeading: automaticallyImplyLeading,
+      backgroundColor: backgroundColor ?? Theme.of(context).appBarTheme.backgroundColor,
       centerTitle: centerTitle,
       title: title != null
           ? Text(

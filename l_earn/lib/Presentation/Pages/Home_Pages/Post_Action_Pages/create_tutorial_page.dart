@@ -52,7 +52,7 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
     _titleController.text = widget.title;
     _descriptionController.text = widget.description;
     _genreController.text = widget.genre;
-    _priceController.text = widget.price;
+    _priceController.text = widget.price == '0' ? '' : widget.price;
     thumbnailUrl = widget.thumbnailUrl;
   }
 

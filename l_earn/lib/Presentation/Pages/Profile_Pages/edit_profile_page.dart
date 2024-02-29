@@ -42,6 +42,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   XFile? _pickedBannerImage;
   XFile? _pickedProfilePicture;
 
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
+
   @override
   void initState() {
     super.initState();
@@ -138,11 +141,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               __newConfirmPasswordController.text.trim()
                         };
 
-                        details["handle"] = "@${_handleController.text.trim().replaceAll('@', '')}";
+                        details["handle"] =
+                            "@${_handleController.text.trim().replaceAll('@', '')}";
 
                         List<File> imageFiles = [];
 
-                        print("::: U P D A T E   D E T A I L S   I S   $details");
+                        print(
+                            "::: U P D A T E   D E T A I L S   I S   $details");
 
                         if (_pickedBannerImage != null) {
                           imageFiles.add(File(
@@ -228,7 +233,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       Expanded(
                           child: MyTextFormField(
                               hintText: 'First name',
-                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@]'))],
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z0-9@]'))
+                              ],
                               controller: _firstNameController,
                               validator: firstNameFieldValidator)),
 
@@ -238,7 +246,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       Expanded(
                           child: MyTextFormField(
                               hintText: 'Last name',
-                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@]'))],
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z0-9@]'))
+                              ],
                               controller: _lastNameController,
                               validator: lastNameFieldValidator)),
                     ],
@@ -252,7 +263,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyTextFormField(
-                    readOnly: true,
+                      readOnly: true,
                       controller: _emailController,
                       hintText: 'Email',
                       validator: emailValidator),
@@ -266,7 +277,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyTextFormField(
                       hintText: 'Handle',
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@]')), LengthLimitingTextInputFormatter(10)],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9@]')),
+                        LengthLimitingTextInputFormatter(10)
+                      ],
                       controller: _handleController,
                       validator: handleValidator),
                 ),
@@ -557,6 +572,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyTextFormField(
                     controller: _currentPasswordController,
+                    inputFormatters: [LengthLimitingTextInputFormatter(8)],
                     validator: (value) {
                       if (value.toString() == '') {
                         return null;
@@ -576,6 +592,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyTextFormField(
                     controller: _newPasswordController,
+                    obscureText: !_showPassword,
+                    suffixIcon:_showPassword == false ? const Icon(Icons.visibility_off_rounded) : const Icon(Icons.visibility_rounded),
+                    suffixOnpressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                    inputFormatters: [LengthLimitingTextInputFormatter(8)],
                     validator: (value) {
                       if (value.toString() == '') {
                         return null;
@@ -594,9 +618,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyTextFormField(
-                    controller: _newPasswordController,
+                    controller: __newConfirmPasswordController,
+                    obscureText: !_showConfirmPassword,
+                    suffixIcon:_showConfirmPassword == false ? const Icon(Icons.visibility_off_rounded) : const Icon(Icons.visibility_rounded),
+                    suffixOnpressed: () {
+                      setState(() {
+                        _showConfirmPassword = !_showConfirmPassword;
+                      });
+                    },
+                    inputFormatters: [LengthLimitingTextInputFormatter(8)],
                     validator: (value) {
-                      if (value.toString() == '') {
+                      if (_newPasswordController.text.trim() != '') {
+                        return signupConfirmPasswordValidator(
+                            value, _newPasswordController.text.trim());
+                      } else if (value.toString() == '') {
                         return null;
                       } else {
                         return signupConfirmPasswordValidator(

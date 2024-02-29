@@ -1,17 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
+import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
 import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
 
 import 'package:l_earn/DataLayer/Models/content_model.dart';
-import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_editor.dart';
+
 import 'package:l_earn/Presentation/components/content_meta_widget.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_content_thumbnail.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
+import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 
 import 'package:l_earn/utils/colors.dart';
 
@@ -26,110 +29,167 @@ class ContentDescriptionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<TabCubit>(
       create: (context) => TabCubit(),
-      child: Scaffold(
-        body:
-            BlocBuilder<ContentCubit, ContentState>(builder: (context, state) {
-          return SafeArea(
-            child: state is RequestingContentById
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.blueGrey,
-                    ),
-                  )
-                : Column(
-                    children: [
-                      Expanded(
-                        child: CustomScrollView(
-                          slivers: [
-                            //? Thumbnail
-                            SliverToBoxAdapter(
-                                child: MyContentThumbnail(
-                                    content: content, borderRadius: 0)),
+      child: BlocListener<PaymentCubit, PaymentState>(
+        listener: (context, state) {
+          print("CURRENT PAYMENT STATE IS $state");
+          if (state is PaymentInvoiceGenerated) {
+            // NAVIGATE TO PAYMENT PAGE
+            Navigator.of(context)
+                .pushNamed('/payment-page', arguments: content);
+          } else if (state is GeneratingPaymentInvoiceFailed) {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return MyDialog(
+                      title: state.error!.title, content: state.error!.content);
+                });
+          }
+        },
+        child: Scaffold(
+          body: BlocBuilder<ContentCubit, ContentState>(
+              builder: (context, state) {
+            return SafeArea(
+              child: state is RequestingContentById
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.blueGrey,
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: CustomScrollView(
+                            slivers: [
+                              //? Thumbnail
+                              SliverToBoxAdapter(
+                                  child: MyContentThumbnail(
+                                      content: content, borderRadius: 0)),
 
-                            //? title
-                            SliverToBoxAdapter(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8),
-                              child: ContentMetaWidget(content: content),
-                            )),
+                              //? title
+                              SliverToBoxAdapter(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8),
+                                child: ContentMetaWidget(content: content),
+                              )),
 
-                            //? tab with description, chapters, reviews
-                            const SliverPadding(
-                              padding: EdgeInsets.all(16),
-                            ),
+                              //? Pay Button
+                              content.author.id ==
+                                          context
+                                              .read<AuthCubit>()
+                                              .state
+                                              .user
+                                              ?.id ||
+                                      content.price == 0
+                                  ? const SliverToBoxAdapter(child: SizedBox())
+                                  : SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0),
+                                        child: BlocBuilder<PaymentCubit,
+                                                PaymentState>(
+                                            builder: (context, state) {
+                                          return MyElevatedButton(
+                                            text: 'Purchase',
+                                            loading: state
+                                                is GeneratingPaymentInvoice,
+                                            onPressed: () {
+                                              // GENERATE INVOICE
+                                              context
+                                                  .read<PaymentCubit>()
+                                                  .generateInvoice(
+                                                      context
+                                                          .read<AuthCubit>()
+                                                          .state
+                                                          .user
+                                                          ?.token,
+                                                      content.id);
 
-                            SliverToBoxAdapter(
-                              child: BlocBuilder<TabCubit, TabState>(
-                                  builder: (context, tabState) {
-                                // print("B U I L D I N G   $content");
-                                return Column(
-                                  children: [
-                                    //* TAB
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      child: MyTabBar(
-                                        tabs: [
-                                          MyContainerButton(
-                                              text: 'Description',
-                                              textColor: tabState.index == 0
-                                                  ? Colors.white
-                                                  : AppColor.mainColorBlack,
-                                              buttonColor: tabState.index == 0
-                                                  ? AppColor.mainColorBlack
-                                                  : Colors.transparent,
-                                              onPressed: () {
-                                                print('ButtonPressed');
-                                                context
-                                                    .read<TabCubit>()
-                                                    .setTabIndex(0);
-                                              }),
-                                          const SizedBox(width: 10),
-                                          MyContainerButton(
-                                              text: 'Chapters',
-                                              textColor: tabState.index == 1
-                                                  ? Colors.white
-                                                  : AppColor.mainColorBlack,
-                                              buttonColor: tabState.index == 1
-                                                  ? AppColor.mainColorBlack
-                                                  : Colors.transparent,
-                                              onPressed: () {
-                                                print('ButtonPressed');
-                                                context
-                                                    .read<TabCubit>()
-                                                    .setTabIndex(1);
-                                              })
-                                        ],
+                                              print(
+                                                  "A B O U T   T O   R E C E I V E   ${content.price}");
+                                            },
+                                          );
+                                        }),
                                       ),
                                     ),
 
-                                    tabState.index == 0
+                              //? tab with description, chapters, reviews
+                              const SliverPadding(
+                                padding: EdgeInsets.all(16),
+                              ),
 
-                                        //? D E S C R I P T I O N   P A G E
-                                        ? BuildDescription(
-                                            content: content,
-                                          )
+                              SliverToBoxAdapter(
+                                child: BlocBuilder<TabCubit, TabState>(
+                                    builder: (context, tabState) {
+                                  // print("B U I L D I N G   $content");
+                                  return Column(
+                                    children: [
+                                      //* TAB
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0),
+                                        child: MyTabBar(
+                                          tabs: [
+                                            MyContainerButton(
+                                                text: 'Description',
+                                                textColor: tabState.index == 0
+                                                    ? Colors.white
+                                                    : AppColor.mainColorBlack,
+                                                buttonColor: tabState.index == 0
+                                                    ? AppColor.mainColorBlack
+                                                    : Colors.transparent,
+                                                onPressed: () {
+                                                  print('ButtonPressed');
+                                                  context
+                                                      .read<TabCubit>()
+                                                      .setTabIndex(0);
+                                                }),
+                                            const SizedBox(width: 10),
+                                            MyContainerButton(
+                                                text: 'Chapters',
+                                                textColor: tabState.index == 1
+                                                    ? Colors.white
+                                                    : AppColor.mainColorBlack,
+                                                buttonColor: tabState.index == 1
+                                                    ? AppColor.mainColorBlack
+                                                    : Colors.transparent,
+                                                onPressed: () {
+                                                  print('ButtonPressed');
+                                                  context
+                                                      .read<TabCubit>()
+                                                      .setTabIndex(1);
+                                                })
+                                          ],
+                                        ),
+                                      ),
 
-                                        //? C H A P T E R S   T A B
-                                        : BuildChapters(
-                                            chapters: content.type == 'book'
-                                                ? content.bookChapters!
-                                                : content.videoChapters!,
-                                            contentId: content.id,
-                                            type: content.type,
-                                          )
-                                  ],
-                                );
-                              }),
-                            )
-                          ],
+                                      tabState.index == 0
+
+                                          //? D E S C R I P T I O N   P A G E
+                                          ? BuildDescription(
+                                              content: content,
+                                            )
+
+                                          //? C H A P T E R S   T A B
+                                          : BuildChapters(
+                                              chapters: content.type == 'book'
+                                                  ? content.bookChapters!
+                                                  : content.videoChapters!,
+                                              contentId: content.id,
+                                              type: content.type,
+                                            )
+                                    ],
+                                  );
+                                }),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-          );
-        }),
+                      ],
+                    ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -164,40 +224,40 @@ class _BuildDescriptionState extends State<BuildDescription> {
 
   @override
   Widget build(BuildContext context) {
-    try{
+    try {
+      _controller = QuillController(
+          document:
+              Document.fromJson(jsonDecode(widget.content.description ?? '[]')),
+          selection: const TextSelection.collapsed(offset: 0));
 
-    _controller = QuillController(
-        document:
-            Document.fromJson(jsonDecode(widget.content.description ?? '[]')),
-        selection: const TextSelection.collapsed(offset: 0));
-
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
-      child: Row(
-        children: [
-          Expanded(
-              child: QuillEditor.basic(
-            configurations: QuillEditorConfigurations(
-              controller: _controller,
-              readOnly: true,
-              showCursor: false,
-              // padding: const EdgeInsets.symmetric(horizontal: 16),
-              sharedConfigurations: const QuillSharedConfigurations(
-                locale: Locale('en'),
+      return Padding(
+        padding:
+            const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
+        child: Row(
+          children: [
+            Expanded(
+                child: QuillEditor.basic(
+              configurations: QuillEditorConfigurations(
+                controller: _controller,
+                readOnly: true,
+                showCursor: false,
+                // padding: const EdgeInsets.symmetric(horizontal: 16),
+                sharedConfigurations: const QuillSharedConfigurations(
+                  locale: Locale('en'),
+                ),
               ),
-            ),
-          ))
-        ],
-      ),
-    );
+            ))
+          ],
+        ),
+      );
     } catch (e) {
       print(':::: E R R O R   I S   $e');
 
       return Padding(
-        padding: const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
-        child: Row(children: [Expanded(child: Text(widget.content.description!))])
-        );
+          padding:
+              const EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 24),
+          child: Row(
+              children: [Expanded(child: Text(widget.content.description!))]));
     }
   }
 }

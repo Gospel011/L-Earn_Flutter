@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/components/my_image_widget.dart';
@@ -45,62 +47,88 @@ class BuildBannerAndUserDescription extends StatelessWidget {
             ),
 
             //* MINI DESCRIPTION
-            Expanded(child: Padding(padding: EdgeInsets.only(right: 16), child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //? username
-                  Row(
-                    children: [
-                      Expanded(child: Text('${user.firstName} ${user.lastName}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold))),
-                      user.isVerified == true ? Text(' ') : const SizedBox(),
-                      user.isVerified == true ? AppIcons.verifiedIcon : const SizedBox(),
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //? username
+                        user.id == context.read<AuthCubit>().state.user?.id
+                            ? RenderUserName(user: user, fontWeight: FontWeight.bold,)
+                            : Row(children: [
+                                Expanded(
+                                    child: Text(
+                                        '${user.firstName} ${user.lastName}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold))),
+                                user.isVerified == true
+                                    ? Text(' ')
+                                    : const SizedBox(),
+                                user.isVerified == true
+                                    ? AppIcons.verifiedIcon
+                                    : const SizedBox(),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                MyContainerButton(
+                                    text: 'follow',
+                                    onPressed: () {
+                                      //  TODO: IMPLEMENT FOLLOW
+                                      print(
+                                          'Follow button for ${user.firstName} ${user.lastName} ${user.id} pressed');
+                                    })
+                              ]),
 
-                  // MyContainerButton(text: 'follow', onPressed: (){
-                  //   //  TODO: IMPLEMENT FOLLOW
-                  //   print('Follow button for ${user.firstName} ${user.lastName} ${user.id} pressed');
-                  // })
-                  ]),
+                        //? handle
+                        Text(user.handle!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Colors.black.withOpacity(0.7))),
 
-                  //? handle
-                  Text(user.handle!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.black.withOpacity(0.7))),
+                        //? school
+                        user.school != null
+                            ? Text(
+                                user.school!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : const SizedBox(),
 
-                  //? school
-                  user.school != null
-                      ? Text(
-                          user.school!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : const SizedBox(),
+                        Row(children: [
+                          //? department
+                          user.department != null
+                              ? Expanded(
+                                  child: Text(
+                                  user.department!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ))
+                              : const SizedBox(),
 
-                  Row(children: [
-                    //? department
-                  user.department != null
-                      ? Expanded(
-                        child: Text(
-                          user.department!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      )
-                      : const SizedBox(),
-                   
-                   user.level != null ? Text(' \u2022 ') : const SizedBox(),
-                   user.level != null ? Text('${user.level} level') : const SizedBox(),
-                  ]),
+                          user.level != null
+                              ? const Text(' \u2022 ')
+                              : const SizedBox(),
+                          user.level != null
+                              ? Text('${user.level} level')
+                              : const SizedBox(),
+                        ]),
 
-                  Text('${user.followers} followers',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.bold))
-                ],
-              )))
+                        Text('${user.followers} followers',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold))
+                      ],
+                    )))
           ]),
         ),
       ],
