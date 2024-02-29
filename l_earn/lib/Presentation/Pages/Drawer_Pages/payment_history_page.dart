@@ -20,7 +20,7 @@ class PaymentHistoryPage extends StatefulWidget
 }
 
 class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
-  final Filter filter = Filter();
+  Filter filter = Filter();
 
   @override
   void initState() {
@@ -35,7 +35,6 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         context.read<AuthCubit>().state.user?.token,
         filters: filter.toMap());
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +58,19 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         //? FILTER BUTTON
         IconButton(
             tooltip: 'Filter',
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => const FilterPage()));
+            onPressed: () async {
+              final Map<String, dynamic>? response = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FilterPage(filter: filter)));
+
+              print(
+                  "R E S P O N S E   F R O M   F I L T E R   P A G E   I S   $response");
+              if (response != null) {
+                filter = Filter.fromMap(response);
+                loadHistory();
+
+                print('Filter Object is $filter');
+              }
             },
             icon: const Icon(Icons.filter_alt)),
       ]),
