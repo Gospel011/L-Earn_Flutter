@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:l_earn/utils/colors.dart';
 
 mixin AppBarMixin {
@@ -91,6 +92,17 @@ mixin TimeParserMixin {
 
   return res;
 }
+
+
+String formatTimestamp(String timestamp) {
+    DateTime dateTime = DateTime.parse(timestamp);
+
+    dateTime = dateTime.toLocal();
+
+    String formattedDate = DateFormat('MMM d, y. h:mm a').format(dateTime);
+
+    return formattedDate;
+  }
 
 }
 
