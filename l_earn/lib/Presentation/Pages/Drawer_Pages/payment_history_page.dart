@@ -26,7 +26,6 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   void initState() {
     super.initState();
 
-    //? START LOADING PAYMENT HISTORY
     loadHistory();
   }
 
@@ -38,18 +37,12 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    //? filter parameters
-    //  'paymentStatus',
-    // 'dateCreated',
-    // 'invoiceRef'
-
     print("Build method called ::: \n");
 
     final textTheme = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
       appBar: widget.buildAppBar(context, title: 'Payment History', actions: [
-        //? REFRESH BUTTON
         BlocBuilder<PaymentCubit, PaymentState>(
           builder: (context, state) {
             return IconButton(
@@ -70,8 +63,6 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                     : const Icon(Icons.refresh_rounded));
           },
         ),
-
-        //? FILTER BUTTON
         IconButton(
             tooltip: 'Filter',
             onPressed: () async {
@@ -117,27 +108,15 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         } else {
           finalWidget = Column(
             children: [
-              // const SliverPadding(padding: EdgeInsets.all(8)),
               Expanded(
                   child: RefreshIndicator(
+                      color: Colors.black,
                       onRefresh: () async {
                         await loadHistory();
                       },
                       child: buidTransactionHistory(context, state))),
-              // const SliverPadding(padding: EdgeInsets.all(24)),
             ],
           );
-
-          // finalWidget = RefreshIndicator(
-          //   onRefresh: () async {
-          //     await Future.delayed(const Duration(seconds: 10));
-          //   },
-          //   child: ListView.builder(
-          //     itemBuilder: (context, index) {
-          //       Text(state.invoices![index].description);
-          //     },
-          //   ),
-          // );
         }
 
         return finalWidget;
@@ -207,7 +186,6 @@ class HistoryItem extends StatelessWidget
             BoxShadow(
                 color: Colors.grey.shade400,
                 blurRadius: 2,
-                // spreadRadius: 1,
                 offset: const Offset(offset, offset)),
             const BoxShadow(
                 color: Colors.white,
@@ -218,9 +196,9 @@ class HistoryItem extends StatelessWidget
         onTap: () {
           print(
               "Navigate to PaymentDetails page with payment details: $invoice");
-        },
 
-        //? PURCHASED BOOK IMAGE
+          Navigator.of(context).pushNamed('/payment-details', arguments: invoice);
+        },
         leading: ClipRRect(
             borderRadius: BorderRadius.circular(48),
             child: invoice.contentThumbnailUrl != null
@@ -232,28 +210,19 @@ class HistoryItem extends StatelessWidget
                     width: 48,
                     height: 48,
                   )),
-
-        //? TITLE OF BOOK
         title: Text(
           invoice.contentTitle!,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: textTheme?.copyWith(color: Colors.black),
         ),
-
-        //? DATE BOUGHT
         subtitle: Text("Created on ${formatTimestamp(invoice.dateCreated)}",
             style: textTheme?.copyWith(fontSize: 12)),
-
-        //? AMOUNT AND STATUS
         trailing: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              //* AMOUNT
               Text('\u20A6${parsePrice(invoice.amount.toString())}'),
-
-              //* STATUS
               Text(
                 invoice.invoiceStatus.toLowerCase(),
                 style: textTheme?.copyWith(

@@ -25,6 +25,8 @@ class _FilterPageState extends State<FilterPage> with AppBarMixin {
     super.initState();
     filter = widget.filter;
 
+    print("Filter is $filter");
+
     if (widget.filter.paymentStatus == 'PAID') {
       setTrue(statusSelected, 0);
     } else if (widget.filter.paymentStatus == 'PENDING') {
@@ -33,7 +35,7 @@ class _FilterPageState extends State<FilterPage> with AppBarMixin {
 
     if (widget.filter.dateCreated == 'dateCreated') {
       setTrue(orderSelected, 0);
-    } 
+    }
   }
 
   @override
@@ -59,6 +61,11 @@ class _FilterPageState extends State<FilterPage> with AppBarMixin {
                     setState(() {
                       statusSelected = [false, false, true];
                       orderSelected = [false, true];
+
+                      filter = filter.copyWith(
+                        paymentStatus: 'null',
+                        dateCreated: 'null',
+                      );
                     });
                   }),
               MyContainerButton(

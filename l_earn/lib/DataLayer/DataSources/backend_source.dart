@@ -22,8 +22,11 @@ class BackendSource {
 
     try {
       http.StreamedResponse response = await request.send();
+      String responseStr = await response.stream.bytesToString();
 
-      return jsonDecode(await response.stream.bytesToString());
+      print("R E S P O N S E S T R   $responseStr");
+
+      return jsonDecode(responseStr);
     } catch (e) {
       // TODO
       print(":::::::: e is $e");

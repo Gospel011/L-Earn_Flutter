@@ -8,6 +8,7 @@ import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
 import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
+import 'package:l_earn/DataLayer/Models/invoice_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 
 import 'package:l_earn/Presentation/Pages/Auth_Pages/emailVerification_page.dart';
@@ -27,6 +28,7 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tu
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
 
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
+import 'package:l_earn/Presentation/Pages/Payment_Page/payment_details.dart';
 import 'package:l_earn/Presentation/Pages/Payment_Page/payment_page.dart';
 import 'package:l_earn/Presentation/Pages/Profile_Pages/edit_profile_page.dart';
 import 'package:l_earn/Presentation/Pages/Utility_Pages/image_view_page.dart';
@@ -48,6 +50,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/login from route generator');
           return const LoginPage();
+        });
+
+      //? PAYMENT DETAILS PAGE
+      case '/payment-details':
+        return MaterialPageRoute(builder: (_) {
+          print('/payment-details from route generator');
+          return PaymentDetailsPage(invoice: settings.arguments as Invoice,);
         });
 
       //? PAYMENT PAGE
