@@ -49,6 +49,21 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
+          //? TUTORS PROFILE PAGE
+          context.read<AuthCubit>().state.user?.role == 'tutor' ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: MyDrawerItem(
+              text: "Tutor's dashboard",
+              onPressed: () {
+                print("Payment history button pressed");
+                Navigator.pop(context);
+
+                
+                Navigator.pushNamed(context, '/tutors-profile');
+              },
+            ),
+          ) : const SizedBox(),
+
           //? VIEW PAYMENT HISTORY
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),

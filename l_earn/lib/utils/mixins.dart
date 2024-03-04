@@ -75,12 +75,12 @@ mixin TimeParserMixin {
 
   late String res;
 
-  if (months != 0) {
+  if (months != 0 && days > 30) {
     res = '$months month${months == 1 ? '' : 's'}';
-  } else if (days != 0) {
+  } else if (days != 0 && hours > 24) {
     res = '$days day${days == 1 ? '' : 's'}';
   }
-  else if (hours != 0) {
+  else if (hours != 0 && minutes > 60) {
     res = '$hours hour${hours == 1 ? '' : 's'}';
   }
   else if (minutes != 0) {

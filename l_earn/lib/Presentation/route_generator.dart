@@ -18,6 +18,7 @@ import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/payment_history_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/profile_page.dart';
+import 'package:l_earn/Presentation/Pages/Drawer_Pages/tutors_profile.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/create_a_chapter.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/write_a_book_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/chapter_page.dart';
@@ -57,6 +58,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/payment-details from route generator');
           return PaymentDetailsPage(invoice: settings.arguments as Invoice,);
+        });
+
+
+      //? TUTOR'S PROFILE PAGE
+      case '/tutors-profile':
+        return MaterialPageRoute(builder: (_) {
+          print('/tutors-profile from route generator');
+          return const TutorsProfilePage();
         });
 
       //? PAYMENT PAGE
