@@ -5,9 +5,10 @@ abstract class PaymentState {
   final Invoice? invoice;
   final Content? content;
   final List<Invoice>? invoices;
+  final TutorSalesStats? stats;
   final AppError? error;
 
-  const PaymentState({this.invoice, this.invoices, this.content, this.error});
+  const PaymentState({this.invoice, this.invoices, this.content, this.stats, this.error});
 }
 
 /// Initial state when payment cubit is first initialized;
@@ -30,10 +31,23 @@ class GeneratingPaymentInvoiceFailed extends PaymentState {
 class LoadingPaymentHistory extends PaymentState {
   const LoadingPaymentHistory({required super.invoices});
 }
+
 class PaymentHistoryLoaded extends PaymentState {
   const PaymentHistoryLoaded({required super.invoices});
 }
+
 class LoadingPaymentHistoryFailed extends PaymentState {
   const LoadingPaymentHistoryFailed({required super.error});
 }
 
+class LoadingTutorStats extends PaymentState {
+  const LoadingTutorStats({required super.stats});
+}
+
+class TutorStatsLoaded extends PaymentState {
+  const TutorStatsLoaded({required super.stats});
+}
+
+class LoadingTutorStatsFailed extends PaymentState {
+  const LoadingTutorStatsFailed({required super.error, super.stats});
+}

@@ -39,7 +39,7 @@ class HistoryItem extends StatelessWidget
           Navigator.of(context).pushNamed('/payment-details', arguments: invoice);
         },
         leading: ClipRRect(
-            borderRadius: BorderRadius.circular(48),
+            // borderRadius: BorderRadius.circular(48),
             child: invoice.contentThumbnailUrl != null
                 ? SizedBox(
                     width: 48,

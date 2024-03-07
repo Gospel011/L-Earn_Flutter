@@ -15,7 +15,8 @@ mixin AppBarMixin {
       bool centerTitle = false}) {
     return AppBar(
       automaticallyImplyLeading: automaticallyImplyLeading,
-      backgroundColor: backgroundColor ?? Theme.of(context).appBarTheme.backgroundColor,
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).appBarTheme.backgroundColor,
       centerTitle: centerTitle,
       title: title != null
           ? Text(
@@ -55,46 +56,42 @@ mixin ImageMixin {
 
 mixin TimeParserMixin {
   String calculateTimeDifference(String timestamp) {
-  DateTime now = DateTime.now();
-  DateTime pastTime = DateTime.parse(timestamp);
+    DateTime now = DateTime.now();
+    DateTime pastTime = DateTime.parse(timestamp);
 
-  pastTime = pastTime.toLocal();
-  
-  Duration difference = now.difference(pastTime);
+    pastTime = pastTime.toLocal();
 
-  int months = now.month - pastTime.month + (12 * (now.year - pastTime.year));
-  int days = difference.inDays;
-  int hours = difference.inHours;
-  int minutes = difference.inMinutes;
-  int seconds = difference.inSeconds;
+    Duration difference = now.difference(pastTime);
 
-  print('Months passed: $months');
-  print('Days passed: $days');
-  print('Hours passed: $hours');
-  print('Minutes passed: $minutes');
+    int months = now.month - pastTime.month + (12 * (now.year - pastTime.year));
+    int days = difference.inDays;
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes;
+    int seconds = difference.inSeconds;
 
-  late String res;
+    print('Months passed: $months');
+    print('Days passed: $days');
+    print('Hours passed: $hours');
+    print('Minutes passed: $minutes');
 
-  if (months != 0 && days > 30) {
-    res = '$months month${months == 1 ? '' : 's'}';
-  } else if (days != 0 && hours > 24) {
-    res = '$days day${days == 1 ? '' : 's'}';
+    late String res;
+
+    if (months != 0 && days > 30) {
+      res = '$months month${months == 1 ? '' : 's'}';
+    } else if (days != 0 && hours > 24) {
+      res = '$days day${days == 1 ? '' : 's'}';
+    } else if (hours != 0 && minutes > 60) {
+      res = '$hours hour${hours == 1 ? '' : 's'}';
+    } else if (minutes != 0) {
+      res = '$minutes minute${minutes == 1 ? '' : 's'}';
+    } else {
+      res = '$seconds second${seconds == 1 ? '' : 's'}';
+    }
+
+    return res;
   }
-  else if (hours != 0 && minutes > 60) {
-    res = '$hours hour${hours == 1 ? '' : 's'}';
-  }
-  else if (minutes != 0) {
-    res = '$minutes minute${minutes == 1 ? '' : 's'}';
-  }
-  else {
-    res = '$seconds second${seconds == 1 ? '' : 's'}';
-  }
 
-  return res;
-}
-
-
-String formatTimestamp(String timestamp) {
+  String formatTimestamp(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
 
     dateTime = dateTime.toLocal();
@@ -103,13 +100,18 @@ String formatTimestamp(String timestamp) {
 
     return formattedDate;
   }
-
 }
 
 mixin PriceParserMixin {
   String parsePrice(String price) {
-
     price = price.replaceAll(',', '');
+
+    //? split the price into the whole and decimal part
+    var partitionedPrice = price.split('.');
+
+    price = partitionedPrice[0];
+
+    // price = price.replaceAll(RegExp(r'\.+'), '');
 
     String reversedNumberString = price.split('').reversed.join('');
 
@@ -122,9 +124,7 @@ mixin PriceParserMixin {
       parts.add(reversedNumberString.substring(i, end));
     }
 
-    
-
-    String result = parts.join(',').split('').reversed.join('');
+    String result = '${parts.join(',').split('').reversed.join('')}${partitionedPrice.length == 3 ? '.${partitionedPrice[1]}' : ''}';
     return result;
   }
 }

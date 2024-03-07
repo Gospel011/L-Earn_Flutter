@@ -88,6 +88,7 @@ class _LearnPageState extends State<LearnPage>
 
             //? Scrollable list of contents
             BlocBuilder<ContentCubit, ContentState>(builder: (context, state) {
+              print("Building content page with state $state");
               return SliverList.builder(
                   itemCount: state.contents.length,
                   itemBuilder: (content, index) {
@@ -100,7 +101,9 @@ class _LearnPageState extends State<LearnPage>
 
                       //* CONTENT
                       child: MyContent(
-                        onHeaderPressed: () => Navigator.pushNamed(context, '/profile-page', arguments: state.contents?[index].author),
+                        onHeaderPressed: () => Navigator.pushNamed(
+                            context, '/profile-page',
+                            arguments: state.contents?[index].author),
                         content: content,
                         onThumbnailPressed: () {
                           //? REQUEST FOR A PARTICULAR CONTENT

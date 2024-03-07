@@ -252,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             : SliverToBoxAdapter(
                                 child: Center(
                                     child: Text(
-                                        '${widget.user.firstName} has not created any books yet')))
+                                        '${context.read<AuthCubit>().state.user?.id == widget.user.id ? 'You have' : "${widget.user.firstName} has"} not created any books yet')))
                     : const SizedBox();
               });
             })

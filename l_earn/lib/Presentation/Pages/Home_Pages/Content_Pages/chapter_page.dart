@@ -82,7 +82,7 @@ class _ChapterPageState extends State<ChapterPage> {
               color: Colors.blueGrey,
             ),
           );
-        } else {
+        } else if (state is ChapterFound) {
           List<dynamic>? parsedContent;
 
           // if (state.article?.content != null) {
@@ -99,7 +99,6 @@ class _ChapterPageState extends State<ChapterPage> {
               List<Map<String, dynamic>>.from(parsedContent!);
           print('Decoded Delta: $deltaList');
 
-          
           quillController.document =
               Document.fromJson(jsonDecode(state.article?.content ?? '[]'));
           textEditingController.text =
@@ -108,6 +107,8 @@ class _ChapterPageState extends State<ChapterPage> {
               controller: quillController,
               textEditingController: textEditingController,
               user: state.content?.author);
+        } else {
+          return const Center(child: Text("No available chapters found for you"));
         }
       }),
     );

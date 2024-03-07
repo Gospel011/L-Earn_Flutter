@@ -1,6 +1,9 @@
 import 'package:l_earn/DataLayer/DataSources/backend_source.dart';
 import 'package:l_earn/DataLayer/Models/error_model.dart';
 import 'package:l_earn/DataLayer/Models/invoice_model.dart';
+import 'package:l_earn/DataLayer/Models/stats_model.dart';
+import 'package:l_earn/DataLayer/Models/tutor_stats_model.dart';
+import 'package:l_earn/DataLayer/Models/user_model.dart';
 
 class PaymentRepo {
   static generateInvoice(token, String contentId) async {
@@ -56,9 +59,11 @@ class PaymentRepo {
         invoiceMap['invoiceStatus'] = invoiceMap['paymentStatus'];
         invoiceMap['description'] = invoiceMap['paymentDescription'];
         invoiceMap['customerEmail'] = invoiceMap['userId']['email'];
-        invoiceMap['customerName'] = '${invoiceMap['userId']['firstName']} ${invoiceMap['userId']['lastName']}';
+        invoiceMap['customerName'] =
+            '${invoiceMap['userId']['firstName']} ${invoiceMap['userId']['lastName']}';
         invoiceMap['createdOn'] = invoiceMap['dateCreated'];
-        invoiceMap['contentThumbnailUrl'] = invoiceMap['contentId']['thumbnailUrl'];
+        invoiceMap['contentThumbnailUrl'] =
+            invoiceMap['contentId']['thumbnailUrl'];
         invoiceMap['contentTitle'] = invoiceMap['contentId']['title'];
 
         invoices.add(Invoice.fromMap(invoiceMap));
@@ -66,6 +71,53 @@ class PaymentRepo {
       print('::: Invoices Are ::: $invoices');
 
       return invoices;
+    } else {
+      return AppError.errorObject(response);
+    }
+  }
+
+  static loadTutorStats(User user) async {
+    final endpoint = 'payment';
+
+    final response = await BackendSource.makeGETRequest(user.token!, endpoint);
+
+    print("Response ::: $response");
+
+    if (response['status'] == 'success') {
+      List<SalesStats> stats = [];
+      int totalSales = 0;
+      double totalProfit = 0;
+      double totalRevenue = 0;
+
+      List aggregatedPayments = response['aggregatedPayments'];
+
+      for (int i = 0; i < aggregatedPayments.length; i++) {
+        var stat = aggregatedPayments[i];
+        var content = stat['content'];
+
+        totalSales += stat['sales'] as int;
+        totalProfit += double.parse(stat['profit'].toString());
+        totalRevenue += double.parse(content['price'].toString());
+
+        content['articles'] = content['articles'].length;
+        content['videos'] = content['videos'].length;
+        content['students'] = content['students'].length;
+        content['authorId'] = user.toMap();
+
+        stat['content'] = content;
+
+        // final Content content = Content.fromMap(contentMaps[i]);
+
+        stats.add(SalesStats.fromMap(stat));
+      }
+
+      var tutorStatsMap = {
+        'stats': stats,
+        'totalSales': totalSales,
+        'totalProfit': totalProfit,
+        'totalRevenue': totalRevenue
+      };
+      return TutorSalesStats.fromMap(tutorStatsMap);
     } else {
       return AppError.errorObject(response);
     }

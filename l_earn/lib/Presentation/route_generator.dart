@@ -57,15 +57,19 @@ class RouteGenerator {
       case '/payment-details':
         return MaterialPageRoute(builder: (_) {
           print('/payment-details from route generator');
-          return PaymentDetailsPage(invoice: settings.arguments as Invoice,);
+          return PaymentDetailsPage(
+            invoice: settings.arguments as Invoice,
+          );
         });
-
 
       //? TUTOR'S PROFILE PAGE
       case '/tutors-profile':
         return MaterialPageRoute(builder: (_) {
           print('/tutors-profile from route generator');
-          return const TutorsProfilePage();
+          return BlocProvider.value(
+            value: paymentCubit,
+            child: const TutorsProfilePage(),
+          );
         });
 
       //? PAYMENT PAGE
@@ -73,8 +77,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/payment-page from route generator');
           return BlocProvider.value(
-            value: paymentCubit,
-            child: PaymentPage(content: settings.arguments as Content,));
+              value: paymentCubit,
+              child: PaymentPage(
+                content: settings.arguments as Content,
+              ));
         });
 
       //? PAYMENT PAGE
@@ -82,8 +88,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           print('/payment-history-page from route generator');
           return BlocProvider.value(
-            value: paymentCubit,
-            child: const PaymentHistoryPage());
+              value: paymentCubit, child: const PaymentHistoryPage());
         });
 
       //? MAKE A POST PAGE
@@ -132,13 +137,15 @@ class RouteGenerator {
       case '/image-view-page':
         return MaterialPageRoute(builder: (_) {
           print('/image-view-page from route generator');
-          return ImageViewPage(image: settings.arguments as String,);
+          return ImageViewPage(
+            image: settings.arguments as String,
+          );
         });
 
       case '/edit-profile-page':
         return MaterialPageRoute(builder: (_) {
           print('/edit-profile-page from route generator');
-          
+
           return const EditProfilePage();
         });
 
@@ -156,7 +163,10 @@ class RouteGenerator {
         print('content-discription from route generator');
         return MaterialPageRoute(builder: (context) {
           return MultiBlocProvider(
-            providers: [BlocProvider.value(value: contentCubit), BlocProvider.value(value: paymentCubit)],
+            providers: [
+              BlocProvider.value(value: contentCubit),
+              BlocProvider.value(value: paymentCubit)
+            ],
             child: ContentDescriptionPage(
               content: settings.arguments as Content,
             ),
