@@ -7,6 +7,7 @@ class MyContainerButton extends StatelessWidget {
       {super.key,
       required this.text,
       required this.onPressed,
+      this.decoration,
       this.loading,
       this.textColor,
       this.showShadow = true,
@@ -16,6 +17,7 @@ class MyContainerButton extends StatelessWidget {
   final String text;
   final Color? textColor;
   final Color? buttonColor;
+  final BoxDecoration? decoration;
   final bool showShadow;
   final void Function() onPressed;
 
@@ -25,20 +27,22 @@ class MyContainerButton extends StatelessWidget {
       // splashColor: Colors.white,
       onTap: onPressed,
       child: Container(
-        decoration: BoxDecoration(
+        decoration: decoration ?? BoxDecoration(
             color: buttonColor ?? Colors.black,
-            boxShadow: showShadow == true ? [
-              BoxShadow(
-                  color: Colors.grey.shade500,
-                  offset: const Offset(1, 1),
-                  spreadRadius: 1,
-                  blurRadius: 5),
-              BoxShadow(
-                  color: Colors.grey.shade300,
-                  offset: const Offset(-1, -1),
-                  spreadRadius: 1,
-                  blurRadius: 5),
-            ] : null,
+            boxShadow: showShadow == true
+                ? [
+                    BoxShadow(
+                        color: Colors.grey.shade500,
+                        offset: const Offset(1, 1),
+                        spreadRadius: 1,
+                        blurRadius: 5),
+                    BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: const Offset(-1, -1),
+                        spreadRadius: 1,
+                        blurRadius: 5),
+                  ]
+                : null,
             borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

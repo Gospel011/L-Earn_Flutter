@@ -315,3 +315,18 @@ class AuthProfileEdited extends AuthState {
 class AuthEditingProfileFailed extends AuthState {
   AuthEditingProfileFailed({required super.user, required super.error});
 }
+
+/// Auth state when a follow request is being processed by the server
+class AuthFollowingUser extends AuthState {
+  AuthFollowingUser({required super.user});
+}
+
+/// Auth state when a follow request has been proccessed
+class AuthUserFollowed extends AuthState {
+  AuthUserFollowed({required super.user});
+}
+
+/// Auth state when a follow request failed
+class AuthFollowingUserFailed extends AuthState {
+  AuthFollowingUserFailed({required super.user, required super.error});
+}

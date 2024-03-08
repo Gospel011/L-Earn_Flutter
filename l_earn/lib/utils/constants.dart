@@ -5,11 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 //! NETWORK CONSTANTS
 class NetWorkConstants {
-  // static const String baseUrl =
-  //     "https://l-earn.onrender.com/api/v1"; //? [PRODUCTION]
+  static const String baseUrl =
+      "https://l-earn.onrender.com/api/v1"; //? [PRODUCTION]
   // static const String baseUrl =
   //     "https://learn-27c8.onrender.com/api/v1"; //? [PRODUCTION2]
-  static const String baseUrl = "http://127.0.0.1:5000/api/v1"; //? [DEVELOPMENT -> laptop]
+  // static const String baseUrl = "http://127.0.0.1:5000/api/v1"; //? [DEVELOPMENT -> laptop]
   // static const String baseUrl = "https://e21e-105-116-1-239.ngrok-free.app/api/v1"; //? [DEVELOPMENT -> phone]
   static final Map<String, String> defaultHeader = {
     "Content-Type": "application/json"

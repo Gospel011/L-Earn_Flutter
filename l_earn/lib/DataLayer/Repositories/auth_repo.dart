@@ -100,4 +100,33 @@ class AuthRepo {
       return AppError.errorObject(response);
     }
   }
+
+  static followUser(String token, String userId) async {
+    final endpoint = 'user/$userId/actions/follow';
+
+    final response = await BackendSource.makeRequest(
+        endpoint: endpoint, token: token, body: {});
+
+  print("::: F O L L O W   R E S P O N S E   F R O M   A U T H R E P O   $response");
+
+    if (response['status'] == 'success') {
+      return response['message'] == "user followed successfully" ? true : false;
+    } else {
+      return AppError.errorObject(response);
+    }
+  }
+
+  static getFollowStatus(token, String userId) async {
+    final endpoint = 'user/$userId/actions/follow-status';
+
+    final response = await BackendSource.makeGETRequest(token, endpoint);
+
+  print("::: F O L L O W S T A T U S   R E S P O N S E   F R O M   A U T H R E P O   $response");
+
+    if (response['status'] == 'success') {
+      return response['message'] == "followed" ? true : false;
+    } else {
+      return AppError.errorObject(response);
+    }
+  }
 }

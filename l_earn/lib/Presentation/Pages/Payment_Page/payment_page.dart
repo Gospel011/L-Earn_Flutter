@@ -31,7 +31,7 @@ class PaymentPage extends StatelessWidget with AppBarMixin, PriceParserMixin {
                     text: 'You may now proceed to make a bank transfer of ',
                     children: [
                       TextSpan(
-                          text: price,
+                          text: "\u20A6${price}",
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.bold,

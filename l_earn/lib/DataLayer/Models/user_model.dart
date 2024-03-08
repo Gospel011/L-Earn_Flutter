@@ -2,12 +2,11 @@
 
 import 'dart:convert';
 
-
-
 class User {
   final String firstName;
   final String lastName;
   final int followers;
+  
   final int? level;
   final String? email;
   final String? department;
@@ -26,6 +25,7 @@ class User {
       {required this.firstName,
       required this.lastName,
       required this.followers,
+      
       this.level,
       this.email,
       this.department,
@@ -43,6 +43,8 @@ class User {
   User copyWith(
       {String? firstName,
       String? lastName,
+      int? followers,
+      
       String? email,
       String? department,
       int? level,
@@ -69,7 +71,8 @@ class User {
         role: role ?? this.role,
         token: token ?? this.token,
         handle: handle,
-        followers: followers,
+        followers: followers ?? this.followers,
+        
         id: id);
   }
 
@@ -90,6 +93,7 @@ class User {
       'token': token,
       'handle': handle,
       'followers': followers,
+      
       '_id': id
     };
   }
@@ -99,18 +103,18 @@ class User {
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
       level: map['level'],
+      
       followers: map['followers'] ?? 0, //TODO: CONFIRM FROM BACKEND
       email: map['email'] != null ? map['email'] as String : null,
-      department: map['department'] != null ? map['department'] as String : null,
+      department:
+          map['department'] != null ? map['department'] as String : null,
       emailVerified:
           map['emailVerified'] != null ? map['emailVerified'] as bool : null,
       isVerified: map['isVerified'] != null ? map['isVerified'] as bool : null,
       profilePicture: map['profilePicture'] != null
           ? map['profilePicture'] as String
           : null,
-      banner: map['banner'] != null
-          ? map['banner'] as String
-          : null,
+      banner: map['banner'] != null ? map['banner'] as String : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
       school: map['school'] != null ? map['school'] as String : null,
       role: map['role'] != null ? map['role'] as String : null,

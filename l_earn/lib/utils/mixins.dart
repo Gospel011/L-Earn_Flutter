@@ -124,7 +124,10 @@ mixin PriceParserMixin {
       parts.add(reversedNumberString.substring(i, end));
     }
 
-    String result = '${parts.join(',').split('').reversed.join('')}${partitionedPrice.length == 3 ? '.${partitionedPrice[1]}' : ''}';
+    print("P A R T I T I O N E D   P R I C E   I S   $partitionedPrice");
+
+    String result =
+        '${parts.join(',').split('').reversed.join('')}${partitionedPrice.length == 2 && partitionedPrice[1] != '0' ? '.${partitionedPrice[1]}' : ''}';
     return result;
   }
 }

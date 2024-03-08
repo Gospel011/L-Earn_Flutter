@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/components/my_image_widget.dart';
 import 'package:l_earn/Presentation/components/my_profile_picture.dart';
+import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/Presentation/components/render_user_name.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
+import 'package:l_earn/utils/colors.dart';
 import 'package:l_earn/utils/constants.dart';
 
-class BuildBannerAndUserDescription extends StatelessWidget {
+class BuildBannerAndUserDescription extends StatefulWidget {
   const BuildBannerAndUserDescription({
     super.key,
     required this.user,
@@ -18,120 +22,217 @@ class BuildBannerAndUserDescription extends StatelessWidget {
   final User user;
 
   @override
+  State<BuildBannerAndUserDescription> createState() =>
+      _BuildBannerAndUserDescriptionState();
+}
+
+class _BuildBannerAndUserDescriptionState
+    extends State<BuildBannerAndUserDescription> {
+  late User newUser;
+  @override
+  void initState() {
+    super.initState();
+    newUser = widget.user;
+
+    context.read<FollowCubit>().getFollowStatus(
+        context.read<AuthCubit>().state.user?.token, widget.user.id!);
+  }
+
+  void followUser() {
+    context.read<FollowCubit>().followUser(
+        context.read<AuthCubit>().state.user?.token, widget.user.id!);
+  }
+
+  @override
   Widget build(BuildContext context) {
     print(
-        ":::: U S E R   F R O M   B A N N E R A N D D E S C R I P T I O N   I S   $user");
-    return Column(
-      children: [
-        //? BANNER
-        SizedBox(
-            width: double.maxFinite,
-            height: 150,
-            child: MyImageWidget(
-              image: user.banner ?? 'default.png',
-              boxfit: BoxFit.cover,
-              borderRadius: 0,
-            )),
+        ":::: U S E R   F R O M   B A N N E R A N D D E S C R I P T I O N   I S   ${widget.user}");
+    return BlocListener<FollowCubit, FollowState>(
+      listener: (context, state) {
+        if (state is UserFollowed) {
+          if (state.followed == true) {
+            newUser = newUser.copyWith(followers: newUser.followers + 1);
+          } else {
+            newUser = newUser.copyWith(followers: newUser.followers - 1);
+          }
+        }
+      },
+      child: Column(
+        children: [
+          //? BANNER
+          SizedBox(
+              width: double.maxFinite,
+              height: 150,
+              child: MyImageWidget(
+                image: widget.user.banner ?? 'default.png',
+                boxfit: BoxFit.cover,
+                borderRadius: 0,
+              )),
 
-        const SizedBox(height: 8),
+          const SizedBox(height: 8),
 
-        //? PROFILE PICTURE | MINI DESCRIPTION
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            //* PROFILE PICTURE
-            MyProfilePicture(user: user, radius: 32),
+          //? PROFILE PICTURE | MINI DESCRIPTION
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              //* PROFILE PICTURE
+              MyProfilePicture(user: widget.user, radius: 32),
 
-            const SizedBox(
-              width: 4,
-            ),
+              const SizedBox(
+                width: 4,
+              ),
 
-            //* MINI DESCRIPTION
-            Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //? username
-                        user.id == context.read<AuthCubit>().state.user?.id
-                            ? RenderUserName(user: user, fontWeight: FontWeight.bold,)
-                            : Row(children: [
-                                Expanded(
-                                    child: Text(
-                                        '${user.firstName} ${user.lastName}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold))),
-                                user.isVerified == true
-                                    ? Text(' ')
-                                    : const SizedBox(),
-                                user.isVerified == true
-                                    ? AppIcons.verifiedIcon
-                                    : const SizedBox(),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                MyContainerButton(
-                                    text: 'follow',
-                                    onPressed: () {
-                                      //  TODO: IMPLEMENT FOLLOW
-                                      print(
-                                          'Follow button for ${user.firstName} ${user.lastName} ${user.id} pressed');
-                                    })
-                              ]),
+              //* MINI DESCRIPTION
+              Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //? username
+                          widget.user.id ==
+                                  context.read<AuthCubit>().state.user?.id
+                              ? RenderUserName(
+                                  user: widget.user,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : Row(children: [
+                                  Expanded(
+                                      child: Text(
+                                          '${widget.user.firstName} ${widget.user.lastName}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
+                                                  fontWeight:
+                                                      FontWeight.bold))),
+                                  widget.user.isVerified == true
+                                      ? Text(' ')
+                                      : const SizedBox(),
+                                  widget.user.isVerified == true
+                                      ? AppIcons.verifiedIcon
+                                      : const SizedBox(),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  BlocBuilder<FollowCubit, FollowState>(
+                                      builder: (context, state) {
+                                    Widget? followWidget;
 
-                        //? handle
-                        Text(user.handle!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                    color: Colors.black.withOpacity(0.7))),
+                                    if (state is FollowInitial ||
+                                        state is GettingFollowStatus) {
+                                      followWidget = const SizedBox();
+                                    } else {
+                                      followWidget = state.followed == true
+                                          ? PopupMenuButton(
+                                              overlayColor: Colors.transparent,                                          
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                      onTap: followUser,
+                                                      child: const Text(
+                                                          "unfollow"))
+                                                ];
+                                              },
+                                              child: const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text("\u2022 following"),
+                                                  Icon(
+                                                    Icons
+                                                        .arrow_drop_down_rounded,
+                                                    color: AppColor.textColor,
+                                                  )
+                                                ],
+                                              ))
+                                          : MyContainerButton(
+                                              text: 'follow',
+                                              onPressed: () {
+                                                //  TODO: IMPLEMENT FOLLOW
+                                                print(
+                                                    'Follow button for ${widget.user.firstName} ${widget.user.lastName} ${widget.user.id} pressed');
 
-                        //? school
-                        user.school != null
-                            ? Text(
-                                user.school!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : const SizedBox(),
+                                                followUser();
+                                              });
+                                    }
 
-                        Row(children: [
-                          //? department
-                          user.department != null
-                              ? Expanded(
-                                  child: Text(
-                                  user.department!,
+                                    return followWidget;
+                                  })
+                                ]),
+
+                          //? handle
+                          Text(widget.user.handle!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: Colors.black.withOpacity(0.7))),
+
+                          //? school
+                          widget.user.school != null
+                              ? Text(
+                                  widget.user.school!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                ))
+                                )
                               : const SizedBox(),
 
-                          user.level != null
-                              ? const Text(' \u2022 ')
-                              : const SizedBox(),
-                          user.level != null
-                              ? Text('${user.level} level')
-                              : const SizedBox(),
-                        ]),
+                          Row(children: [
+                            //? department
+                            widget.user.department != null
+                                ? Expanded(
+                                    child: Text(
+                                    widget.user.department!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ))
+                                : const SizedBox(),
 
-                        Text('${user.followers} followers',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.bold))
-                      ],
-                    )))
-          ]),
-        ),
-      ],
+                            widget.user.level != null
+                                ? const Text(' \u2022 ')
+                                : const SizedBox(),
+                            widget.user.level != null
+                                ? Text('${widget.user.level} level')
+                                : const SizedBox(),
+                          ]),
+
+                          BlocBuilder<FollowCubit, FollowState>(
+                              builder: (context, state) {
+                            print("Current follow state is $state");
+                            Text followersText = Text(
+                                widget.user.followers == 1
+                                    ? '1 follower'
+                                    : '${widget.user.followers} followers',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold));
+                            if (state is UserFollowed) {
+                              String text = '${newUser.followers}';
+
+                              print("TEXT $text");
+                              followersText = Text(
+                                  '$text ${newUser.followers == 1 ? 'follower' : 'followers'}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold));
+                            }
+
+                            return followersText;
+                          })
+                        ],
+                      )))
+            ]),
+          ),
+        ],
+      ),
     );
   }
 }

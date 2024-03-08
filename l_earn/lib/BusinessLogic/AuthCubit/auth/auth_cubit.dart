@@ -119,4 +119,12 @@ class AuthCubit extends HydratedCubit<AuthState> {
 
     return state.toMap();
   }
+
+
+
+
+  
+
 }
+
+

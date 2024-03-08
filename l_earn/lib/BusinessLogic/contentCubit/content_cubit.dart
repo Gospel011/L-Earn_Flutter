@@ -40,11 +40,11 @@ class ContentCubit extends Cubit<ContentState> {
 
       if (userId == null) {
         emit(ContentLoaded(
-            contents: page != null ? response : contents,
+            contents: contents,
             myContents: state.myContents));
       } else {
         emit(ContentLoaded(
-            contents: page != null ? response : contents,
+            contents: contents,
             myContents: response));
       }
 

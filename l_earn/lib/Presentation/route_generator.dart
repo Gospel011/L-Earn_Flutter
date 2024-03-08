@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
@@ -213,9 +214,11 @@ class RouteGenerator {
           return MultiBlocProvider(
               providers: [
                 BlocProvider<TabCubit>(create: (context) => TabCubit()),
-                BlocProvider.value(value: contentCubit)
+                BlocProvider.value(value: contentCubit),
+                BlocProvider<FollowCubit>(create: (context) => FollowCubit()),
                 // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),
               ],
+              
               child: ProfilePage(
                 user: settings.arguments as User,
               ));
