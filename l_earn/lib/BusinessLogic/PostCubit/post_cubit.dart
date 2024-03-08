@@ -16,7 +16,7 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> getNewPosts(userId, token, {int? page}) async {
     currentPage++;
-    if(page != null) currentPage = page;
+    if (page != null) currentPage = page;
 
     List<Post> newPosts = [...state.newPosts];
 
@@ -31,10 +31,11 @@ class PostCubit extends Cubit<PostState> {
       print(
           "E M I T T I N G   N E W   S T A T E ${newPosts.length}, RESPONSE LENGTH: ${response.length}");
 
-      if ( page == null ) newPosts.addAll(response);
+      if (page == null) newPosts.addAll(response);
 
       print("E M I T T I N G   N E W   S T A T E ${newPosts.length}");
-      emit(NewPostsLoaded(page: currentPage, newPosts: page != null ? response : newPosts));
+      emit(NewPostsLoaded(
+          page: currentPage, newPosts: page != null ? response : newPosts));
 
       if (response.isEmpty) {
         print("decreasing page count to ${currentPage - 1}");
@@ -75,5 +76,22 @@ class PostCubit extends Cubit<PostState> {
     emit(NewPostsFailed(
         newPosts: state.newPosts,
         error: AppError(title: title, content: content)));
+  }
+
+  void updatePostAuthor(User newUser) {
+    List<Post> posts = state.newPosts;
+
+    int index = 0;
+    for (Post post in posts) {
+      if (post.user.id == newUser.id) {
+        posts[index] = posts[index].copyWith(user: newUser);
+      }
+
+      index++;
+    }
+
+    print("UPDATED POST AUTHOR 🥵🥵🥵🥵🥵 ${posts[0]}");
+
+    emit(NewPostsLoaded(page: state.page, newPosts: posts));
   }
 }

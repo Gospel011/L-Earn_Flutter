@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
+import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
+import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/components/my_image_widget.dart';
@@ -55,6 +57,10 @@ class _BuildBannerAndUserDescriptionState
           } else {
             newUser = newUser.copyWith(followers: newUser.followers - 1);
           }
+
+          //* Update all contents and posts followers to reflect the follow change
+          context.read<ContentCubit>().updateContentAuthor(newUser);
+          context.read<PostCubit>().updatePostAuthor(newUser);
         }
       },
       child: Column(
@@ -128,7 +134,7 @@ class _BuildBannerAndUserDescriptionState
                                     } else {
                                       followWidget = state.followed == true
                                           ? PopupMenuButton(
-                                              overlayColor: Colors.transparent,                                          
+                                              overlayColor: Colors.transparent,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(8)),

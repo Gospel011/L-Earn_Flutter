@@ -215,10 +215,11 @@ class RouteGenerator {
               providers: [
                 BlocProvider<TabCubit>(create: (context) => TabCubit()),
                 BlocProvider.value(value: contentCubit),
+                BlocProvider.value(value: postCubit),
                 BlocProvider<FollowCubit>(create: (context) => FollowCubit()),
                 // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),
               ],
-              
+
               child: ProfilePage(
                 user: settings.arguments as User,
               ));

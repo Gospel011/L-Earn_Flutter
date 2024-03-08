@@ -4,6 +4,7 @@ import 'package:l_earn/DataLayer/Models/article_model.dart';
 
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/DataLayer/Models/error_model.dart';
+import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/DataLayer/Models/video_model.dart';
 import 'package:l_earn/DataLayer/Repositories/content_repo.dart';
 
@@ -39,13 +40,9 @@ class ContentCubit extends Cubit<ContentState> {
       if (userId != null) userContents.addAll(response);
 
       if (userId == null) {
-        emit(ContentLoaded(
-            contents: contents,
-            myContents: state.myContents));
+        emit(ContentLoaded(contents: contents, myContents: state.myContents));
       } else {
-        emit(ContentLoaded(
-            contents: contents,
-            myContents: response));
+        emit(ContentLoaded(contents: contents, myContents: response));
       }
 
       if (response.isEmpty) {
@@ -203,5 +200,23 @@ class ContentCubit extends Cubit<ContentState> {
           myContents: state.myContents,
           error: response as AppError));
     }
+  }
+
+  void updateContentAuthor(User newUser) {
+    List<Content> contents = state.contents;
+    List<Content>? myContents = state.myContents;
+
+    int index = 0;
+    for (Content content in contents) {
+      if (content.author.id == newUser.id) {
+        contents[index] = contents[index].copyWith(author: newUser);
+      }
+
+      index++;
+    }
+
+    print("UPDATED AUTHOR 🥵🥵🥵🥵🥵 ${contents[0]}");
+
+    emit(ContentLoaded(contents: contents, myContents: myContents));
   }
 }
