@@ -177,18 +177,24 @@ class RouteGenerator {
       case '/chapter-page':
         print('chapter-page from route generator');
         return MaterialPageRoute(builder: (context) {
-          return BlocProvider.value(
-            value: contentCubit,
-            child: const ChapterPage(),
-          );
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: contentCubit),
+              BlocProvider.value(value: postCubit),              
+              BlocProvider<FollowCubit>(create: (context) => FollowCubit()),
+            ],
+            child: const ChapterPage());
         });
 
       case '/write-book-page':
         print('chapter-page from route generator');
         return MaterialPageRoute(builder: (context) {
           final args = settings.arguments as Map? ?? {};
-          return BlocProvider.value(
-            value: contentCubit,
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: contentCubit),
+              BlocProvider<FollowCubit>(create: (context) => FollowCubit()),
+            ],
             child: WriteABookPage(
                 content: args['content'], chapterId: args['chapterId']),
           );

@@ -60,6 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return BlocListener<ContentCubit, ContentState>(
       listener: (context, state) {
         print('STATE IS $state');
+        print("FOLLOWER COUNT IS ${widget.user.followers}");
         if (state is RequestingContentById) {
           showDialog(
               context: context,
@@ -243,12 +244,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         : state.myContents != null &&
                                 state.myContents!.isNotEmpty
 
-                                //* BUILDING THE ACTUAL SCROLLABLE LIST OF CONTENTS
+                            //* BUILDING THE ACTUAL SCROLLABLE LIST OF CONTENTS
                             ? buildListOfContents(context,
                                 contents: state.myContents!,
                                 itemCount: state.myContents!.length,
-                                user: user
-                                )
+                                user: user)
                             : SliverToBoxAdapter(
                                 child: Center(
                                     child: Text(
@@ -264,7 +264,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
 //* M E T H O D S
   SliverList buildListOfContents(BuildContext context,
-      {required List<Content> contents, required int itemCount, required User user}) {
+      {required List<Content> contents,
+      required int itemCount,
+      required User user}) {
     return SliverList.builder(
         itemCount: itemCount,
         itemBuilder: (content, index) {

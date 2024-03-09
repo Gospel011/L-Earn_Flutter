@@ -75,6 +75,7 @@ class _ChapterPageState extends State<ChapterPage> {
           width: 16,
         )
       ]),
+      
       body: BlocBuilder<ContentCubit, ContentState>(builder: (context, state) {
         if (state is RequestingChapterById) {
           return const Center(
@@ -84,15 +85,6 @@ class _ChapterPageState extends State<ChapterPage> {
           );
         } else if (state is ChapterFound) {
           List<dynamic>? parsedContent;
-
-          // if (state.article?.content != null) {
-          //   parsedContent = List<Map<String, String>>.from(
-          //       (jsonDecode(state.article!.content!) as List).map((obj) =>
-          //           Map<String, String>.from(obj.map((key, value) =>
-          //               MapEntry(key.toString(), value.toString())))));
-
-          // print("PARSED CONTENT IS $parsedContent");
-          // }
 
           parsedContent = jsonDecode(state.article?.content! ?? '[]');
           List<Map<String, dynamic>> deltaList =
@@ -108,7 +100,8 @@ class _ChapterPageState extends State<ChapterPage> {
               textEditingController: textEditingController,
               user: state.content?.author);
         } else {
-          return const Center(child: Text("No available chapters found for you"));
+          return const Center(
+              child: Text("No available chapters found for you"));
         }
       }),
     );

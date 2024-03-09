@@ -6,8 +6,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
+import 'package:l_earn/Presentation/components/follower_count_widget.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_profile_picture.dart';
 import 'package:l_earn/Presentation/components/my_textfield.dart';
@@ -39,8 +41,6 @@ class _ChapterPageState extends State<MyQuillEditor> {
 
   @override
   Widget build(BuildContext context) {
-
-
     //? CONFIGURATIONS FOR QUILL EDITOR
     quillEditorConfigurations = QuillEditorConfigurations(
       controller: widget.controller,
@@ -54,17 +54,15 @@ class _ChapterPageState extends State<MyQuillEditor> {
       ),
     );
 
-
-
-            var themeData = ThemeData(
-                textTheme: TextTheme(
-                    bodyMedium: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.mainColorBlack)),
-                inputDecorationTheme: const InputDecorationTheme(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    enabledBorder: InputBorder.none));
+    var themeData = ThemeData(
+        textTheme: TextTheme(
+            bodyMedium: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: AppColor.mainColorBlack)),
+        inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(borderSide: BorderSide.none),
+            enabledBorder: InputBorder.none));
 
     return Column(
       children: [
@@ -73,7 +71,7 @@ class _ChapterPageState extends State<MyQuillEditor> {
             slivers: [
               //? SPACING FROM TOP
               const SliverPadding(padding: EdgeInsets.all(8)),
-          
+
               //? CHAPTER X: TITLE
               SliverToBoxAdapter(
                 child: Theme(
@@ -91,11 +89,11 @@ class _ChapterPageState extends State<MyQuillEditor> {
                       ),
                     )),
               ),
-          
+
               const SliverPadding(padding: EdgeInsets.all(16)),
-          
+
               //? AUTHOURS MINI PROFILE
-          
+
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -107,9 +105,9 @@ class _ChapterPageState extends State<MyQuillEditor> {
                         user: widget.user!,
                         radius: 24,
                       ),
-          
+
                       const SizedBox(width: 4),
-          
+
                       //? COLUMN WITH NAME AND FOLLOWERS
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,13 +118,14 @@ class _ChapterPageState extends State<MyQuillEditor> {
                             user: widget.user!,
                             fontWeight: FontWeight.bold,
                           ),
-          
+
                           //* F O L L O W E R S
-                          Text(
-                              '${widget.user!.followers} followers')
+                          FollowerCountWidget(
+                              followerCount: widget.user!.followers,
+                              fontWeight: FontWeight.normal)
                         ],
                       ),
-          
+
                       // MyContainerButton(
                       //     text: 'Follow',
                       //     onPressed: () {
@@ -136,23 +135,19 @@ class _ChapterPageState extends State<MyQuillEditor> {
                   ),
                 ),
               ),
-          
+
               const SliverPadding(padding: EdgeInsets.all(8)),
-          
-              //? FOLLOW OR FOLLOWING BUTTON
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: MyElevatedButton(
-                      text: 'Follow',
-                      onPressed: () {
-                        print('Follow button pressed');
-                      }),
-                ),
-              ),
-          
+
+              // //? FOLLOW OR FOLLOWING BUTTON
+              // SliverToBoxAdapter(
+              //   child: Padding(
+              //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //     child: FollowButton(),
+              //   ),
+              // ),
+
               const SliverPadding(padding: EdgeInsets.all(16)),
-          
+
               //? EDITOR
               SliverToBoxAdapter(
                 child: QuillEditor.basic(
@@ -162,16 +157,35 @@ class _ChapterPageState extends State<MyQuillEditor> {
             ],
           ),
         ),
-        
-        widget.readOnly == true ? const SizedBox() : QuillToolbar.simple(
-            configurations: QuillSimpleToolbarConfigurations(
-                toolbarSize: 48,
-                controller: widget.controller,
-                multiRowsDisplay: false,
-                sharedConfigurations: const QuillSharedConfigurations(
-                  locale: Locale('en'),
-                )))
+        widget.readOnly == true
+            ? const SizedBox()
+            : QuillToolbar.simple(
+                configurations: QuillSimpleToolbarConfigurations(
+                    toolbarSize: 48,
+                    controller: widget.controller,
+                    multiRowsDisplay: false,
+                    sharedConfigurations: const QuillSharedConfigurations(
+                      locale: Locale('en'),
+                    )))
       ],
     );
+  }
+}
+
+class FollowButton extends StatelessWidget {
+  const FollowButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FollowCubit, FollowState>(
+        builder: (context, state) {
+      return MyElevatedButton(
+          text: 'Follow',
+          onPressed: () {
+            print('Follow button pressed');
+          });
+    });
   }
 }

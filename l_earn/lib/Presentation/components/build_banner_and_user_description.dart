@@ -9,7 +9,7 @@ import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Presentation/components/my_image_widget.dart';
 import 'package:l_earn/Presentation/components/my_profile_picture.dart';
-import 'package:l_earn/Presentation/components/my_text_button.dart';
+import 'package:l_earn/Presentation/components/follower_count_widget.dart';
 import 'package:l_earn/Presentation/components/render_user_name.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/utils/colors.dart';
@@ -207,32 +207,22 @@ class _BuildBannerAndUserDescriptionState
                                 ? Text('${widget.user.level} level')
                                 : const SizedBox(),
                           ]),
-
+                          
+                          //? FOLLOW COUNT WIDGET
+                          
                           BlocBuilder<FollowCubit, FollowState>(
                               builder: (context, state) {
-                            print("Current follow state is $state");
-                            Text followersText = Text(
-                                widget.user.followers == 1
-                                    ? '1 follower'
-                                    : '${widget.user.followers} followers',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold));
+                            int followerCount = widget.user.followers;
+                            print("is userfollowed ${state is UserFollowed}");
                             if (state is UserFollowed) {
-                              String text = '${newUser.followers}';
-
-                              print("TEXT $text");
-                              followersText = Text(
-                                  '$text ${newUser.followers == 1 ? 'follower' : 'followers'}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold));
+                              followerCount = newUser.followers;
                             }
-
-                            return followersText;
+                            return FollowerCountWidget(
+                              followerCount: followerCount,
+                            );
                           })
+
+
                         ],
                       )))
             ]),
@@ -242,3 +232,5 @@ class _BuildBannerAndUserDescriptionState
     );
   }
 }
+
+
