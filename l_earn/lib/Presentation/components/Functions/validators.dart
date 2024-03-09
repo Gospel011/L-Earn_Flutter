@@ -1,3 +1,5 @@
+import 'package:l_earn/utils/constants.dart';
+
 ///? Confirms if the email is valid
 String? emailValidator(value) {
   if (value.toString().contains('@')) {
@@ -18,10 +20,10 @@ String? handleValidator(value) {
 
 ///? confirms if the password is valid
 String? passwordValidator(value) {
-  if (value.split('').length >= 8 && value.split('').length <= 16) {
+  if (value.split('').length >= passwordLowerLimit) {
     return null;
   } else {
-    return 'Your password must be 8 to 16 characters long';
+    return 'Your password must be atleast $passwordLowerLimit characters long';
   }
 }
 

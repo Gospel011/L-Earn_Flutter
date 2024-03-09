@@ -247,7 +247,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     hintText: "new Password",
                     controller: _passwordController,
                     validator: passwordValidator,
-                    inputFormatters: [LengthLimitingTextInputFormatter(16)],
                     obscureText: _obscureTextPassword,
                     suffixIcon: Icon(_obscureTextPassword == false
                         ? Icons.visibility
@@ -274,7 +273,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       return signupConfirmPasswordValidator(
                           value, _passwordController.text.trim());
                     },
-                    inputFormatters: [LengthLimitingTextInputFormatter(16)],
                     obscureText: _obscureTextConfirmPassword,
                     suffixIcon: Icon(_obscureTextConfirmPassword == false
                         ? Icons.visibility

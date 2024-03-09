@@ -20,6 +20,7 @@ class NetWorkConstants {
 
 //*CURSOR WIDTH
 const double cursorWidth = 1.0;
+const int passwordLowerLimit = 8;
 
 final class AppIcons {
   static final arrowDown = SvgPicture.asset('assets/svg_icons/arrow_down-thin.svg');

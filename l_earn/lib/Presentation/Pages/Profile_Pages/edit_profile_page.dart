@@ -566,13 +566,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
 
                 const SizedBox(height: 10),
+
                 // CHANGE PASSWORD SECTION
                 //? CURRENT PASSWORD
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyTextFormField(
                     controller: _currentPasswordController,
-                    inputFormatters: [LengthLimitingTextInputFormatter(8)],
                     validator: (value) {
                       if (value.toString() == '') {
                         return null;
@@ -599,7 +599,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         _showPassword = !_showPassword;
                       });
                     },
-                    inputFormatters: [LengthLimitingTextInputFormatter(8)],
                     validator: (value) {
                       if (value.toString() == '') {
                         return null;
@@ -625,8 +624,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       setState(() {
                         _showConfirmPassword = !_showConfirmPassword;
                       });
-                    },
-                    inputFormatters: [LengthLimitingTextInputFormatter(8)],
+                    },                    
                     validator: (value) {
                       if (_newPasswordController.text.trim() != '') {
                         return signupConfirmPasswordValidator(

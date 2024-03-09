@@ -109,9 +109,6 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "Password",
                         controller: _passwordController,
                         validator: passwordValidator,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(16)
-                        ],
                         obscureText: _obscureText,
                         suffixIcon: Icon(_obscureText == false
                             ? Icons.visibility

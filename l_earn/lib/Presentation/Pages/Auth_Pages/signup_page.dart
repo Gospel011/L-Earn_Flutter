@@ -170,9 +170,6 @@ class _SignupPageState extends State<SignupPage> {
                         hintText: "Password",
                         controller: _passwordController,
                         validator: passwordValidator,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(16)
-                        ],
                         obscureText: _obscureTextPassword,
                         suffixIcon: Icon(_obscureTextPassword == false
                             ? Icons.visibility
@@ -199,9 +196,6 @@ class _SignupPageState extends State<SignupPage> {
                           return signupConfirmPasswordValidator(
                               value, _passwordController.text);
                         },
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(16)
-                        ],
                         obscureText: _obscureTextConfirmPassword,
                         suffixIcon: Icon(_obscureTextConfirmPassword == false
                             ? Icons.visibility
