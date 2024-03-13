@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:l_earn/Presentation/components/my_image_loading_placeholder_widget.dart';
 
@@ -13,17 +14,16 @@ class MyImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 16.0)),
-        child: Image.network(
-          image,
-          fit: boxfit,
-          loadingBuilder: (context, child, progress) {
-            if (progress == null) return child;
-            return const ImageLoadingPlaceHolderWidget();
-          },
-          errorBuilder: (context, child, stacktrace) {
-            return const ImageLoadingPlaceHolderWidget();
-          },
-        ));
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 16.0)),
+      child: CachedNetworkImage(
+        imageUrl: image,
+        fit: boxfit,
+        placeholder: (context, url) => const ImageLoadingPlaceHolderWidget(),
+        errorWidget: (context, url, error) =>
+            const ImageLoadingPlaceHolderWidget(),
+        fadeInDuration: const Duration(milliseconds: 1),
+        fadeInCurve: Curves.linear,
+      ),
+    );
   }
 }

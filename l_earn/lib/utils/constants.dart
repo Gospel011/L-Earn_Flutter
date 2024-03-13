@@ -52,3 +52,26 @@ final class AppIcons {
   static final write32 = SvgPicture.asset('assets/svg_icons/write.svg', width: 32, height: 32,);
   static final write = SvgPicture.asset('assets/svg_icons/write.svg');
 }
+
+
+class AppRoutes {
+  static const login = 'login';
+  static const signup = 'signup';
+  static const forgotPassword = 'forgot-password';
+  static const resetPassword = 'reset-password';
+  static const emailVerification = 'verify-email';
+  static const home = 'home';
+  static const profile = 'profile';
+  static const editProfile = 'edit-profile';
+  static const tutorsDashboard = 'tutors-dashboard';
+  static const paymentHistory = 'payment-history';
+  static const payment = 'payment';
+  static const post = 'post';
+  static const createTutorial = 'create-tutorial';
+  static const imageView = 'image-view';
+  static const paymentDetails = 'payment-details';
+  static const contentDescription = 'content-description';
+  static const writeBook = 'write-book-page';
+  static const chapterPage = 'chapter-page';
+  static const createEvent = 'create-event';
+}

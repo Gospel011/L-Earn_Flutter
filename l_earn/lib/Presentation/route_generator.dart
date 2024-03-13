@@ -20,7 +20,7 @@ import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/payment_history_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/profile_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/tutors_profile.dart';
-import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/create_a_chapter.dart';
+
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/write_a_book_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/chapter_page.dart';
 
@@ -47,14 +47,31 @@ class RouteGenerator {
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     print('SETTING = $settings');
     switch (settings.name) {
-      //? LOGIN PAGE
+      //! LOGIN PAGE
       case '/':
         return MaterialPageRoute(builder: (_) {
           print('/login from route generator');
           return const LoginPage();
         });
 
-      //? PAYMENT DETAILS PAGE
+      //! SIGN UP PAGE
+      case '/signup':
+        return MaterialPageRoute(builder: (_) {
+          print('/sign_up from route generator');
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _timerCubit,
+              ),
+              BlocProvider.value(
+                value: _verificationCubit,
+              ),
+            ],
+            child: const SignupPage(),
+          );
+        });
+
+      //! PAYMENT DETAILS PAGE
       case '/payment-details':
         return MaterialPageRoute(builder: (_) {
           print('/payment-details from route generator');
@@ -63,7 +80,7 @@ class RouteGenerator {
           );
         });
 
-      //? TUTOR'S PROFILE PAGE
+      //! TUTOR'S PROFILE PAGE
       case '/tutors-profile':
         return MaterialPageRoute(builder: (_) {
           print('/tutors-profile from route generator');
@@ -73,7 +90,7 @@ class RouteGenerator {
           );
         });
 
-      //? PAYMENT PAGE
+      //! PAYMENT PAGE
       case '/payment-page':
         return MaterialPageRoute(builder: (_) {
           print('/payment-page from route generator');
@@ -84,7 +101,7 @@ class RouteGenerator {
               ));
         });
 
-      //? PAYMENT PAGE
+      //! PAYMENT PAGE
       case '/payment-history-page':
         return MaterialPageRoute(builder: (_) {
           print('/payment-history-page from route generator');
@@ -92,7 +109,7 @@ class RouteGenerator {
               value: paymentCubit, child: const PaymentHistoryPage());
         });
 
-      //? MAKE A POST PAGE
+      //! MAKE A POST PAGE
       case '/make-post':
         return MaterialPageRoute(builder: (_) {
           print('${settings.name} from route generator');
@@ -100,6 +117,7 @@ class RouteGenerator {
               value: postCubit, child: const MakePostPage());
         });
 
+      //! CREATE TUTORIAL PAGE
       case '/create-tutorial':
         return MaterialPageRoute(builder: (_) {
           print('${settings.name} from route generator');
@@ -129,12 +147,14 @@ class RouteGenerator {
               ));
         });
 
+      //! CREATE EVENT
       case '/create-event':
         return MaterialPageRoute(builder: (_) {
           print('/create-event from route generator');
           return const CreateEventPage();
         });
 
+      //! IMAGE VIEW PAGE
       case '/image-view-page':
         return MaterialPageRoute(builder: (_) {
           print('/image-view-page from route generator');
@@ -143,6 +163,7 @@ class RouteGenerator {
           );
         });
 
+      //! Edit profile
       case '/edit-profile-page':
         return MaterialPageRoute(builder: (_) {
           print('/edit-profile-page from route generator');
@@ -150,7 +171,7 @@ class RouteGenerator {
           return const EditProfilePage();
         });
 
-      //? HOME PAGE
+      //! HOME PAGE
       case '/home':
         return MaterialPageRoute(builder: (context) {
           print('/home from route generator');
@@ -160,6 +181,8 @@ class RouteGenerator {
           ], child: HomePage());
         });
 
+
+      //! content description
       case '/content-description':
         print('content-discription from route generator');
         return MaterialPageRoute(builder: (context) {
@@ -174,6 +197,7 @@ class RouteGenerator {
           );
         });
 
+      //! CHAPTER PAGE
       case '/chapter-page':
         print('chapter-page from route generator');
         return MaterialPageRoute(builder: (context) {
@@ -186,6 +210,7 @@ class RouteGenerator {
             child: const ChapterPage());
         });
 
+      //! WRITE A BOOK PAGE
       case '/write-book-page':
         print('chapter-page from route generator');
         return MaterialPageRoute(builder: (context) {
@@ -200,20 +225,9 @@ class RouteGenerator {
           );
         });
 
-      // case '/write-a-book-page':
-      //   print('write-a-book-page from route generator');
 
-      //   final args = settings.arguments as Map? ?? {};
-      //   return MaterialPageRoute(builder: (context) {
-      //     return BlocProvider.value(
-      //       value: contentCubit,
-      //       child: WriteABookPage(
-      //         content: args['content'],
-      //         chapterId: args['chapterId']
-      //       ),
-      //     );
-      //   });
 
+      //! Profile Page
       case '/profile-page':
         print('profile-page from route generator');
         return MaterialPageRoute(builder: (context) {
@@ -231,12 +245,8 @@ class RouteGenerator {
               ));
         });
 
-      case '/create-a-chapter-page':
-        print('create-a-chapter-page from route generator');
-        return MaterialPageRoute(builder: (context) {
-          return const CreateAChapterPage();
-        });
 
+      //! forgot password
       case '/forgot-password':
         return MaterialPageRoute(builder: (context) {
           print('/forgot-password from route generator');
@@ -246,33 +256,17 @@ class RouteGenerator {
           );
         });
 
+      //! reset password
       case '/reset-password':
         return MaterialPageRoute(builder: (context) {
-          print('/home from route generator');
+          print('/reset-password from route generator');
           return BlocProvider.value(
             value: _timerCubit,
             child: ResetPasswordPage(),
           );
         });
 
-      //? SIGN UP PAGE
-      case '/signup':
-        return MaterialPageRoute(builder: (_) {
-          print('/sign_up from route generator');
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider.value(
-                value: _timerCubit,
-              ),
-              BlocProvider.value(
-                value: _verificationCubit,
-              ),
-            ],
-            child: const SignupPage(),
-          );
-        });
-
-      //? VERIFICATION
+      //! VERIFICATION
       case '/emailVerificationPage':
         return MaterialPageRoute(builder: (context) {
           print('/verification from route generator');
