@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:l_earn/DataLayer/Models/post_model.dart';
 
+import 'package:l_earn/Presentation/components/my_custom_text.dart';
 import 'package:l_earn/Presentation/components/my_expandable_text.dart';
 import 'package:l_earn/Presentation/components/my_image_widget.dart';
 import 'package:l_earn/Presentation/components/my_like_comment_share_widget.dart';
@@ -35,7 +36,8 @@ class MyPostWidget extends StatelessWidget {
             child: MyPostHeader(user: post.user, moreActions: moreActions)),
 
           //? TEXT
-          MyExpandableText(text: post.text),
+          MyCustomText(text: post.text),
+          // MyExpandableText(text: post.text),
 
           //? [POLL -- > next launch] OR IMAGE
           // BarChart()

@@ -1,8 +1,9 @@
 import 'package:l_earn/utils/constants.dart';
+import 'package:email_validator/email_validator.dart';
 
 ///? Confirms if the email is valid
 String? emailValidator(value) {
-  if (value.toString().contains('@')) {
+  if (EmailValidator.validate(value.toString())) {
     return null;
   } else {
     return 'Please provide a valid email address';
