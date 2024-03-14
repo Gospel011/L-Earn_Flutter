@@ -55,13 +55,20 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
         listener: (context, state) async {
           if (state is EmailVerified) {
             print("V E R I F I C A T I O N SUCCESSFUL");
+
+            context
+                .read<AuthCubit>()
+                .updateEmailVerifiedStatus(status: true);
+
+                
             await showDialog(
                 context: context,
                 builder: (context) {
                   return MyDialog(
                     title: 'Congratulations',
-                    content:
-                        context.read<AuthCubit>().state.email == null ? "Your account is now verifed" : 'Your Account setup is complete. You may now login with your email and password.',
+                    content: context.read<AuthCubit>().state.email == null
+                        ? "Your account is now verifed"
+                        : 'Your Account setup is complete. You may now login with your email and password.',
                   );
                 });
 
@@ -69,7 +76,9 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
               // Navigator.pushNamedAndRemoveUntil(
               //     context, '/', (route) => false);
 
-              context.read<AuthCubit>().state.email == null ? context.goNamed(AppRoutes.home) : context.goNamed(AppRoutes.login);
+              context.read<AuthCubit>().state.email == null
+                  ? context.goNamed(AppRoutes.home)
+                  : context.goNamed(AppRoutes.login);
             }
           } else if (state is VerificationFailed) {
             print("V e r i f i c a t i o n failed");
@@ -257,36 +266,26 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
   }
 
   void e6OnChanged(value) {
-                    value != ''
-                        ? _d6Focusnode.unfocus()
-                        : _d5Focusnode.requestFocus();
-                  }
+    value != '' ? _d6Focusnode.unfocus() : _d5Focusnode.requestFocus();
+  }
 
   void e5OnChanged(value) {
-                  value != ''
-                      ? _d6Focusnode.requestFocus()
-                      : _d4Focusnode.requestFocus();
-                }
+    value != '' ? _d6Focusnode.requestFocus() : _d4Focusnode.requestFocus();
+  }
 
   void e4OnChanged(value) {
-                    value != ''
-                        ? _d5Focusnode.requestFocus()
-                        : _d3Focusnode.requestFocus();
-                  }
+    value != '' ? _d5Focusnode.requestFocus() : _d3Focusnode.requestFocus();
+  }
 
   void e3OnChanged(value) {
-                    value != ''
-                        ? _d4Focusnode.requestFocus()
-                        : _d2Focusnode.requestFocus();
-                  }
+    value != '' ? _d4Focusnode.requestFocus() : _d2Focusnode.requestFocus();
+  }
 
   void e2OnChanged(value) {
-                    value != ''
-                        ? _d3Focusnode.requestFocus()
-                        : _d1Focusnode.requestFocus();
-                  }
+    value != '' ? _d3Focusnode.requestFocus() : _d1Focusnode.requestFocus();
+  }
 
   void e1OnChanged(value) {
-                    value != '' ? _d2Focusnode.requestFocus() : null;
-                  }
+    value != '' ? _d2Focusnode.requestFocus() : null;
+  }
 }

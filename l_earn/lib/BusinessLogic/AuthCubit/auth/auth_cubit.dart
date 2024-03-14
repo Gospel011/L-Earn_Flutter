@@ -105,6 +105,14 @@ class AuthCubit extends HydratedCubit<AuthState> {
     }
   }
 
+  void updateEmailVerifiedStatus({required bool status}) {
+    String? token = state.user?.token;
+
+    final User? user = state.user?.copyWith(token: token, emailVerified: status);
+
+    if(user != null) emit(AuthLoggedIn(user: user!));
+  }
+
   @override
   AuthState fromJson(Map<String, dynamic> json) {
     print("Retrieved previously saved state");
@@ -119,12 +127,4 @@ class AuthCubit extends HydratedCubit<AuthState> {
 
     return state.toMap();
   }
-
-
-
-
-  
-
 }
-
-
