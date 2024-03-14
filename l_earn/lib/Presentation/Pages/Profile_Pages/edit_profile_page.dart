@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,7 +102,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         }
       },
       child: Scaffold(
-          appBar: widget.buildAppBar(context, title: 'Edit profile', actions: [
+          appBar: widget.buildAppBar(context, automaticallyImplyLeading: Platform.isWindows, title: 'Edit profile', actions: [
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -311,7 +314,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("Male"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _genderController.text = 'Male';
                                         });
@@ -323,7 +327,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("Female"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _genderController.text = 'Female';
                                         });
@@ -381,7 +386,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("FUTO"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _schoolController.text =
                                               'Federal University of Technology, Owerri';
@@ -439,7 +445,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("100"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '100 level';
                                         });
@@ -453,7 +460,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("200"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '200 level';
                                         });
@@ -467,7 +475,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("300"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '300 level';
                                         });
@@ -481,7 +490,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("400"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '400 level';
                                         });
@@ -495,7 +505,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("500"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '500 level';
                                         });
@@ -509,7 +520,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("600"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '600 level';
                                         });
@@ -523,7 +535,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("700"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '700 level';
                                         });
@@ -537,7 +550,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               BorderRadius.circular(16)),
                                       title: const Text("800"),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        //! avigator.pop(context);
+                                        context.pop();
                                         setState(() {
                                           _levelController.text = '800 level';
                                         });
@@ -593,7 +607,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: MyTextFormField(
                     controller: _newPasswordController,
                     obscureText: !_showPassword,
-                    suffixIcon:_showPassword == false ? const Icon(Icons.visibility_off_rounded) : const Icon(Icons.visibility_rounded),
+                    suffixIcon: _showPassword == false
+                        ? const Icon(Icons.visibility_off_rounded)
+                        : const Icon(Icons.visibility_rounded),
                     suffixOnpressed: () {
                       setState(() {
                         _showPassword = !_showPassword;
@@ -619,12 +635,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: MyTextFormField(
                     controller: __newConfirmPasswordController,
                     obscureText: !_showConfirmPassword,
-                    suffixIcon:_showConfirmPassword == false ? const Icon(Icons.visibility_off_rounded) : const Icon(Icons.visibility_rounded),
+                    suffixIcon: _showConfirmPassword == false
+                        ? const Icon(Icons.visibility_off_rounded)
+                        : const Icon(Icons.visibility_rounded),
                     suffixOnpressed: () {
                       setState(() {
                         _showConfirmPassword = !_showConfirmPassword;
                       });
-                    },                    
+                    },
                     validator: (value) {
                       if (_newPasswordController.text.trim() != '') {
                         return signupConfirmPasswordValidator(

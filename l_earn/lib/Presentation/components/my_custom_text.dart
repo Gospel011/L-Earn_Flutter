@@ -45,7 +45,7 @@ class MyCustomText extends StatelessWidget {
         color: Colors.black,
       ),
       hashtagStyle:
-          const TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold),
+          const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       onHashtagTap: (value) {
         print("Hashtag $value tapped");
       },

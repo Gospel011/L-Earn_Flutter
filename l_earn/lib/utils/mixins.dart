@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 mixin AppBarMixin {
   AppBar buildAppBar(BuildContext context,
@@ -34,8 +36,7 @@ mixin AppBarMixin {
                 ? IconButton(
                     onPressed: () {
                       closeButtonOnpressed == null
-                          ? Navigator.pushNamedAndRemoveUntil(
-                              context, '/', (route) => false)
+                          ? context.goNamed(AppRoutes.login)
                           : closeButtonOnpressed();
                     },
                     icon: const Icon(Icons.close_rounded))

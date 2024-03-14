@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/DataLayer/Models/post_model.dart';
 
 import 'package:l_earn/Presentation/components/my_custom_text.dart';
@@ -8,6 +9,7 @@ import 'package:l_earn/Presentation/components/my_image_widget.dart';
 import 'package:l_earn/Presentation/components/my_like_comment_share_widget.dart';
 
 import 'package:l_earn/Presentation/components/my_post_header.dart';
+import 'package:l_earn/utils/constants.dart';
 
 class MyPostWidget extends StatelessWidget {
   const MyPostWidget({
@@ -32,7 +34,7 @@ class MyPostWidget extends StatelessWidget {
         children: [
           //? ROW WITH PROFILE PICTURE, NAME, HANDLE AND MORE ICON
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, '/profile-page', arguments: post.user),
+            onTap: () => context.goNamed(AppRoutes.profile, extra: post.user),
             child: MyPostHeader(user: post.user, moreActions: moreActions)),
 
           //? TEXT

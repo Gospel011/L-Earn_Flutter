@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
@@ -16,6 +17,7 @@ import 'package:l_earn/Presentation/components/my_textfield.dart';
 import 'package:l_earn/Presentation/components/render_user_name.dart';
 
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
 
 class MyQuillEditor extends StatefulWidget {
   const MyQuillEditor(
@@ -97,41 +99,44 @@ class _ChapterPageState extends State<MyQuillEditor> {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //? PROFILE PICTURE
-                      MyProfilePicture(
-                        user: widget.user!,
-                        radius: 24,
-                      ),
-
-                      const SizedBox(width: 4),
-
-                      //? COLUMN WITH NAME AND FOLLOWERS
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          //* U S E R N A M E
-                          RenderUserName(
-                            user: widget.user!,
-                            fontWeight: FontWeight.bold,
-                          ),
-
-                          //* F O L L O W E R S
-                          FollowerCountWidget(
-                              followerCount: widget.user!.followers,
-                              fontWeight: FontWeight.normal)
-                        ],
-                      ),
-
-                      // MyContainerButton(
-                      //     text: 'Follow',
-                      //     onPressed: () {
-                      //       print('Follow button pressed');
-                      //     })
-                    ],
+                  child: GestureDetector(
+                    onTap: () => context.goNamed(AppRoutes.profile, extra: widget.user),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //? PROFILE PICTURE
+                        MyProfilePicture(
+                          user: widget.user!,
+                          radius: 24,
+                        ),
+                    
+                        const SizedBox(width: 4),
+                    
+                        //? COLUMN WITH NAME AND FOLLOWERS
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            //* U S E R N A M E
+                            RenderUserName(
+                              user: widget.user!,
+                              fontWeight: FontWeight.bold,
+                            ),
+                    
+                            //* F O L L O W E R S
+                            FollowerCountWidget(
+                                followerCount: widget.user!.followers,
+                                fontWeight: FontWeight.normal)
+                          ],
+                        ),
+                    
+                        // MyContainerButton(
+                        //     text: 'Follow',
+                        //     onPressed: () {
+                        //       print('Follow button pressed');
+                        //     })
+                      ],
+                    ),
                   ),
                 ),
               ),

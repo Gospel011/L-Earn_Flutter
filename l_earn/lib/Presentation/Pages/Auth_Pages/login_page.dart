@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
@@ -11,6 +12,7 @@ import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/Presentation/components/my_textformfield.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
 import 'package:l_earn/utils/mixins.dart';
 
 class LoginPage extends StatefulWidget with AppBarMixin {
@@ -28,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _obscureText = true;
 
-  
   @override
   Widget build(BuildContext context) {
     //? Update email controller
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         print('state in login page bloc listener is $state');
         if (state is AuthLoggedIn) {
           print("::: state is authlogged in :::");
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          context.goNamed(AppRoutes.home);
         } else if (state is AuthSignedUp) {
           print("::: state is auth signed up :::");
           _emailController.text = state.email!;
@@ -133,8 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                               textcolor: AppColor.buttonTextBlue,
                               onPressed: () {
                                 print('Forgot password button pressed');
-                                Navigator.pushNamed(
-                                    context, '/forgot-password');
+                                context.goNamed(AppRoutes.forgotPassword);
                               })
                         ],
                       ),
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("Don't have an account?"),
+                          const Text("Don't have an account?"),
                           MyTextButton(
                               text: 'signup',
                               textcolor: AppColor.buttonTextBlue,
@@ -196,7 +196,9 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 //TODO --> NAVIGATE TO SIGNUP
                                 print('Signup button pressed');
-                                Navigator.pushNamed(context, '/signup');
+                                // context.go('/login/signup');
+                                context.goNamed(AppRoutes.signup);
+                                // Navigator.pushNamed(context, '/signup');
                               })
                         ],
                       ),

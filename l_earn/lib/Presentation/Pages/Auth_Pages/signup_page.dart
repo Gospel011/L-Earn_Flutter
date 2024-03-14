@@ -13,7 +13,9 @@ import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/Presentation/components/my_textformfield.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
 import 'package:l_earn/utils/mixins.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupPage extends StatefulWidget with AppBarMixin {
   const SignupPage({super.key});
@@ -60,10 +62,10 @@ class _SignupPageState extends State<SignupPage> {
                   context
                       .read<VerificationCubit>()
                       .requestEmailVerificationOtp();
-                  
-                  
+
                   //? navigate to emailVerificationPage
-                  Navigator.pushNamed(context, '/emailVerificationPage');
+                  // Navigator.pushNamed(context, '/emailVerificationPage');
+                  context.pushNamed(AppRoutes.emailVerification);
                 }
               },
             ),
@@ -219,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Builder(builder: (context) {
                         final authState = context.watch<AuthCubit>().state;
-                        
+
                         return MyElevatedButton(
                           loading: authState is AuthSigningUp,
                           text: 'Sign up',
@@ -277,10 +279,8 @@ class _SignupPageState extends State<SignupPage> {
                               textcolor: AppColor.buttonTextBlue,
                               textDecoration: TextDecoration.underline,
                               onPressed: () {
-                                //TODO --> NAVIGATE TO SIGNUP
                                 print('Login button pressed');
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, '/', (route) => false);
+                                context.goNamed(AppRoutes.login);
                               })
                         ],
                       ),

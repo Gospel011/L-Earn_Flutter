@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
 import '../../../BusinessLogic/contentCubit/content_cubit.dart';
 import '../../../DataLayer/Models/content_model.dart';
 
@@ -71,10 +73,13 @@ class _LearnPageState extends State<LearnPage>
               builder: ((context) => MyDialog(
                   title: state.error!.title, content: state.error!.content)));
         } else if (state is ContentFound) {
-          Navigator.pop(context);
+          //! avigator.pop(context);
+          context.pop();
           //? NAVIGATE TO CONTENT DESCRIPTION PAGE
-          Navigator.of(context)
-              .pushNamed('/content-description', arguments: state.content!);
+          context.goNamed(AppRoutes.contentDescription,
+              extra: state.content!);
+          //! avigator.of(context)
+          //     .pushNamed('/content-description', arguments: state.content!);
         }
       },
       child: RefreshIndicator(
@@ -101,9 +106,12 @@ class _LearnPageState extends State<LearnPage>
 
                       //* CONTENT
                       child: MyContent(
-                        onHeaderPressed: () => Navigator.pushNamed(
-                            context, '/profile-page',
-                            arguments: state.contents?[index].author),
+                        onHeaderPressed: () => context.goNamed(
+                            AppRoutes.profile,
+                            extra: state.contents[index].author),
+                        //! avigator.pushNamed(
+                        //     context, '/profile-page',
+                        //     arguments: state.contents?[index].author),
                         content: content,
                         onThumbnailPressed: () {
                           //? REQUEST FOR A PARTICULAR CONTENT

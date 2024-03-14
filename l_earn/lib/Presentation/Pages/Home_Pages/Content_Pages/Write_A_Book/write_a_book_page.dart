@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_editor.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
@@ -10,6 +12,7 @@ import 'package:l_earn/BusinessLogic/ContentCubit/content_cubit.dart';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/utils/constants.dart';
 import 'package:l_earn/utils/mixins.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
@@ -47,8 +50,10 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
                   });
 
               if (context.mounted) {
-                Navigator.pushReplacementNamed(context, '/profile-page',
-                    arguments: context.read<AuthCubit>().state.user);
+                context.push(AppRoutes.profile,
+                    extra: context.read<AuthCubit>().state.user);
+                //! avigator.pushReplacementNamed(context, '/profile-page',
+                //     arguments: context.read<AuthCubit>().state.user);
               }
 
               _titleController.text = '';
@@ -59,7 +64,7 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
           },
           child: Scaffold(
               resizeToAvoidBottomInset: true,
-              appBar: buildAppBar(context, actions: [
+              appBar: buildAppBar(context, automaticallyImplyLeading: Platform.isWindows, actions: [
                 Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

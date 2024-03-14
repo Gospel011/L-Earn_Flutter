@@ -16,7 +16,13 @@ import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
 import 'package:l_earn/utils/colors.dart';
 
 import 'package:l_earn/utils/mixins.dart';
+
+import 'package:l_earn/utils/constants.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import "dart:io";
 
 class ProfilePage extends StatefulWidget with AppBarMixin {
   const ProfilePage({super.key, required this.user});
@@ -47,7 +53,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void deleteBook(String contentId) {
-    // Navigator.pop(context);
+    //! avigator.pop(context);
+    context.pop();
 
     //! PERFORM DELETE OPERATION
     context
@@ -72,12 +79,16 @@ class _ProfilePageState extends State<ProfilePage> {
               builder: ((context) => MyDialog(
                   title: state.error!.title, content: state.error!.content)));
         } else if (state is ContentFound) {
-          Navigator.pop(context);
+          //! avigator.pop(context);
+          context.pop();
           //? NAVIGATE TO CONTENT DESCRIPTION PAGE
-          Navigator.of(context)
-              .pushNamed('/content-description', arguments: state.content!);
+          //! avigator.of(context)
+          //     .pushNamed('/content-description', arguments: state.content!);
+          context.pushNamed(AppRoutes.contentDescription,
+              extra: state.content!);
         } else if (state is ContentDeleted) {
-          Navigator.pop(context);
+          //! avigator.pop(context);
+          context.pop();
           //? REFRESH CONTENT
           loadContents();
         }
@@ -86,7 +97,8 @@ class _ProfilePageState extends State<ProfilePage> {
       //? S C A F F O L D
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, '/create-tutorial'),
+          onPressed: () => context.pushNamed(AppRoutes.createTutorial),
+          //! avigator.pushNamed(context, '/create-tutorial'),
           elevation: 20,
           backgroundColor: AppColor.mainColorBlack,
           child: const Icon(
@@ -95,6 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         appBar: widget.buildAppBar(context,
+            automaticallyImplyLeading: Platform.isWindows,
             actions: context.read<AuthCubit>().state.user?.id == widget.user.id
                 ? [
                     PopupMenuButton(
@@ -106,8 +119,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             PopupMenuItem(
                               value: 'Edit',
                               child: const Text("Edit profile"),
-                              onTap: () => Navigator.pushNamed(
-                                  context, '/edit-profile-page'),
+                              onTap: () =>
+                                  context.pushNamed(AppRoutes.editProfile),
+                              //! avigator.pushNamed(
+                              //     context, '/edit-profile-page'),
                             ),
 
                             //? Verify Email
@@ -138,7 +153,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       ?.copyWith(fontSize: 14),
                                                 ),
                                                 onTap: () {
-                                                  Navigator.pop(context);
+                                                  //! avigator.pop(context);
+                                                  context.pop();
                                                   print(
                                                       "Don't generate new otp");
                                                 },
@@ -158,7 +174,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       ?.copyWith(fontSize: 14),
                                                 ),
                                                 onTap: () {
-                                                  Navigator.pop(context);
+                                                  //! avigator.pop(context);
+                                                  context.pop();
                                                   print("Generate new otp");
                                                 },
                                               ),
@@ -289,15 +306,23 @@ class _ProfilePageState extends State<ProfilePage> {
                           print("Edit content pressed");
                           print("POST TAG LENGT ${content.tags}");
 
-                          Navigator.pushNamed(context, '/create-tutorial',
-                              arguments: {
-                                'title': content.title,
-                                'description': content.description,
-                                'price': content.price,
-                                'genre': content.tags?.join(''),
-                                'thumbnailUrl': content.thumbnailUrl,
-                                'id': content.id
-                              });
+                          //! avigator.pushNamed(context, '/create-tutorial',
+                          //     arguments: {
+                          //       'title': content.title,
+                          //       'description': content.description,
+                          //       'price': content.price,
+                          //       'genre': content.tags?.join(''),
+                          //       'thumbnailUrl': content.thumbnailUrl,
+                          //       'id': content.id
+                          //     });
+                          context.pushNamed(AppRoutes.createTutorial, extra: {
+                            'title': content.title,
+                            'description': content.description,
+                            'price': content.price,
+                            'genre': content.tags?.join(''),
+                            'thumbnailUrl': content.thumbnailUrl,
+                            'id': content.id
+                          });
                         },
                         child: Text('Edit ${content.type}'),
                       ),
@@ -309,9 +334,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           //TODO: HANDLE ADD CONTENT
                           print("Add chapter pressed");
 
-                          Navigator.of(context).pushReplacementNamed(
-                              '/write-book-page',
-                              arguments: {"content": content});
+                          context.pushNamed(
+                              AppRoutes.writeBook,
+                              extra: {"content": content});
+                          //! avigator.of(context).pushReplacementNamed(
+                          //     '/write-book-page',
+                          //     arguments: {"content": content});
                         },
                         child: const Text('Add chapter'),
                       ),
@@ -372,7 +400,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     MyContainerButton(
                                         text: "No",
                                         onPressed: () {
-                                          Navigator.pop(context);
+                                          //! avigator.pop(context);
+                                          context.pop();
                                           print("User clicked No");
                                         })
                                   ],

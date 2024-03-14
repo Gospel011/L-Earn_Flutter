@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
+
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_profile_picture.dart';
 import 'package:l_earn/Presentation/components/render_user_name.dart';
+import 'package:l_earn/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class MyDrawer extends StatelessWidget {
   final User user;
@@ -41,28 +43,35 @@ class MyDrawer extends StatelessWidget {
               text: "View profile",
               onPressed: () {
                 print("View profile button pressed");
-                Navigator.pop(context);
+                //! avigator.pop(context);
+                context.pop();
 
-                Navigator.pushNamed(context, '/profile-page',
-                    arguments: context.read<AuthCubit>().state.user!);
+                context.goNamed(AppRoutes.profile,
+                    extra: context.read<AuthCubit>().state.user!);
+
+                //! avigator.pushNamed(context, '/profile-page',
+                //     arguments: context.read<AuthCubit>().state.user!);
               },
             ),
           ),
 
           //? TUTORS PROFILE PAGE
-          context.read<AuthCubit>().state.user?.role == 'tutor' ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyDrawerItem(
-              text: "Tutor's dashboard",
-              onPressed: () {
-                print("Payment history button pressed");
-                Navigator.pop(context);
+          context.read<AuthCubit>().state.user?.role == 'tutor'
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: MyDrawerItem(
+                    text: "Tutor's dashboard",
+                    onPressed: () {
+                      print("Payment history button pressed");
+                      //! avigator.pop(context);
+                      context.pop();
 
-                
-                Navigator.pushNamed(context, '/tutors-profile');
-              },
-            ),
-          ) : const SizedBox(),
+                      //! avigator.pushNamed(context, '/tutors-profile');
+                      context.goNamed(AppRoutes.tutorsDashboard);
+                    },
+                  ),
+                )
+              : const SizedBox(),
 
           //? VIEW PAYMENT HISTORY
           Padding(
@@ -71,10 +80,11 @@ class MyDrawer extends StatelessWidget {
               text: "Payment history",
               onPressed: () {
                 print("Payment history button pressed");
-                Navigator.pop(context);
+                //! avigator.pop(context);
+                context.pop();
 
-                
-                Navigator.pushNamed(context, '/payment-history-page');
+                //! avigator.pushNamed(context, '/payment-history-page');
+                context.goNamed(AppRoutes.paymentHistory);
               },
             ),
           ),
@@ -86,7 +96,8 @@ class MyDrawer extends StatelessWidget {
               text: "Logout",
               onPressed: () {
                 print("Logout button pressed");
-                Navigator.pop(context);
+                //! avigator.pop(context);
+                context.pop();
                 context.read<AuthCubit>().logout();
               },
             ),

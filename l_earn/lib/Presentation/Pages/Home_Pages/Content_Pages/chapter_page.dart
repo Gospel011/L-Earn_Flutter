@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,7 @@ class _ChapterPageState extends State<ChapterPage> {
           ],
         )),
       ),
-      appBar: widget.buildAppBar(context, actions: [
+      appBar: widget.buildAppBar(context, automaticallyImplyLeading: Platform.isWindows, actions: [
         BlocBuilder<ContentCubit, ContentState>(builder: (context, state) {
           return state.article != null
               ? Padding(
@@ -100,8 +101,8 @@ class _ChapterPageState extends State<ChapterPage> {
               textEditingController: textEditingController,
               user: state.content?.author);
         } else {
-          return const Center(
-              child: Text("No available chapters found for you"));
+          return Center(
+              child: Text("No available chapters found for you, $state"));
         }
       }),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 
 import 'package:l_earn/Presentation/components/my_textformfield.dart';
+import 'package:l_earn/utils/constants.dart';
 
 import 'package:l_earn/utils/mixins.dart';
 
@@ -23,13 +25,9 @@ class ForgotPasswordPage extends StatefulWidget with AppBarMixin {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  
   final TextEditingController _emailController = TextEditingController();
-  
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +48,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             content: state.error!.content);
                       });
                 } else if (state is AuthPasswordResetOtpSent) {
-                  print("Auth password reset otp sent from /forgot-password page");
-                  
-                  
+                  print(
+                      "Auth password reset otp sent from /forgot-password page");
+
                   //? navigate to reset password page
-                  Navigator.pushNamed(context, '/reset-password');
+                  // avigator.pushNamed(context, '/reset-password');
+                  context.goNamed(AppRoutes.resetPassword);
                 }
-            //? This is to start the timer if the email was sent successfully.
-                  context
-                      .read<TimerCubit>()
-                      .setTimer(duration: const Duration(minutes: 1));
+                //? This is to start the timer if the email was sent successfully.
+                context
+                    .read<TimerCubit>()
+                    .setTimer(duration: const Duration(minutes: 1));
               },
             ),
-
-            
           ],
           child: SingleChildScrollView(
             child: Center(
@@ -111,7 +108,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                     ),
 
-                    
                     const SizedBox(
                       height: 48,
                     ),
@@ -122,7 +118,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Builder(builder: (context) {
                         final authState = context.watch<AuthCubit>().state;
-                        
+
                         return MyElevatedButton(
                           loading: authState is AuthRequestingPasswordResetOtp,
                           text: 'Send Otp',
@@ -132,7 +128,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 _formKey.currentState?.validate();
 
                             if (isValid == true) {
-
                               //? EMAIL
                               AuthHelper.userMap["email"] =
                                   _emailController.text;
@@ -144,7 +139,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         );
                       }),
                     ),
-
                   ],
                 ),
               ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
@@ -19,6 +20,7 @@ import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/utils/colors.dart';
 
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:l_earn/utils/constants.dart';
 
 class ContentDescriptionPage extends StatelessWidget {
   const ContentDescriptionPage({super.key, required this.content});
@@ -34,8 +36,9 @@ class ContentDescriptionPage extends StatelessWidget {
           print("CURRENT PAYMENT STATE IS $state");
           if (state is PaymentInvoiceGenerated) {
             // NAVIGATE TO PAYMENT PAGE
-            Navigator.of(context)
-                .pushNamed('/payment-page', arguments: content);
+            context.pushNamed(AppRoutes.payment, extra: content);
+            //! avigator.of(context)
+            //     .pushNamed('/payment-page', arguments: content);
           } else if (state is GeneratingPaymentInvoiceFailed) {
             showDialog(
                 context: context,
@@ -276,11 +279,12 @@ class BuildChapters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChaptersColumn(
-      chapters: chapters,
-      contentId: contentId,
-      type: type,
-      preRequestAction: () => Navigator.pushNamed(context, '/chapter-page'),
-    );
+        chapters: chapters,
+        contentId: contentId,
+        type: type,
+        preRequestAction: () => context
+            .pushNamed(AppRoutes.chapterPage) //! avigator.pushNamed(context, '/chapter-page'),
+        );
   }
 }
 
@@ -304,7 +308,8 @@ class ChaptersColumn extends StatelessWidget {
       listener: (context, state) {
         if (state is ChapterNotFound) {
           //? return to description page
-          Navigator.pop(context);
+          //! avigator.pop(context);
+          context.pop();
 
           //? show error message
           showDialog(

@@ -17,12 +17,18 @@ import 'package:l_earn/Presentation/components/my_bottom_modal_sheet.dart';
 import 'package:l_earn/Presentation/components/my_drawer.dart';
 
 import 'package:l_earn/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:l_earn/utils/mixins.dart';
 
-class HomePage extends StatelessWidget with AppBarMixin {
+class HomePage extends StatefulWidget with AppBarMixin {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     const Home(),
     const SizedBox(),
@@ -32,12 +38,8 @@ class HomePage extends StatelessWidget with AppBarMixin {
   ];
 
   // pagesTitles = ['Home', 'Learn', 'Post', 'Events', "Profile"];
-  late final List<String> pagesTitle = [
-    'Home',
-    'Post',
-    'Learn'
-  ]; //, 'Events', "Profile"];
-
+  late final List<String> pagesTitle = ['Home', 'Post', 'Learn'];
+  //, 'Events', "Profile"];
   late final List<Widget> pageIconsFill = [
     AppIcons.homeFill,
     AppIcons.post,
@@ -67,19 +69,27 @@ class HomePage extends StatelessWidget with AppBarMixin {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    final User? user = context.read<AuthCubit>().state.user;
+  void initState() {
+    super.initState();
+
+    user = context.read<AuthCubit>().state.user;
 
     context.read<PostCubit>().getNewPosts(user?.id, user?.token);
+    
     context
         .read<ContentCubit>()
         .loadContents(context.read<AuthCubit>().state.user?.token);
+  }
 
+  late final User? user;
+  @override
+  Widget build(BuildContext context) {
     //* BLOC LISTENER
     return BlocListener<AuthCubit, AuthState>(
       listener: ((context, state) {
         if (state is AuthInitial) {
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          //! avigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          context.goNamed(AppRoutes.login);
         }
       }),
       child: BlocProvider(
@@ -98,7 +108,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
           })),
 
           //* APP BAR
-          appBar: buildAppBar(context, actions: [
+          appBar: widget.buildAppBar(context, actions: [
             Builder(builder: (context) {
               return IconButton(
                   onPressed: () {
@@ -148,8 +158,11 @@ class HomePage extends StatelessWidget with AppBarMixin {
                     ListTile(
                       onTap: () {
                         print("Make a post tapped");
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, '/make-post');
+                        //! avigator.pop(context);
+                        context.pop();
+
+                        //! avigator.pushNamed(context, '/make-post');
+                        context.goNamed(AppRoutes.post);
                       },
                       leading: AppIcons.write32,
                       title: const Text("Make a post"),
@@ -159,11 +172,15 @@ class HomePage extends StatelessWidget with AppBarMixin {
                     ListTile(
                       onTap: () {
                         print("Write a book tapped");
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, '/create-tutorial');
+                        //! avigator.pop(context);
+                        context.pop();
+
+                        //! avigator.pushNamed(context, '/create-tutorial');
+
+                        context.goNamed(AppRoutes.createTutorial);
                       },
-                      leading:
-                          SizedBox(height: 32, width: 32, child: AppIcons.learnFill),
+                      leading: SizedBox(
+                          height: 32, width: 32, child: AppIcons.learnFill),
                       title: const Text("Create content"),
                     ),
 
@@ -171,7 +188,7 @@ class HomePage extends StatelessWidget with AppBarMixin {
                     // ListTile(
                     //   onTap: () {
                     //     print("Create a playlist tapped");
-                    //     // Navigator.pushNamed(context, '/create-event');
+                    //     //! avigator.pushNamed(context, '/create-event');
                     //   },
                     //   leading: AppIcons.learnFill,
                     //   title: const Text("Create a playlist"),
@@ -192,4 +209,3 @@ class HomePage extends StatelessWidget with AppBarMixin {
     });
   }
 }
-

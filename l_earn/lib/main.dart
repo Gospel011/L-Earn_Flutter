@@ -6,6 +6,7 @@ import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:l_earn/Presentation/route_generator.dart';
+import 'package:l_earn/Presentation/go_router_config.dart';
 import 'package:l_earn/utils/themes.dart';
 
 void main() async {
@@ -34,9 +35,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // BlocProvider<CommentCubit>(
-        //   create: (context) => CommentCubit(),
-        // ),
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
         ),
@@ -44,12 +42,16 @@ class _MyAppState extends State<MyApp> {
       
       child: Builder(builder: (context) {
         print('Current state is ${context.read<AuthCubit>().state}');
-        return MaterialApp(
+
+        final GoRouterConfig router = GoRouterConfig(authCubit: context.read<AuthCubit>());
+        return MaterialApp.router(
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.myAppTheme,
-            onGenerateRoute: widget.routeGenerator.onGenerateRoute,
-            initialRoute: context.read<AuthCubit>().state.user == null ? '/' : '/home');
+            routerConfig: router.router,
+            // onGenerateRoute: widget.routeGenerator.onGenerateRoute,
+            // initialRoute: context.read<AuthCubit>().state.user == null ? '/' : '/home',
+            );
       }),
     );
   }

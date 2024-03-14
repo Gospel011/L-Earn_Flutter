@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
@@ -40,7 +42,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     final textTheme = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
-      appBar: widget.buildAppBar(context, title: 'Payment History', actions: [
+      appBar: widget.buildAppBar(context, title: 'Payment History', automaticallyImplyLeading: Platform.isWindows, actions: [
         BlocBuilder<PaymentCubit, PaymentState>(
           builder: (context, state) {
             return IconButton(

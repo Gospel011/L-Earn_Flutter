@@ -13,6 +13,8 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
 import 'package:l_earn/Presentation/components/my_text_button.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../utils/enums.dart';
 
@@ -64,8 +66,10 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                 });
 
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/', (route) => false);
+              // Navigator.pushNamedAndRemoveUntil(
+              //     context, '/', (route) => false);
+
+              context.goNamed(AppRoutes.login);
             }
           } else if (state is VerificationFailed) {
             print("V e r i f i c a t i o n failed");

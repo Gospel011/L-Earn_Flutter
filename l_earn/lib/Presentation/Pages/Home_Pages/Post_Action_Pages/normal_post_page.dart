@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 
@@ -8,6 +11,7 @@ import 'package:l_earn/Presentation/components/display_image.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 
 import 'package:l_earn/Presentation/components/my_textfield.dart';
+import 'package:l_earn/utils/constants.dart';
 import 'package:l_earn/utils/enums.dart';
 
 import '../../../../utils/mixins.dart';
@@ -37,50 +41,57 @@ class _MakePostPageState extends State<MakePostPage> {
     return BlocListener<PostCubit, PostState>(
       listener: (context, state) {
         if (state is NewPostCreated) {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          //! avigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          context.goNamed(AppRoutes.home);
         }
       },
       child: Scaffold(
-          appBar: widget.buildAppBar(context, title: 'Make Post', actions: [
-            Align(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: BlocBuilder<PostCubit, PostState>(
-                    builder: (context, state) {
-                  return MyContainerButton(
-                      text: 'post',
-                      loading: state is CreatingNewPost,
-                      onPressed: () {
-                        print("::: Posting your content ::::");
-                        if (state is CreatingNewPost) return;
-                        
-                        final String text = _postText.text.trim();
+          appBar: widget.buildAppBar(context,
+              automaticallyImplyLeading: Platform.isWindows,
+              title: 'Make Post',
+              actions: [
+                Align(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: BlocBuilder<PostCubit, PostState>(
+                        builder: (context, state) {
+                      return MyContainerButton(
+                          text: 'post',
+                          loading: state is CreatingNewPost,
+                          onPressed: () {
+                            print("::: Posting your content ::::");
+                            if (state is CreatingNewPost) return;
 
-                        if (text == '') {
-                          context.read<PostCubit>().emitNewPostsFailed(
-                              title: 'Failed',
-                              content: 'Can\'t create post with empty body');
-                          return;
-                        }
+                            final String text = _postText.text.trim();
 
-                        final Map<String, dynamic> post = {
-                          'text': text,
-                        };
+                            if (text == '') {
+                              context.read<PostCubit>().emitNewPostsFailed(
+                                  title: 'Failed',
+                                  content:
+                                      'Can\'t create post with empty body');
+                              return;
+                            }
 
-                        if (_pickedImage != null) {
-                          post.addAll(
-                              {'addon': 'image', 'image': _pickedImage!.path});
-                        }
+                            final Map<String, dynamic> post = {
+                              'text': text,
+                            };
 
-                        context.read<PostCubit>().createNewPosts(
-                            context.read<AuthCubit>().state.user!.id!,
-                            context.read<AuthCubit>().state.user!.token!,
-                            post);
-                      });
-                }),
-              ),
-            )
-          ]),
+                            if (_pickedImage != null) {
+                              post.addAll({
+                                'addon': 'image',
+                                'image': _pickedImage!.path
+                              });
+                            }
+
+                            context.read<PostCubit>().createNewPosts(
+                                context.read<AuthCubit>().state.user!.id!,
+                                context.read<AuthCubit>().state.user!.token!,
+                                post);
+                          });
+                    }),
+                  ),
+                )
+              ]),
           floatingActionButton: FloatingActionButton(
             backgroundColor: AppColor.mainColorBlack,
             onPressed: _getSingleImageFromSource,

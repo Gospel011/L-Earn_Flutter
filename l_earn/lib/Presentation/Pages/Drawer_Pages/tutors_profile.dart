@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +51,7 @@ class _TutorsProfilePageState extends State<TutorsProfilePage> {
     const EdgeInsets screenPadding = EdgeInsets.symmetric(horizontal: 16);
 
     return Scaffold(
-      appBar: widget.buildAppBar(context, title: 'Tutor\'s Dashboard'),
+      appBar: widget.buildAppBar(context, title: 'Tutor\'s Dashboard', automaticallyImplyLeading: Platform.isWindows),
       backgroundColor: Colors.grey.shade100,
       body: Center(
           child: CustomScrollView(

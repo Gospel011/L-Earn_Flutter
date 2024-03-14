@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
@@ -13,6 +16,7 @@ import 'package:l_earn/Presentation/components/my_price_container.dart';
 import 'package:l_earn/Presentation/components/my_textfield.dart';
 import 'package:l_earn/utils/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l_earn/utils/constants.dart';
 
 import '../../../../utils/mixins.dart';
 
@@ -109,8 +113,10 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
                 });
 
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
+              //! avigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              //? TESTING NAVIGATING TO PROFILE PAGE INSTEAD
+              context.goNamed(AppRoutes.profile,
+                  extra: context.read<AuthCubit>().state.user!);
             }
           } else if (state is ContentEdited) {
             await showDialog(
@@ -123,12 +129,16 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
                 });
 
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              //! avigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              //? TESTING NAVIGATING TO PROFILE PAGE INSTEAD
+              context.goNamed(AppRoutes.profile,
+                  extra: context.read<AuthCubit>().state.user!);
             }
           }
         },
         child: Scaffold(
             appBar: widget.buildAppBar(context,
+                automaticallyImplyLeading: Platform.isWindows,
                 title: widget.bookId != null ? 'Edit Book' : 'Create Book',
                 actions: [
                   Padding(
@@ -285,7 +295,8 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
                                                   ?.unfocus();
                                               setState(() {});
 
-                                              Navigator.pop(context);
+                                              //! avigator.pop(context);
+                                              context.pop();
                                             })
                                       ],
                                     );

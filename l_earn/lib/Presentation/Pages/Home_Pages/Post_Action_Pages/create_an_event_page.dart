@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:l_earn/utils/constants.dart';
 
 import '../../../../utils/mixins.dart';
 
@@ -10,8 +12,8 @@ class CreateEventPage extends StatelessWidget with AppBarMixin {
     return Scaffold(
         appBar:
             buildAppBar(context, includeClose: true, closeButtonOnpressed: () {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          context.goNamed(AppRoutes.home);
         }),
-        body: Center(child: Text("Create an event")));
+        body: const Center(child: Text("Create an event")));
   }
 }

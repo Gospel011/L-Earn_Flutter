@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
@@ -9,15 +9,17 @@ import 'package:l_earn/Helpers/auth_helper.dart';
 import 'package:l_earn/Presentation/components/Functions/validators.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
-import 'package:l_earn/Presentation/components/my_textfield.dart';
+
 import 'package:l_earn/Presentation/components/my_textformfield.dart';
 import 'package:l_earn/utils/mixins.dart';
 
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
-import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
-import 'package:l_earn/Presentation/components/my_text_button.dart';
-import 'package:l_earn/utils/colors.dart';
 
+import 'package:l_earn/Presentation/components/my_text_button.dart';
+
+import 'package:l_earn/utils/constants.dart';
+import 'package:l_earn/utils/colors.dart';
+import 'package:go_router/go_router.dart';
 import '../../../utils/enums.dart';
 
 class ResetPasswordPage extends StatefulWidget with AppBarMixin {
@@ -74,8 +76,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Scaffold(
       appBar: widget.buildAppBar(context, title: 'L-EARN', includeClose: true),
       resizeToAvoidBottomInset: false,
@@ -94,8 +94,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 });
 
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/', (route) => false);
+              context.goNamed(AppRoutes.login);
             }
           } else if (state is AuthPasswordResetFailed) {
             print("P A S S W O R D CHANGE failed");
@@ -199,7 +198,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           controller: e4,
                           focusNode: _d4Focusnode,
                           onChanged: e4OnChanged,
-                          textFieldType: TextFieldType.otp, validator: otpValidator,
+                          textFieldType: TextFieldType.otp,
+                          validator: otpValidator,
                         ),
                       ),
 
@@ -279,7 +279,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         : Icons.visibility_off),
                     suffixOnpressed: () {
                       setState(() {
-                        _obscureTextConfirmPassword = !_obscureTextConfirmPassword;
+                        _obscureTextConfirmPassword =
+                            !_obscureTextConfirmPassword;
                       });
                     },
                   ),
@@ -310,14 +311,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               bool? isValid = _formKey.currentState?.validate();
 
               if (isValid == true) {
-
-              AuthHelper.userMap["otp"] =
-                  "${e1.text}${e2.text}${e3.text}${e4.text}${e5.text}${e6.text}";
-              AuthHelper.userMap["newPassword"] =
-                  _passwordController.text.trim();
-              AuthHelper.userMap["newConfirmPassword"] =
-                  _confirmPasswordController.text.trim();
-              context.read<AuthCubit>().resetPassword();
+                AuthHelper.userMap["otp"] =
+                    "${e1.text}${e2.text}${e3.text}${e4.text}${e5.text}${e6.text}";
+                AuthHelper.userMap["newPassword"] =
+                    _passwordController.text.trim();
+                AuthHelper.userMap["newConfirmPassword"] =
+                    _confirmPasswordController.text.trim();
+                context.read<AuthCubit>().resetPassword();
               }
             },
           );

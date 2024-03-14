@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
@@ -48,286 +49,297 @@ class GoRouterConfig {
   final PaymentCubit paymentCubit = PaymentCubit();
 
   GoRouter get router => GoRouter(
-          navigatorKey: _rootNavigatorKey,
-          initialLocation: '/login',
-          routes: [
-            //* HOME ROUTES
-            GoRoute(
-                name: AppRoutes.home,
-                path: '/home',
-                builder: (context, state) {
-                  print("${AppRoutes.home} from go_router");
-                  return MultiBlocProvider(providers: [
-                    BlocProvider.value(value: postCubit),
-                    BlocProvider.value(value: contentCubit)
-                  ], child: HomePage());
-                },
-                routes: [
-                  //? PROFILE PAGE ROUTE
-                  GoRoute(
-                      name: AppRoutes.profile,
-                      path: 'profile',
-                      builder: (context, state) {
-                        print("${AppRoutes.profile} from go_router");
-                        return MultiBlocProvider(
+      navigatorKey: _rootNavigatorKey,
+      initialLocation: '/login',
+      routes: [
+        //* HOME ROUTES
+        GoRoute(
+            //?__
+            name: AppRoutes.home,
+            path: '/home',
+            builder: (context, state) {
+              print("${AppRoutes.home} from go_router");
+              return MultiBlocProvider(providers: [
+                BlocProvider.value(value: postCubit),
+                BlocProvider.value(value: contentCubit)
+              ], child: HomePage());
+            },
+            routes: [
+              //? PROFILE PAGE ROUTE
+              GoRoute(
+                  name: AppRoutes.profile,
+                  path: 'profile',
+                  builder: (context, state) {
+                    print("${AppRoutes.profile} from go_router");
+                    return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<TabCubit>(
+                              create: (context) => TabCubit()),
+                          BlocProvider.value(value: contentCubit),
+                          BlocProvider.value(value: postCubit),
+                          BlocProvider<FollowCubit>(
+                              create: (context) => FollowCubit()),
+                          // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),
+                        ],
+                        child: ProfilePage(
+                          user: state.extra as User, //! provide extra [User]
+                        ));
+                  },
+                  routes: [
+                    //? EMAIL VERIFICATION ROUTE
+                    GoRoute(
+                        name: AppRoutes.emailVerification,
+                        path: 'email-verification',
+                        builder: (context, state) {
+                          print(
+                              "${AppRoutes.emailVerification} from go_router");
+                          return MultiBlocProvider(
                             providers: [
-                              BlocProvider<TabCubit>(
-                                  create: (context) => TabCubit()),
-                              BlocProvider.value(value: contentCubit),
-                              BlocProvider.value(value: postCubit),
-                              BlocProvider<FollowCubit>(
-                                  create: (context) => FollowCubit()),
-                              // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),
+                              BlocProvider.value(
+                                value: _timerCubit,
+                              ),
+                              BlocProvider.value(
+                                value: _verificationCubit,
+                              ),
                             ],
-                            child: ProfilePage(
-                              user:
-                                  state.extra as User, //! provide extra [User]
-                            ));
-                      },
-                      routes: [
-                        //? EMAIL VERIFICATION ROUTE
-                        GoRoute(
-                            name: AppRoutes.emailVerification,
-                            path: 'email-verification',
-                            builder: (context, state) {
-                              print(
-                                  "${AppRoutes.emailVerification} from go_router");
-                              return MultiBlocProvider(
-                                providers: [
-                                  BlocProvider.value(
-                                    value: _timerCubit,
-                                  ),
-                                  BlocProvider.value(
-                                    value: _verificationCubit,
-                                  ),
-                                ],
-                                child: EmailVerificationPage(),
-                              );
-                            }),
+                            child: EmailVerificationPage(),
+                          );
+                        }),
 
-                        //? EDIT PROFILE ROUTE
-                        GoRoute(
-                            name: AppRoutes.editProfile,
-                            path: 'edit-profile',
-                            builder: (context, state) {
-                              print("${AppRoutes.editProfile} from go_router");
-                              return const EditProfilePage();
-                            })
-                      ]), // end of profile page routes
+                    //? EDIT PROFILE ROUTE
+                    GoRoute(
+                        name: AppRoutes.editProfile,
+                        path: 'edit-profile',
+                        builder: (context, state) {
+                          print("${AppRoutes.editProfile} from go_router");
+                          return const EditProfilePage();
+                        })
+                  ]), // end of profile page routes
 
-                  //? TUTOR'S DASHBOARD
-                  GoRoute(
-                      name: AppRoutes.tutorsDashboard,
-                      path: 'tutors-dashboard',
-                      builder: (context, state) {
-                        print("${AppRoutes.tutorsDashboard} from go_router");
-                        return BlocProvider.value(
-                          value: paymentCubit,
-                          child: const TutorsProfilePage(),
-                        );
-                      }),
+              //? TUTOR'S DASHBOARD
+              GoRoute(
+                  name: AppRoutes.tutorsDashboard,
+                  path: 'tutors-dashboard',
+                  builder: (context, state) {
+                    print("${AppRoutes.tutorsDashboard} from go_router");
+                    return BlocProvider.value(
+                      value: paymentCubit,
+                      child: const TutorsProfilePage(),
+                    );
+                  }),
 
-                  //? PAYMENT HISTORY
-                  GoRoute(
-                      name: AppRoutes.paymentHistory,
-                      path: 'payment-history',
-                      builder: (context, state) {
-                        print("${AppRoutes.paymentHistory} from go_router");
-                        return BlocProvider.value(
-                            value: paymentCubit,
-                            child: const PaymentHistoryPage());
-                      },
-                      routes: [
-                        GoRoute(
-                            name: AppRoutes.paymentDetails,
-                            path: 'payment-details',
-                            builder: (context, state) {
-                              return PaymentDetailsPage(
-                                invoice: state.extra
-                                    as Invoice, //! provide extra as [Invoice]
-                              );
-                            })
-                      ]),
+              //? PAYMENT HISTORY
+              GoRoute(
+                  name: AppRoutes.paymentHistory,
+                  path: 'payment-history',
+                  builder: (context, state) {
+                    print("${AppRoutes.paymentHistory} from go_router");
+                    return BlocProvider.value(
+                        value: paymentCubit, child: const PaymentHistoryPage());
+                  },
+                  routes: [
+                    GoRoute(
+                        name: AppRoutes.paymentDetails,
+                        path: 'payment-details',
+                        builder: (context, state) {
+                          return PaymentDetailsPage(
+                            invoice: state.extra
+                                as Invoice, //! provide extra as [Invoice]
+                          );
+                        })
+                  ]),
 
-                  //? MAKE POST PAGE
-                  GoRoute(
-                      name: AppRoutes.post,
-                      path: '/make-post',
-                      builder: (context, state) {
-                        print("${AppRoutes.post} from go_router");
-                        return BlocProvider.value(
-                            value: postCubit, child: const MakePostPage());
-                      }),
+              //? MAKE POST PAGE
+              GoRoute(
+                  name: AppRoutes.post,
+                  path: 'make-post',
+                  builder: (context, state) {
+                    print("${AppRoutes.post} from go_router");
+                    return BlocProvider.value(
+                        value: postCubit, child: const MakePostPage());
+                  }),
 
-                  //? CREATE TUTORIAL PAGE
-                  GoRoute(
-                      name: AppRoutes.createTutorial,
-                      path: '/create-tutorial',
-                      builder: (context, state) {
-                        print("${AppRoutes.createTutorial} from go_router");
-                        Map<String, dynamic>? args;
-                        try {
-                          args = state.extra as Map<String,
-                              dynamic>?; //! provide extra as [Map<String, dynamic>]
-                        } catch (e) {
-                          print(e);
-                        }
-                        // {
-                        //                                       'title': content.title,
-                        //                                       'description': content.description,
-                        //                                       'price': content.price,
-                        //                                       'genre': content.tags?.join(','),
-                        //                                       'thumbnailUrl': content.thumbnailUrl
-                        //                                     }
+              //? CREATE TUTORIAL PAGE
+              GoRoute(
+                  name: AppRoutes.createTutorial,
+                  path: 'create-tutorial',
+                  builder: (context, state) {
+                    print("${AppRoutes.createTutorial} from go_router");
+                    Map<String, dynamic>? args;
+                    try {
+                      args = state.extra as Map<String,
+                          dynamic>?; //! provide extra as [Map<String, dynamic>]
+                    } catch (e) {
+                      print(e);
+                    }
+                    // {
+                    //                                       'title': content.title,
+                    //                                       'description': content.description,
+                    //                                       'price': content.price,
+                    //                                       'genre': content.tags?.join(','),
+                    //                                       'thumbnailUrl': content.thumbnailUrl
+                    //                                     }
 
-                        return BlocProvider.value(
-                            value: contentCubit,
-                            child: CreateTutorialPage(
-                              title: args?['title'] ?? '',
-                              description: args?['description'] ?? '',
-                              price: args?['price'].toString() ?? '',
-                              genre: args?['genre'] ?? '',
-                              thumbnailUrl: args?['thumbnailUrl'],
-                              bookId: args?['id'],
-                            ));
-                      }),
+                    return BlocProvider.value(
+                        value: contentCubit,
+                        child: CreateTutorialPage(
+                          title: args?['title'] ?? '',
+                          description: args?['description'] ?? '',
+                          price: args?['price'].toString() ?? '',
+                          genre: args?['genre'] ?? '',
+                          thumbnailUrl: args?['thumbnailUrl'],
+                          bookId: args?['id'],
+                        ));
+                  }),
 
-                  //? CONTENT DESCRIPTION ROUTE
-                  GoRoute(
-                      name: AppRoutes.contentDescription,
-                      path: 'content-description',
-                      builder: (context, state) {
-                        return MultiBlocProvider(
-                          providers: [
+              //? CONTENT DESCRIPTION ROUTE
+              GoRoute(
+                  name: AppRoutes.contentDescription,
+                  path: 'content-description',
+                  builder: (context, state) {
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider.value(value: contentCubit),
+                        BlocProvider.value(value: paymentCubit)
+                      ],
+                      child: ContentDescriptionPage(
+                        content: state.extra
+                            as Content, //! provide extra as [Content]
+                      ),
+                    );
+                  },
+                  routes: [
+                    //? CHAPTER PAGE
+                    GoRoute(
+                        name: AppRoutes.chapterPage,
+                        path: 'chapter-page',
+                        builder: (context, state) {
+                          return MultiBlocProvider(providers: [
                             BlocProvider.value(value: contentCubit),
-                            BlocProvider.value(value: paymentCubit)
-                          ],
-                          child: ContentDescriptionPage(
-                            content: state.extra
-                                as Content, //! provide extra as [Content]
-                          ),
-                        );
-                      },
-                      routes: [
-
-                        //? CHAPTER PAGE
-                        GoRoute(
-                            name: AppRoutes.chapterPage,
-                            path: 'chapter-page',
-                            builder: (context, state) {
-                              return MultiBlocProvider(providers: [
-                                BlocProvider.value(value: contentCubit),
-                                BlocProvider.value(value: postCubit),
-                                BlocProvider<FollowCubit>(
-                                    create: (context) => FollowCubit()),
-                              ], child: const ChapterPage());
-                            })
-                      ]), // end of content description
-
-                  //? WRITE BOOK PAGE
-                  GoRoute(
-                      name: AppRoutes.writeBook,
-                      path: 'write-book-page',
-                      builder: (context, state) {
-                        final args = state.extra as Map? ??
-                            {}; //! provide extra as [Map?]
-                        return MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(value: contentCubit),
+                            BlocProvider.value(value: postCubit),
                             BlocProvider<FollowCubit>(
                                 create: (context) => FollowCubit()),
-                          ],
-                          child: WriteABookPage(
-                              content: args['content'],
-                              chapterId: args['chapterId']),
-                        );
-                      }),
+                          ], child: const ChapterPage());
+                        })
+                  ]), // end of content description
 
-                  //? CREATE EVENT PAGE
-                  GoRoute(
-                      name: AppRoutes.createEvent,
-                      path: 'create-event',
-                      builder: (context, state) {
-                        return const CreateEventPage();
-                      })
-                ]), // end of home routes
+              //? WRITE BOOK PAGE
+              GoRoute(
+                  name: AppRoutes.writeBook,
+                  path: 'write-book-page',
+                  builder: (context, state) {
+                    final args =
+                        state.extra as Map? ?? {}; //! provide extra as [Map?]
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider.value(value: contentCubit),
+                        BlocProvider<FollowCubit>(
+                            create: (context) => FollowCubit()),
+                      ],
+                      child: WriteABookPage(
+                          content: args['content'],
+                          chapterId: args['chapterId']),
+                    );
+                  }),
 
-            //* PAYMENT ROUTE
-            GoRoute(
-                name: AppRoutes.payment,
-                path: '/payment',
-                builder: (context, state) {
-                  return BlocProvider.value(
-                      value: paymentCubit,
-                      child: PaymentPage(
-                        content:
-                            state.extra as Content, //! provide extra [Content]
-                      ));
-                }),
+              //? CREATE EVENT PAGE
+              GoRoute(
+                  name: AppRoutes.createEvent,
+                  path: 'create-event',
+                  builder: (context, state) {
+                    return const CreateEventPage();
+                  })
+            ]), // end of home routes
 
-            //* IMAGE VIEW ROUTE
-            GoRoute(
-                name: AppRoutes.imageView,
-                path: '/image/:imageUrl',
-                builder: (context, state) {
-                  return ImageViewPage(
-                    image: state.pathParameters['imageUrl']
-                        as String, //! provide path parameter [imageUrl] as a [String]
-                  );
-                }),
+        //* PAYMENT ROUTE
+        GoRoute(
+            name: AppRoutes.payment,
+            path: '/payment',
+            builder: (context, state) {
+              return BlocProvider.value(
+                  value: paymentCubit,
+                  child: PaymentPage(
+                    content: state.extra as Content, //! provide extra [Content]
+                  ));
+            }),
 
-            //* AUTH ROUTES
-            GoRoute(
-                name: AppRoutes.login,
-                path: '/login',
-                builder: (context, state) {
-                  print("${AppRoutes.login} from go_router");
-                  return const LoginPage();
-                },
-                routes: [
-                  //? SIGNUP
-                  GoRoute(
-                      name: AppRoutes.signup,
-                      path: 'signup',
-                      builder: (context, state) {
-                        print("${AppRoutes.signup} from go_router");
-                        return MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(
-                              value: _timerCubit,
-                            ),
-                            BlocProvider.value(
-                              value: _verificationCubit,
-                            ),
-                          ],
-                          child: const SignupPage(),
-                        );
-                      }),
+        //* IMAGE VIEW ROUTE
+        GoRoute(
+            name: AppRoutes.imageView,
+            path: '/image/:imageUrl',
+            builder: (context, state) {
+              return ImageViewPage(
+                image: state.pathParameters['imageUrl']
+                    as String, //! provide path parameter [imageUrl] as a [String]
+              );
+            }),
 
-                  //? fORGOT PASSWORD
-                  GoRoute(
-                      name: AppRoutes.forgotPassword,
-                      path: 'forgot-password',
-                      builder: (context, state) {
-                        print("${AppRoutes.forgotPassword} from go_router");
-                        return BlocProvider.value(
+        //* AUTH ROUTES
+        GoRoute(
+            name: AppRoutes.login,
+            path: '/login',
+            builder: (context, state) {
+              print("${AppRoutes.login} from go_router");
+              return const LoginPage();
+            },
+            routes: [
+              //?__ SIGNUP
+              GoRoute(
+                  name: AppRoutes.signup,
+                  path: 'signup',
+                  builder: (context, state) {
+                    print("${AppRoutes.signup} from go_router");
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider.value(
                           value: _timerCubit,
-                          child: const ForgotPasswordPage(),
-                        );
-                      }),
+                        ),
+                        BlocProvider.value(
+                          value: _verificationCubit,
+                        ),
+                      ],
+                      child: const SignupPage(),
+                    );
+                  }),
 
-                  //? RESET PASSWORD
-                  GoRoute(
-                      name: AppRoutes.resetPassword,
-                      path: 'reset-password',
-                      builder: (context, state) {
-                        print("${AppRoutes.resetPassword} from go_router");
+              //?__ fORGOT PASSWORD
+              GoRoute(
+                  name: AppRoutes.forgotPassword,
+                  path: 'forgot-password',
+                  builder: (context, state) {
+                    print("${AppRoutes.forgotPassword} from go_router");
+                    return BlocProvider.value(
+                      value: _timerCubit,
+                      child: const ForgotPasswordPage(),
+                    );
+                  },
+                  routes: [
+                    //? RESET PASSWORD
+                    GoRoute(
+                        name: AppRoutes.resetPassword,
+                        path: 'reset-password',
+                        builder: (context, state) {
+                          print("${AppRoutes.resetPassword} from go_router");
 
-                        return BlocProvider.value(
-                          value: _timerCubit,
-                          child: ResetPasswordPage(),
-                        );
-                      })
-                ])
-          ]);
+                          return BlocProvider.value(
+                            value: _timerCubit,
+                            child: ResetPasswordPage(),
+                          );
+                        })
+                  ]),
+            ])
+      ],
+      redirect: (context, state) {
+        print(
+            "CURRENT LOCATION ${state.matchedLocation}, Logged in?: ${authCubit.state.user != null}");
+
+        final bool isLoggedIn = authCubit.state.user != null;
+        final String currentLocation = state.matchedLocation;
+
+        if (isLoggedIn && currentLocation == '/login') {
+          return '/home';
+        }
+
+        return null;
+      });
 }
