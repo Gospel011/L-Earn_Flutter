@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
+import 'package:l_earn/Helpers/auth_helper.dart';
 import 'package:l_earn/Presentation/components/build_banner_and_user_description.dart';
 import 'package:l_earn/Presentation/components/my_content_widget.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
@@ -50,6 +52,10 @@ class _ProfilePageState extends State<ProfilePage> {
         context.read<AuthCubit>().state.user!.token,
         userId: widget.user.id,
         page: page);
+  }
+
+  void requestEmailOtp() {
+    context.read<VerificationCubit>().requestEmailVerificationOtp();
   }
 
   void deleteBook(String contentId) {
@@ -118,7 +124,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             //? Edit Profile
                             PopupMenuItem(
                               value: 'Edit',
-                              child: const Text("Edit profile"),
+                              child: Text("Edit profile",
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
                               onTap: () =>
                                   context.pushNamed(AppRoutes.editProfile),
                               //! avigator.pushNamed(
@@ -128,7 +136,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             //? Verify Email
                             PopupMenuItem(
                               value: 'verify',
-                              child: const Text("Verify email"),
+                              child: Text("Verify email",
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
                               onTap: () {
                                 showDialog(
                                     context: context,
@@ -157,6 +167,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   context.pop();
                                                   print(
                                                       "Don't generate new otp");
+
+                                                  AuthHelper.userMap["email"] =
+                                                      context
+                                                          .read<AuthCubit>()
+                                                          .state
+                                                          .user
+                                                          ?.email;
+
+                                                  //? navigate to emailVerificationPage
+                                                  context.pushNamed(AppRoutes
+                                                      .emailVerification);
                                                 },
                                               ),
                                               ListTile(
@@ -177,6 +198,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   //! avigator.pop(context);
                                                   context.pop();
                                                   print("Generate new otp");
+
+                                                  AuthHelper.userMap["email"] =
+                                                      context
+                                                          .read<AuthCubit>()
+                                                          .state
+                                                          .user
+                                                          ?.email;
+
+                                                  //? send email otp
+                                                  requestEmailOtp(); //*_-------------------------------------
+
+                                                  //? navigate to emailVerificationPage
+                                                  context.pushNamed(AppRoutes
+                                                      .emailVerification);
                                                 },
                                               ),
                                             ],
@@ -334,8 +369,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           //TODO: HANDLE ADD CONTENT
                           print("Add chapter pressed");
 
-                          context.pushNamed(
-                              AppRoutes.writeBook,
+                          context.pushNamed(AppRoutes.writeBook,
                               extra: {"content": content});
                           //! avigator.of(context).pushReplacementNamed(
                           //     '/write-book-page',

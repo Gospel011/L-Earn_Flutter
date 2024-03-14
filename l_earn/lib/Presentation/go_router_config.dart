@@ -77,6 +77,7 @@ class GoRouterConfig {
                               create: (context) => TabCubit()),
                           BlocProvider.value(value: contentCubit),
                           BlocProvider.value(value: postCubit),
+                          BlocProvider.value(value: _verificationCubit),
                           BlocProvider<FollowCubit>(
                               create: (context) => FollowCubit()),
                           // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),

@@ -283,7 +283,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                             RegExp(r'[a-zA-Z0-9@]')),
-                        LengthLimitingTextInputFormatter(10)
+                        LengthLimitingTextInputFormatter(12)
                       ],
                       controller: _handleController,
                       validator: handleValidator),

@@ -58,10 +58,10 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
             await showDialog(
                 context: context,
                 builder: (context) {
-                  return const MyDialog(
+                  return MyDialog(
                     title: 'Congratulations',
                     content:
-                        'Your Account setup is complete. You may now login with your email and password.',
+                        context.read<AuthCubit>().state.email == null ? "Your account is now verifed" : 'Your Account setup is complete. You may now login with your email and password.',
                   );
                 });
 
@@ -69,7 +69,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
               // Navigator.pushNamedAndRemoveUntil(
               //     context, '/', (route) => false);
 
-              context.goNamed(AppRoutes.login);
+              context.read<AuthCubit>().state.email == null ? context.goNamed(AppRoutes.home) : context.goNamed(AppRoutes.login);
             }
           } else if (state is VerificationFailed) {
             print("V e r i f i c a t i o n failed");
@@ -103,7 +103,7 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
 
             //* Text
             Text(
-              'Please provide the 6-digit code we sent to ${context.read<AuthCubit>().state.email}',
+              'Please provide the 6-digit code we sent to ${context.read<AuthCubit>().state.email ?? context.read<AuthCubit>().state.user?.email}',
               textAlign: TextAlign.center,
             ),
 
@@ -230,20 +230,20 @@ class EmailVerificationPage extends StatelessWidget with AppBarMixin {
                           onPressed: () {
                             //TODO --> NAVIGATE TO SIGNUP
 
-                            if (state is TimerEnded) {
-                              print('Resending...');
+                            // if (state is TimerEnded) {
+                            //   print('Resending...');
 
-                              //? RESENT OTP
-                              context
-                                  .read<VerificationCubit>()
-                                  .requestEmailVerificationOtp();
+                            //   //? RESENT OTP
+                            //   context
+                            //       .read<VerificationCubit>()
+                            //       .requestEmailVerificationOtp();
 
-                              //? start timer
-                              context.read<TimerCubit>().setTimer(
-                                  duration: const Duration(minutes: 1));
-                            } else {
-                              print("Timer hasn't ended");
-                            }
+                            //   //? start timer
+                            //   context.read<TimerCubit>().setTimer(
+                            //       duration: const Duration(minutes: 1));
+                            // } else {
+                            //   print("Timer hasn't ended");
+                            // }
                           });
                     },
                   )
