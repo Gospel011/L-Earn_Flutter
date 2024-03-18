@@ -23,6 +23,8 @@ class _LearnPageState extends State<LearnPage>
     with PriceParserMixin, TimeParserMixin {
   final ScrollController _scrollController = ScrollController();
 
+  TextStyle? textTheme;
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -59,6 +61,8 @@ class _LearnPageState extends State<LearnPage>
 
   @override
   Widget build(BuildContext context) {
+    textTheme = Theme.of(context).textTheme.bodyMedium;
+
     return BlocListener<ContentCubit, ContentState>(
       listener: (context, state) {
         print('STATE IS $state');
@@ -76,8 +80,7 @@ class _LearnPageState extends State<LearnPage>
           //! avigator.pop(context);
           context.pop();
           //? NAVIGATE TO CONTENT DESCRIPTION PAGE
-          context.goNamed(AppRoutes.contentDescription,
-              extra: state.content!);
+          context.goNamed(AppRoutes.contentDescription, extra: state.content!);
           //! avigator.of(context)
           //     .pushNamed('/content-description', arguments: state.content!);
         }
@@ -109,9 +112,6 @@ class _LearnPageState extends State<LearnPage>
                         onHeaderPressed: () => context.goNamed(
                             AppRoutes.profile,
                             extra: state.contents[index].author),
-                        //! avigator.pushNamed(
-                        //     context, '/profile-page',
-                        //     arguments: state.contents?[index].author),
                         content: content,
                         onThumbnailPressed: () {
                           //? REQUEST FOR A PARTICULAR CONTENT
@@ -123,6 +123,29 @@ class _LearnPageState extends State<LearnPage>
                         onMetaPressed: () {
                           print('${content.title} meta pressed');
                         },
+                        moreActions: [
+                          PopupMenuItem(
+                              child: Text(
+                            "Share ${content.type}",
+                            style: textTheme,
+                          )),
+                          PopupMenuItem(
+                              child: Text(
+                            "Save",
+                            style: textTheme,
+                          )),
+                          PopupMenuItem(
+                            child: Text(
+                              "Report",
+                              style: textTheme,
+                            ),
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("${content.type} flagged")));
+                            },
+                          ),
+                        ],
                       ),
                     );
                   });

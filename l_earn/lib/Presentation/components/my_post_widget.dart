@@ -46,7 +46,8 @@ class MyPostWidget extends StatelessWidget {
           post.image != null
               ? GestureDetector(
                 onTap:() {
-                  Navigator.pushNamed(context, '/image-view-page', arguments: post.image!);
+                  // Navigator.pushNamed(context, '/image-view-page', arguments: post.image!);
+                  context.pushNamed(AppRoutes.imageView, pathParameters: {"imageUrl": post.image!});
                 },
                 child: Container(
                     width: double.maxFinite,

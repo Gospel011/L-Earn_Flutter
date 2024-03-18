@@ -20,6 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
   // int page = 1;
+  late TextStyle? textTheme;
 
   @override
   void initState() {
@@ -55,6 +56,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    textTheme = Theme.of(context).textTheme.bodyMedium;
+
     return BlocListener<PostCubit, PostState>(
       listener: ((context, state) {
         if (state is NewPostsFailed) {
@@ -92,7 +95,33 @@ class _HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         final Post post = state.newPosts[index];
 
-                        return MyPostWidget(post: post, index: index);
+                        return MyPostWidget(
+                          post: post,
+                          index: index,
+                          moreActions: [
+                            PopupMenuItem(
+                                child: Text(
+                              "Share post",
+                              style: textTheme,
+                            )),
+                            PopupMenuItem(
+                                child: Text(
+                              "Save",
+                              style: textTheme,
+                            )),
+                            PopupMenuItem(
+                              child: Text(
+                                "Report",
+                                style: textTheme,
+                              ),
+                              onTap: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("post flagged")));
+                              },
+                            ),
+                          ],
+                        );
                       }),
 
                   SliverToBoxAdapter(
