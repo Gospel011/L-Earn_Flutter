@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/Presentation/components/my_circularProgressIndicator.dart';
+import 'package:l_earn/Presentation/components/my_circular_progress_indicator.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_post_widget.dart';
 import 'package:l_earn/utils/colors.dart';

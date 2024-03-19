@@ -100,7 +100,7 @@ class _ChapterPageState extends State<MyQuillEditor> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: GestureDetector(
-                    onTap: () => context.goNamed(AppRoutes.profile, extra: widget.user),
+                    onTap: () => widget.user != null ? context.goNamed(AppRoutes.profile, pathParameters: {"id": widget.user!.id!}) : null,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

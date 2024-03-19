@@ -34,7 +34,7 @@ class MyPostWidget extends StatelessWidget {
         children: [
           //? ROW WITH PROFILE PICTURE, NAME, HANDLE AND MORE ICON
           GestureDetector(
-            onTap: () => context.goNamed(AppRoutes.profile, extra: post.user),
+            onTap: () => context.goNamed(AppRoutes.profile, queryParameters: {"user": post.user.id!}),
             child: MyPostHeader(user: post.user, moreActions: moreActions)),
 
           //? TEXT

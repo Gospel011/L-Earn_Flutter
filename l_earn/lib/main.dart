@@ -15,16 +15,14 @@ void main() async {
   HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: await getApplicationDocumentsDirectory());
 
-  final RouteGenerator _routeGenerator = RouteGenerator();
+  
 
-  runApp(MyApp(
-    routeGenerator: _routeGenerator,
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  final RouteGenerator routeGenerator;
-  const MyApp({super.key, required this.routeGenerator});
+  
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();

@@ -62,6 +62,7 @@ class AppRoutes {
   static const emailVerification = 'verify-email';
   static const home = 'home';
   static const profile = 'profile';
+  static const profilePost = 'profilePost';
   static const editProfile = 'edit-profile';
   static const tutorsDashboard = 'tutors-dashboard';
   static const paymentHistory = 'payment-history';

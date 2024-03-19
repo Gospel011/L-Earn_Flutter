@@ -111,7 +111,7 @@ class _LearnPageState extends State<LearnPage>
                       child: MyContent(
                         onHeaderPressed: () => context.goNamed(
                             AppRoutes.profile,
-                            extra: state.contents[index].author),
+                            pathParameters: {"id": state.contents[index].author.id!}),
                         content: content,
                         onThumbnailPressed: () {
                           //? REQUEST FOR A PARTICULAR CONTENT

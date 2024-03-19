@@ -42,46 +42,49 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     final textTheme = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
-      appBar: widget.buildAppBar(context, title: 'Payment History', automaticallyImplyLeading: Platform.isWindows, actions: [
-        BlocBuilder<PaymentCubit, PaymentState>(
-          builder: (context, state) {
-            return IconButton(
-                tooltip: 'Refresh',
-                onPressed: () {
-                  if (state is LoadingPaymentHistory) {
-                    return;
+      appBar: widget.buildAppBar(context,
+          title: 'Payment History',
+          automaticallyImplyLeading: Platform.isWindows,
+          actions: [
+            BlocBuilder<PaymentCubit, PaymentState>(
+              builder: (context, state) {
+                return IconButton(
+                    tooltip: 'Refresh',
+                    onPressed: () {
+                      if (state is LoadingPaymentHistory) {
+                        return;
+                      }
+                      loadHistory();
+                    },
+                    icon: state is LoadingPaymentHistory
+                        ? const Center(
+                            child: SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                    color: Colors.blueGrey)))
+                        : const Icon(Icons.refresh_rounded));
+              },
+            ),
+            IconButton(
+                tooltip: 'Filter',
+                onPressed: () async {
+                  final Map<String, dynamic>? response = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FilterPage(filter: filter)));
+
+                  print(
+                      "R E S P O N S E   F R O M   F I L T E R   P A G E   I S   $response");
+                  if (response != null) {
+                    filter = Filter.fromMap(response);
+                    loadHistory();
+
+                    print('Filter Object is $filter');
                   }
-                  loadHistory();
                 },
-                icon: state is LoadingPaymentHistory
-                    ? const Center(
-                        child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                                color: Colors.blueGrey)))
-                    : const Icon(Icons.refresh_rounded));
-          },
-        ),
-        IconButton(
-            tooltip: 'Filter',
-            onPressed: () async {
-              final Map<String, dynamic>? response = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FilterPage(filter: filter)));
-
-              print(
-                  "R E S P O N S E   F R O M   F I L T E R   P A G E   I S   $response");
-              if (response != null) {
-                filter = Filter.fromMap(response);
-                loadHistory();
-
-                print('Filter Object is $filter');
-              }
-            },
-            icon: const Icon(Icons.filter_alt)),
-      ]),
+                icon: const Icon(Icons.filter_alt)),
+          ]),
       backgroundColor: Colors.grey.shade100,
       body: BlocBuilder<PaymentCubit, PaymentState>(
           buildWhen: (previous, current) {
@@ -91,16 +94,13 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         print(state.invoices);
 
         if (state is LoadingPaymentHistory) {
-          
           finalWidget = const Center(
               child: ListTile(
-            title: Center(
-              child: CircularProgressIndicator(
-                color: Colors.blueGrey,
-              ),
-            )            
-          ));
-
+                  title: Center(
+            child: CircularProgressIndicator(
+              color: Colors.blueGrey,
+            ),
+          )));
         } else if (state.invoices != null && state.invoices!.isEmpty) {
           finalWidget = const Center(
             child: Text("No invoice found"),
@@ -130,7 +130,6 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     if (state.invoices == null || state.invoices!.isEmpty) {
       return const Text('You haven\'t made any purchases yet.');
     } else {
-
       //? Listview of history items
       return ListView.separated(
         itemCount: state.invoices!.length,

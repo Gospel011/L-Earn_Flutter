@@ -7,6 +7,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/timer/timer_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
+import 'package:l_earn/BusinessLogic/ProfileCubit/profile_cubit.dart';
 import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
@@ -25,6 +26,7 @@ import 'package:l_earn/Presentation/Pages/Drawer_Pages/tutors_profile.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/Write_A_Book/write_a_book_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/chapter_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/content_description_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/content_shell.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_an_event_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tutorial_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
@@ -66,10 +68,8 @@ class GoRouterConfig {
             },
             routes: [
               //? PROFILE PAGE ROUTE
-              GoRoute(
-                  name: AppRoutes.profile,
-                  path: 'profile',
-                  builder: (context, state) {
+              StatefulShellRoute.indexedStack(
+                  builder: (context, state, shell) {
                     print("${AppRoutes.profile} from go_router");
                     return MultiBlocProvider(
                         providers: [
@@ -78,43 +78,72 @@ class GoRouterConfig {
                           BlocProvider.value(value: contentCubit),
                           BlocProvider.value(value: postCubit),
                           BlocProvider.value(value: _verificationCubit),
+                          BlocProvider<ProfileCubit>(
+                              create: (context) => ProfileCubit()),
                           BlocProvider<FollowCubit>(
                               create: (context) => FollowCubit()),
                           // BlocProvider<ContentCubit>(create: (context) => ContentCubit()),
                         ],
                         child: ProfilePage(
-                          user: state.extra as User, //! provide extra [User]
-                        ));
+                            userId: state.uri.queryParameters['user']!,
+                            shell: shell));
                   },
-                  routes: [
-                    //? EMAIL VERIFICATION ROUTE
-                    GoRoute(
-                        name: AppRoutes.emailVerification,
-                        path: 'email-verification',
-                        builder: (context, state) {
-                          print(
-                              "${AppRoutes.emailVerification} from go_router");
-                          return MultiBlocProvider(
-                            providers: [
-                              BlocProvider.value(
-                                value: _timerCubit,
-                              ),
-                              BlocProvider.value(
-                                value: _verificationCubit,
-                              ),
-                            ],
-                            child: EmailVerificationPage(),
-                          );
-                        }),
+                  branches: [
+                    //? PROFILE
+                    StatefulShellBranch(routes: [
+                      GoRoute(
+                          path: "profile",
+                          name: AppRoutes.profile,
+                          builder: (context, state) {
+                            return ContentsShell();
 
-                    //? EDIT PROFILE ROUTE
-                    GoRoute(
-                        name: AppRoutes.editProfile,
-                        path: 'edit-profile',
-                        builder: (context, state) {
-                          print("${AppRoutes.editProfile} from go_router");
-                          return const EditProfilePage();
-                        })
+                            ///*uuuuuu
+                          },
+                          routes: [
+                            //? EMAIL VERIFICATION ROUTE
+                            GoRoute(
+                                parentNavigatorKey: _rootNavigatorKey,
+                                name: AppRoutes.emailVerification,
+                                path: 'email-verification',
+                                builder: (context, state) {
+                                  print(
+                                      "${AppRoutes.emailVerification} from go_router");
+                                  return MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider.value(
+                                        value: _timerCubit,
+                                      ),
+                                      BlocProvider.value(
+                                        value: _verificationCubit,
+                                      ),
+                                    ],
+                                    child: EmailVerificationPage(),
+                                  );
+                                }),
+
+                            //? EDIT PROFILE ROUTE
+                            GoRoute(
+                                parentNavigatorKey: _rootNavigatorKey,
+                                name: AppRoutes.editProfile,
+                                path: 'edit-profile',
+                                builder: (context, state) {
+                                  print(
+                                      "${AppRoutes.editProfile} from go_router");
+                                  return const EditProfilePage();
+                                })
+                          ])
+                    ]),
+
+                    StatefulShellBranch(routes: [
+                      GoRoute(
+                          path: 'profile/posts',
+                          name: AppRoutes.profilePost,
+                          builder: (context, state) {
+                            return Center(
+                              child: Text("Post page"),
+                            );
+                          })
+                    ])
                   ]), // end of profile page routes
 
               //? TUTOR'S DASHBOARD

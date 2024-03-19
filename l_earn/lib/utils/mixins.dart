@@ -4,6 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:l_earn/utils/colors.dart';
 import 'package:l_earn/utils/constants.dart';
 import 'package:go_router/go_router.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.dart';
+
+import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
+import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 mixin AppBarMixin {
   AppBar buildAppBar(BuildContext context,
@@ -130,5 +135,34 @@ mixin PriceParserMixin {
     String result =
         '${parts.join(',').split('').reversed.join('')}${partitionedPrice.length == 2 && partitionedPrice[1] != '0' ? '.${partitionedPrice[1]}' : ''}';
     return result;
+  }
+}
+
+mixin UserMixin {
+  void requestEmailOtp(BuildContext context) {
+    context.read<VerificationCubit>().requestEmailVerificationOtp();
+  }
+}
+
+mixin PostMixin {
+
+}
+
+mixin ContentMixin {
+  void loadContents(BuildContext context, {int page = 1, required String userId}) {
+    context.read<ContentCubit>().loadContents(
+        context.read<AuthCubit>().state.user!.token,
+        userId: userId,
+        page: page);
+  }
+
+  void deleteBook(String contentId, {required BuildContext context}) {
+    //! avigator.pop(context);
+    context.pop();
+
+    //! PERFORM DELETE OPERATION
+    context
+        .read<ContentCubit>()
+        .deleteBook(context.read<AuthCubit>().state.user?.token, id: contentId);
   }
 }
