@@ -95,7 +95,10 @@ class GoRouterConfig {
                           path: "profile",
                           name: AppRoutes.profile,
                           builder: (context, state) {
-                            return ContentsShell();
+                            print("\n\n\n\n");
+                            print("Returning Contents Shell _________------");
+                            print("\n\n\n\n");
+                            return const ContentsShell();
 
                             ///*uuuuuu
                           },

@@ -59,37 +59,52 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ContentCubit, ContentState>(
-      listener: (context, state) {
-        print('STATE IS $state');
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ContentCubit, ContentState>(
+          listener: (context, state) {
+            print('STATE IS $state');
 
-        if (state is RequestingContentById) {
-          showDialog(
-              context: context,
-              builder: (context) => const Center(
-                  child: CircularProgressIndicator(color: Colors.blueGrey)));
-        } else if (state is ContentLoadingFailed || state is ContentNotFound) {
-          showDialog(
-              context: context,
-              builder: ((context) => MyDialog(
-                  title: state.error!.title, content: state.error!.content)));
-        } else if (state is ContentFound) {
-          //! avigator.pop(context);
-          context.pop();
-          //? NAVIGATE TO CONTENT DESCRIPTION PAGE
-          //! avigator.of(context)
-          //     .pushNamed('/content-description', arguments: state.content!);
-          context.pushNamed(AppRoutes.contentDescription,
-              extra: state.content!);
-        } else if (state is ContentDeleted) {
-          //! avigator.pop(context);
-          context.pop();
-          //? REFRESH CONTENT
-          widget.loadContents(context, userId: widget.userId);
-        }
-      },
-
-      //? S C A F F O L D
+            if (state is RequestingContentById) {
+              showDialog(
+                  context: context,
+                  builder: (context) => const Center(
+                      child:
+                          CircularProgressIndicator(color: Colors.blueGrey)));
+            } else if (state is ContentLoadingFailed ||
+                state is ContentNotFound) {
+              showDialog(
+                  context: context,
+                  builder: ((context) => MyDialog(
+                      title: state.error!.title,
+                      content: state.error!.content)));
+            } else if (state is ContentFound) {
+              //! avigator.pop(context);
+              context.pop();
+              //? NAVIGATE TO CONTENT DESCRIPTION PAGE
+              //! avigator.of(context)
+              //     .pushNamed('/content-description', arguments: state.content!);
+              context.pushNamed(AppRoutes.contentDescription,
+                  extra: state.content!);
+            } else if (state is ContentDeleted) {
+              //! avigator.pop(context);
+              context.pop();
+              //? REFRESH CONTENT
+              widget.loadContents(context, userId: widget.userId);
+            }
+          },
+        ),
+        BlocListener<ProfileCubit, ProfileState>(listener: (context, state) {
+          if (state.error != null) {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return MyDialog(
+                      title: state.error!.title, content: state.error!.content);
+                });
+          }
+        })
+      ],
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () => context.pushNamed(AppRoutes.createTutorial),
@@ -149,24 +164,24 @@ class _ProfilePageState extends State<ProfilePage> {
                         }),
 
                     //? Post
-                    MyContainerButton(
-                        text: "posts",
-                        showShadow: false,
-                        textColor: widget.shell.currentIndex == 1
-                            ? Colors.white
-                            : Colors.black.withOpacity(0.8),
-                        buttonColor: widget.shell.currentIndex == 1
-                            ? Colors.black.withOpacity(0.8)
-                            : Colors.white,
-                        onPressed: () {
-                          print("current index ${widget.shell.currentIndex}");
-                          if (widget.shell.currentIndex != 1) {
-                            setState(() {
-                              context.goNamed(AppRoutes.profilePost,
-                                  queryParameters: {"user": widget.userId});
-                            });
-                          }
-                        }),
+                    //! MyContainerButton(
+                    //     text: "posts",
+                    //     showShadow: false,
+                    //     textColor: widget.shell.currentIndex == 1
+                    //         ? Colors.white
+                    //         : Colors.black.withOpacity(0.8),
+                    //     buttonColor: widget.shell.currentIndex == 1
+                    //         ? Colors.black.withOpacity(0.8)
+                    //         : Colors.white,
+                    //     onPressed: () {
+                    //       print("current index ${widget.shell.currentIndex}");
+                    //       if (widget.shell.currentIndex != 1) {
+                    //         setState(() {
+                    //           context.goNamed(AppRoutes.profilePost,
+                    //               queryParameters: {"user": widget.userId});
+                    //         });
+                    //       }
+                    //     }),
 
                     // const SizedBox(width: 10,)
                   ],
@@ -180,9 +195,27 @@ class _ProfilePageState extends State<ProfilePage> {
             //? SCROLLABLE LIST OF CONTENTS
 
             BlocBuilder<ContentCubit, ContentState>(builder: (conext, state) {
-              return state is ContentLoading ? const SliverToBoxAdapter(
-                child:  MyCircularProgressIndicator()
-              ) : widget.shell;
+              if (widget.shell.currentIndex == 0) {
+                if (state is ContentLoading) {
+                  return const SliverToBoxAdapter(
+                      child: MyCircularProgressIndicator());
+                } else if (state.myContents != null &&
+                    state.myContents!.isNotEmpty) {
+                  final User user = context.read<AuthCubit>().state.user!;
+
+                  return widget.buildListOfContents(context,
+                      contents: state.myContents!,
+                      itemCount: state.myContents!.length,
+                      user: user);
+                } else {
+                  return const SliverToBoxAdapter(child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text("No books yet"),
+                  ));
+                }
+              } else {
+                return SliverToBoxAdapter(child: Text("Post page"));
+              }
               // return state is ContentLoading ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2,),) : widget.shell;
             })
           ],
@@ -306,5 +339,3 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 }
-
-

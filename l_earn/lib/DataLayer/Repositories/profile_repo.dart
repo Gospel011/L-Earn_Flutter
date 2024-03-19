@@ -14,7 +14,7 @@ class ProfileRepo {
       return User.fromMap(userMap);
     } else {
       return AppError(
-          title: response["title"] ?? 'Login failed',
+          title: response["title"] ?? 'An Error Occured',
           content: response["message"]);
     }
   }
