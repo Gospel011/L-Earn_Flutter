@@ -20,6 +20,9 @@ import 'package:l_earn/utils/constants.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:l_earn/utils/mixins.dart';
+import 'dart:io';
+import 'dart:async';
+import 'package:app_links/app_links.dart';
 
 class HomePage extends StatefulWidget with AppBarMixin {
   HomePage({super.key});
@@ -79,15 +82,44 @@ class _HomePageState extends State<HomePage> {
     context
         .read<ContentCubit>()
         .loadContents(context.read<AuthCubit>().state.user?.token);
+
+    initAppLinks();
   }
 
   late final User? user;
   bool canPop = false;
 
+    final _appLinks = AppLinks();
+    StreamSubscription? linkSubscription;
+  Future<void> initAppLinks() async {
+
+// Get the initial/first link.
+// This is useful when app was terminated (i.e. not started)
+final uri = await _appLinks.getInitialAppLink();
+// Do something (navigation, ...)
+
+print("Initial Applink Uri: $uri");
+
+// Subscribe to further events when app is started.
+// (Use stringLinkStream to get it as [String])
+linkSubscription = _appLinks.uriLinkStream.listen((uri) {
+    // Do something (navigation, ...)
+    print("Applink from stream Uri: $uri");
+
+    print("::: Q U E R Y   P A R A M E T E R S : ${uri.queryParameters}");
+});
+
+
+
+// Maybe later. Get the latest link.
+// final uri = await _appLinks.getLatestAppLink();
+// print("Applink from getLatestAppLink Uri: $uri");
+  }
+
   @override
   Widget build(BuildContext context) {
     //* BLOC LISTENER
-    // ignore: deprecated_member_use
+    
     return BlocListener<AuthCubit, AuthState>(
       listener: ((context, state) {
         if (state is AuthInitial) {
@@ -99,8 +131,7 @@ class _HomePageState extends State<HomePage> {
         create: (context) => PageCubit(),
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          bottomNavigationBar:
-              BottomAppBar(child: Builder(builder: (context) {
+          bottomNavigationBar: BottomAppBar(child: Builder(builder: (context) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List<Widget>.generate(pageIconsFill.length, (index) {
@@ -108,7 +139,7 @@ class _HomePageState extends State<HomePage> {
               }),
             );
           })),
-    
+
           //* APP BAR
           appBar: widget.buildAppBar(context, actions: [
             Builder(builder: (context) {
@@ -120,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                       height: 40, child: Icon(Icons.menu_rounded)));
             })
           ]),
-    
+
           //* DRAWER
           endDrawer:
               BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
@@ -128,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                 ? MyDrawer(user: state.user!)
                 : const SizedBox();
           }),
-    
+
           //* BODY
           body: BlocBuilder<PageCubit, PageState>(
             builder: (context, state) {

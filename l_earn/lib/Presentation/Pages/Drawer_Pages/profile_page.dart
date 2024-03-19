@@ -27,8 +27,8 @@ import 'package:go_router/go_router.dart';
 import "dart:io";
 
 class ProfilePage extends StatefulWidget with AppBarMixin {
-  const ProfilePage({super.key, required this.user});
-  final User user;
+  const ProfilePage({super.key, this.user});
+  final User? user;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
