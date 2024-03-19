@@ -89,37 +89,47 @@ class _HomePageState extends State<HomePage> {
   late final User? user;
   bool canPop = false;
 
-    final _appLinks = AppLinks();
-    StreamSubscription? linkSubscription;
+  final _appLinks = AppLinks();
+  StreamSubscription? linkSubscription;
   Future<void> initAppLinks() async {
-
 // Get the initial/first link.
 // This is useful when app was terminated (i.e. not started)
-final uri = await _appLinks.getInitialAppLink();
+    final uri = await _appLinks.getInitialAppLink();
 // Do something (navigation, ...)
 
-print("Initial Applink Uri: $uri");
+    print("Initial Applink Uri: $uri");
+
+    handleUri(uri);
 
 // Subscribe to further events when app is started.
 // (Use stringLinkStream to get it as [String])
-linkSubscription = _appLinks.uriLinkStream.listen((uri) {
-    // Do something (navigation, ...)
-    print("Applink from stream Uri: $uri");
+    linkSubscription = _appLinks.uriLinkStream.listen((uri) {
+      // Do something (navigation, ...)
+      print("Applink from stream Uri: $uri");
+      handleUri(uri);
 
-    print("::: Q U E R Y   P A R A M E T E R S : ${uri.queryParameters}");
-});
-
-
+      print("::: Q U E R Y   P A R A M E T E R S : ${uri.queryParameters}");
+    });
 
 // Maybe later. Get the latest link.
 // final uri = await _appLinks.getLatestAppLink();
 // print("Applink from getLatestAppLink Uri: $uri");
   }
 
+  void handleUri(Uri? uri) {
+    if (uri != null) {
+      if (uri.path.contains('profile')) {
+        print(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        String id = uri.path.split('profile/')[1];
+        context.goNamed(AppRoutes.profile, queryParameters: {"user": id});
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //* BLOC LISTENER
-    
+
     return BlocListener<AuthCubit, AuthState>(
       listener: ((context, state) {
         if (state is AuthInitial) {

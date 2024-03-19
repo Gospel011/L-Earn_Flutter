@@ -73,11 +73,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           CircularProgressIndicator(color: Colors.blueGrey)));
             } else if (state is ContentLoadingFailed ||
                 state is ContentNotFound) {
+              var content = state.error!.content;
+
+              if (state.error!.content == 'Invalid  "content" id') {
+                content = 'No content was found';
+              } 
               showDialog(
                   context: context,
-                  builder: ((context) => MyDialog(
-                      title: state.error!.title,
-                      content: state.error!.content)));
+                  builder: ((context) =>
+                      MyDialog(title: state.error!.title, content: content)));
             } else if (state is ContentFound) {
               //! avigator.pop(context);
               context.pop();
@@ -96,11 +100,17 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         BlocListener<ProfileCubit, ProfileState>(listener: (context, state) {
           if (state.error != null) {
+
+            var content = state.error!.content;
+
+            if (state.error!.content == 'Invalid  "user" id') {
+                content = 'The requested user does not exist';
+              }
             showDialog(
                 context: context,
                 builder: (context) {
                   return MyDialog(
-                      title: state.error!.title, content: state.error!.content);
+                      title: state.error!.title, content: content);
                 });
           }
         })
@@ -208,7 +218,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       itemCount: state.myContents!.length,
                       user: user);
                 } else {
-                  return const SliverToBoxAdapter(child: Padding(
+                  return const SliverToBoxAdapter(
+                      child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text("No books yet"),
                   ));
