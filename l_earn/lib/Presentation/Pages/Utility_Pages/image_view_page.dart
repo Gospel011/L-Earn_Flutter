@@ -6,6 +6,9 @@ class ImageViewPage extends StatelessWidget {
 
   final String image;
 
+  static final TransformationController transformationController =
+      TransformationController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,9 +17,15 @@ class ImageViewPage extends StatelessWidget {
         automaticallyImplyLeading: true,
         title: const Text('Pinch to Zoom'),
       ),
-      body: InteractiveViewer(
-        maxScale: 8,
-        child: Center(child: MyImageWidget(image: image, borderRadius: 0))),
+      body: GestureDetector(
+        onDoubleTap: (){
+          transformationController.value = Matrix4.identity();
+        },
+        child: InteractiveViewer(
+            transformationController: transformationController,
+            maxScale: 8,
+            child: Center(child: MyImageWidget(image: image, borderRadius: 0))),
+      ),
     );
   }
 }

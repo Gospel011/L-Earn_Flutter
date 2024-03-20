@@ -82,7 +82,7 @@ class _BuildBannerAndUserDescriptionState
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               //* PROFILE PICTURE
-              MyProfilePicture(user: widget.user, radius: 32),
+              MyProfilePicture(user: widget.user, radius: 32, tappable: true,),
 
               const SizedBox(
                 width: 4,

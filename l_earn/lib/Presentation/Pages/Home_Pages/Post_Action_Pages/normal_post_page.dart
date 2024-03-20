@@ -28,9 +28,11 @@ class _MakePostPageState extends State<MakePostPage> {
   final TextEditingController _postText = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   XFile? _pickedImage;
+  
 
   @override
   Widget build(BuildContext context) {
+    
     //? Request focus
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {

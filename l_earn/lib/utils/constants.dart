@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 //! NETWORK CONSTANTS
 class NetWorkConstants {
+  static const String baseShareUrl = "https://l-earn.onrender.com";
   static const String baseUrl =
       "https://l-earn.onrender.com/api/v1"; //? [PRODUCTION]
   // static const String baseUrl =

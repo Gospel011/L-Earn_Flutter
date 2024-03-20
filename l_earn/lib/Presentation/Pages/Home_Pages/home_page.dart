@@ -120,8 +120,32 @@ class _HomePageState extends State<HomePage> {
     if (uri != null) {
       if (uri.path.contains('profile')) {
         print(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        String id = uri.path.split('profile/')[1];
-        context.goNamed(AppRoutes.profile, queryParameters: {"user": id});
+        //? [/profile/65b180c437c3742ad28bc4ce]
+
+        String endpoint = uri.path.split("https://l-earn.onrender.com")[0];
+
+        String path = endpoint.split('/')[1];
+        String id = endpoint.split('/')[2];
+
+        switch (path) {
+          case 'profile':
+            context.goNamed(AppRoutes.profile, queryParameters: {"user": id});
+            break;
+          case 'posts':
+            // context.goNamed(AppRoutes.post, queryParameters: {"user": id});
+            break;
+          case 'contents':
+            // context.goNamed(AppRoutes.post, queryParameters: {"user": id});
+            break;
+
+        }
+
+        print("endpoint: $endpoint, path: $path, id: $id");
+
+        // if(path == 'profile') {
+
+        //
+        // }
       }
     }
   }

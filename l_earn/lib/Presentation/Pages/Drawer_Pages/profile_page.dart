@@ -31,6 +31,8 @@ import 'package:go_router/go_router.dart';
 
 import "dart:io";
 
+import 'package:share_plus/share_plus.dart';
+
 class ProfilePage extends StatefulWidget
     with AppBarMixin, ContentMixin, UserMixin {
   const ProfilePage({super.key, required this.userId, required this.shell});
@@ -77,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
               if (state.error!.content == 'Invalid  "content" id') {
                 content = 'No content was found';
-              } 
+              }
               showDialog(
                   context: context,
                   builder: ((context) =>
@@ -100,17 +102,15 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         BlocListener<ProfileCubit, ProfileState>(listener: (context, state) {
           if (state.error != null) {
-
             var content = state.error!.content;
 
             if (state.error!.content == 'Invalid  "user" id') {
-                content = 'The requested user does not exist';
-              }
+              content = 'The requested user does not exist';
+            }
             showDialog(
                 context: context,
                 builder: (context) {
-                  return MyDialog(
-                      title: state.error!.title, content: content);
+                  return MyDialog(title: state.error!.title, content: content);
                 });
           }
         })
@@ -259,6 +259,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     //     context, '/edit-profile-page'),
                   ),
 
+                  //? Share Profile
+                  PopupMenuItem(
+                    value: 'Share',
+                    child: Text("Share profile",
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    onTap: () {
+                      Share.share(
+                          "${NetWorkConstants.baseShareUrl}/profile/${context.read<AuthCubit>().state.user!.id}");
+                    },
+                  ),
+
                   //? Verify Email
                   PopupMenuItem(
                     value: 'verify',
@@ -342,6 +353,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 if (profileState.profileUser?.emailVerified == true) {
                   list.removeLast();
+                  return list;
+                }
+                if (profileState.profileUser?.emailVerified == false) {
+                  list.removeAt(1);
                   return list;
                 }
 
