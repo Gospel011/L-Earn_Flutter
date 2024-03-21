@@ -125,24 +125,8 @@ class _HomeState extends State<Home> {
                         );
                       }),
 
-                  SliverToBoxAdapter(
-                      child: state is NewPostsLoading
-                          ? const MyCircularProgressIndicator()
-                          : state is NewPostsFailed
-                              ? Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0),
-                                    child: MyElevatedButton(
-                                      text: 'Reload',
-                                      onPressed: () {
-                                        print('RELOADING');
-                                        getPosts();
-                                      },
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox()),
+                  
+                  
                 ],
               );
             },

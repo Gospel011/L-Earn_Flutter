@@ -14,6 +14,7 @@ import 'package:l_earn/BusinessLogic/AuthCubit/verification/verification_cubit.d
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 
 mixin AppBarMixin {
   AppBar buildAppBar(BuildContext context,
@@ -190,6 +191,19 @@ mixin ContentMixin {
               content: content,
               moreActions: user.id == content.author.id
                   ? [
+                      //? SHARE CONTENT
+                      PopupMenuItem(
+                        value: 'share',
+                        onTap: () {
+                          //TODO: HANDLE EDIT CONTENT
+                          print("Share content pressed");
+                          print("POST TAG LENGT ${content.tags}");
+
+                          Share.share("${NetWorkConstants.baseShareUrl}/contents/${content.id}");
+                          
+                        },
+                        child: Text('Edit ${content.type}'),
+                      ),
                       //? EDIT CONTENT
                       PopupMenuItem(
                         value: 'edit',
@@ -325,6 +339,9 @@ mixin ContentMixin {
                 print('${content.title} thumbnail pressed');
                 context.read<ContentCubit>().getContentById(
                     context.read<AuthCubit>().state.user?.token, content.id);
+                
+                context.pushNamed(AppRoutes.contentDescription,
+                  pathParameters: {"id": content.id});
               },
               onMetaPressed: () {
                 print('${content.title} meta pressed');

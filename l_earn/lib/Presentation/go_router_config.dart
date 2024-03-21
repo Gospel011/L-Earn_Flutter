@@ -228,7 +228,7 @@ class GoRouterConfig {
               //? CONTENT DESCRIPTION ROUTE
               GoRoute(
                   name: AppRoutes.contentDescription,
-                  path: 'content-description',
+                  path: 'content-description/:id',
                   builder: (context, state) {
                     return MultiBlocProvider(
                       providers: [
@@ -236,8 +236,7 @@ class GoRouterConfig {
                         BlocProvider.value(value: paymentCubit)
                       ],
                       child: ContentDescriptionPage(
-                        content: state.extra
-                            as Content, //! provide extra as [Content]
+                        contentId: state.pathParameters["id"]!, //! provide path parameter as [String]
                       ),
                     );
                   },

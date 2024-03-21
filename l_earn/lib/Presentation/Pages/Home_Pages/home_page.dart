@@ -92,8 +92,10 @@ class _HomePageState extends State<HomePage> {
   final _appLinks = AppLinks();
   StreamSubscription? linkSubscription;
   Future<void> initAppLinks() async {
+
 // Get the initial/first link.
 // This is useful when app was terminated (i.e. not started)
+
     final uri = await _appLinks.getInitialAppLink();
 // Do something (navigation, ...)
 
@@ -106,6 +108,7 @@ class _HomePageState extends State<HomePage> {
     linkSubscription = _appLinks.uriLinkStream.listen((uri) {
       // Do something (navigation, ...)
       print("Applink from stream Uri: $uri");
+
       handleUri(uri);
 
       print("::: Q U E R Y   P A R A M E T E R S : ${uri.queryParameters}");
@@ -117,8 +120,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void handleUri(Uri? uri) {
+    
     if (uri != null) {
-      if (uri.path.contains('profile')) {
+      // if (uri.path.contains('profile')) {
         print(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
         //? [/profile/65b180c437c3742ad28bc4ce]
 
@@ -126,6 +130,8 @@ class _HomePageState extends State<HomePage> {
 
         String path = endpoint.split('/')[1];
         String id = endpoint.split('/')[2];
+
+        print("endpoint $endpoint, path $path, id: $id");
 
         switch (path) {
           case 'profile':
@@ -135,7 +141,8 @@ class _HomePageState extends State<HomePage> {
             // context.goNamed(AppRoutes.post, queryParameters: {"user": id});
             break;
           case 'contents':
-            // context.goNamed(AppRoutes.post, queryParameters: {"user": id});
+            print("contents");
+            context.goNamed(AppRoutes.contentDescription, pathParameters: {"id": id});
             break;
 
         }
@@ -146,7 +153,7 @@ class _HomePageState extends State<HomePage> {
 
         //
         // }
-      }
+      // }
     }
   }
 

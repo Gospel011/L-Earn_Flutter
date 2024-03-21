@@ -52,6 +52,9 @@ class _ProfilePageState extends State<ProfilePage> {
     print('Asking__________________');
 
     // user = context.read<AuthCubit>().state.user!;
+    context
+        .read<ContentCubit>()
+        .loadContents(context.read<AuthCubit>().state.user?.token);
 
     widget.loadContents(context, userId: widget.userId);
 
@@ -67,37 +70,13 @@ class _ProfilePageState extends State<ProfilePage> {
           listener: (context, state) {
             print('STATE IS $state');
 
-            if (state is RequestingContentById) {
-              showDialog(
-                  context: context,
-                  builder: (context) => const Center(
-                      child:
-                          CircularProgressIndicator(color: Colors.blueGrey)));
-            } else if (state is ContentLoadingFailed ||
-                state is ContentNotFound) {
-              var content = state.error!.content;
+             if (state is ContentDeleted) {
+              context.pop();
 
-              if (state.error!.content == 'Invalid  "content" id') {
-                content = 'No content was found';
-              }
-              showDialog(
-                  context: context,
-                  builder: ((context) =>
-                      MyDialog(title: state.error!.title, content: content)));
-            } else if (state is ContentFound) {
-              //! avigator.pop(context);
-              context.pop();
-              //? NAVIGATE TO CONTENT DESCRIPTION PAGE
-              //! avigator.of(context)
-              //     .pushNamed('/content-description', arguments: state.content!);
-              context.pushNamed(AppRoutes.contentDescription,
-                  extra: state.content!);
-            } else if (state is ContentDeleted) {
-              //! avigator.pop(context);
-              context.pop();
               //? REFRESH CONTENT
               widget.loadContents(context, userId: widget.userId);
             }
+
           },
         ),
         BlocListener<ProfileCubit, ProfileState>(listener: (context, state) {

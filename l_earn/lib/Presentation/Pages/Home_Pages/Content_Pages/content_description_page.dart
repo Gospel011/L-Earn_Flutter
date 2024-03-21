@@ -22,10 +22,23 @@ import 'package:l_earn/utils/colors.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:l_earn/utils/constants.dart';
 
-class ContentDescriptionPage extends StatelessWidget {
-  const ContentDescriptionPage({super.key, required this.content});
+class ContentDescriptionPage extends StatefulWidget {
+  const ContentDescriptionPage({super.key, required this.contentId});
 
-  final Content content;
+  final String contentId;
+
+  @override
+  State<ContentDescriptionPage> createState() => _ContentDescriptionPageState();
+}
+
+class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<ContentCubit>().getContentById(
+        context.read<AuthCubit>().state.user?.token, widget.contentId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +49,8 @@ class ContentDescriptionPage extends StatelessWidget {
           print("CURRENT PAYMENT STATE IS $state");
           if (state is PaymentInvoiceGenerated) {
             // NAVIGATE TO PAYMENT PAGE
-            context.pushNamed(AppRoutes.payment, extra: content);
+            context.pushNamed(AppRoutes.payment,
+                extra: context.read<ContentCubit>().state.content);
             //! avigator.of(context)
             //     .pushNamed('/payment-page', arguments: content);
           } else if (state is GeneratingPaymentInvoiceFailed) {
@@ -48,150 +62,174 @@ class ContentDescriptionPage extends StatelessWidget {
                 });
           }
         },
-        child: Scaffold(
-          body: BlocBuilder<ContentCubit, ContentState>(
-              builder: (context, state) {
-            return SafeArea(
-              child: state is RequestingContentById
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.blueGrey,
-                      ),
-                    )
-                  : Column(
-                      children: [
-                        Expanded(
-                          child: CustomScrollView(
-                            slivers: [
-                              //? Thumbnail
-                              SliverToBoxAdapter(
-                                  child: MyContentThumbnail(
-                                      content: content, borderRadius: 0)),
+        child: BlocListener<ContentCubit, ContentState>(
+          listener: (context, state) {
+            print('STATE IS $state');
 
-                              //? title
-                              SliverToBoxAdapter(
-                                  child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 8),
-                                child: ContentMetaWidget(content: content),
-                              )),
+             if (state is ContentLoadingFailed ||
+                state is ContentNotFound) {
+              var content = state.error!.content;
 
-                              //? Pay Button
-                              content.author.id ==
-                                          context
-                                              .read<AuthCubit>()
-                                              .state
-                                              .user
-                                              ?.id ||
-                                      content.price == 0
-                                  ? const SliverToBoxAdapter(child: SizedBox())
-                                  : SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: BlocBuilder<PaymentCubit,
-                                                PaymentState>(
-                                            builder: (context, state) {
-                                          return MyElevatedButton(
-                                            text: 'Purchase',
-                                            loading: state
-                                                is GeneratingPaymentInvoice,
-                                            onPressed: () {
-                                              // GENERATE INVOICE
-                                              context
-                                                  .read<PaymentCubit>()
-                                                  .generateInvoice(
-                                                      context
-                                                          .read<AuthCubit>()
-                                                          .state
-                                                          .user
-                                                          ?.token,
-                                                      content.id);
-
-                                              print(
-                                                  "A B O U T   T O   R E C E I V E   ${content.price}");
-                                            },
-                                          );
-                                        }),
-                                      ),
-                                    ),
-
-                              //? tab with description, chapters, reviews
-                              const SliverPadding(
-                                padding: EdgeInsets.all(16),
-                              ),
-
-                              SliverToBoxAdapter(
-                                child: BlocBuilder<TabCubit, TabState>(
-                                    builder: (context, tabState) {
-                                  // print("B U I L D I N G   $content");
-                                  return Column(
-                                    children: [
-                                      //* TAB
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: MyTabBar(
-                                          tabs: [
-                                            MyContainerButton(
-                                                text: 'Description',
-                                                textColor: tabState.index == 0
-                                                    ? Colors.white
-                                                    : AppColor.mainColorBlack,
-                                                buttonColor: tabState.index == 0
-                                                    ? AppColor.mainColorBlack
-                                                    : Colors.transparent,
-                                                onPressed: () {
-                                                  print('ButtonPressed');
-                                                  context
-                                                      .read<TabCubit>()
-                                                      .setTabIndex(0);
-                                                }),
-                                            const SizedBox(width: 10),
-                                            MyContainerButton(
-                                                text: 'Chapters',
-                                                textColor: tabState.index == 1
-                                                    ? Colors.white
-                                                    : AppColor.mainColorBlack,
-                                                buttonColor: tabState.index == 1
-                                                    ? AppColor.mainColorBlack
-                                                    : Colors.transparent,
-                                                onPressed: () {
-                                                  print('ButtonPressed');
-                                                  context
-                                                      .read<TabCubit>()
-                                                      .setTabIndex(1);
-                                                })
-                                          ],
+              if (state.error!.content == 'Invalid  "content" id') {
+                content = 'No content was found';
+              }
+              showDialog(
+                  context: context,
+                  builder: ((context) =>
+                      MyDialog(title: state.error!.title, content: content)));
+            } 
+          },
+        
+          child: Scaffold(
+            body: BlocBuilder<ContentCubit, ContentState>(
+                builder: (context, state) {
+              return SafeArea(
+                child: state.content == null
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blueGrey,
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: CustomScrollView(
+                              slivers: [
+                                //? Thumbnail
+                                SliverToBoxAdapter(
+                                    child: MyContentThumbnail(
+                                        content: state.content!,
+                                        borderRadius: 0)),
+          
+                                //? title
+                                SliverToBoxAdapter(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8),
+                                  child:
+                                      ContentMetaWidget(content: state.content!),
+                                )),
+          
+                                //? Pay Button
+                                state.content!.author.id ==
+                                            context
+                                                .read<AuthCubit>()
+                                                .state
+                                                .user
+                                                ?.id ||
+                                        state.content!.price == 0
+                                    ? const SliverToBoxAdapter(child: SizedBox())
+                                    : SliverToBoxAdapter(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: BlocBuilder<PaymentCubit,
+                                                  PaymentState>(
+                                              builder: (context, paymentState) {
+                                            return MyElevatedButton(
+                                              text: 'Purchase',
+                                              loading: paymentState
+                                                  is GeneratingPaymentInvoice,
+                                              onPressed: () {
+                                                // GENERATE INVOICE
+                                                print("state $state");
+                                                context
+                                                    .read<PaymentCubit>()
+                                                    .generateInvoice(
+                                                        context
+                                                            .read<AuthCubit>()
+                                                            .state
+                                                            .user
+                                                            ?.token,
+                                                        state.content!.id);
+          
+                                                print(
+                                                    "A B O U T   T O   R E C E I V E   ${state.content!.price}");
+                                              },
+                                            );
+                                          }),
                                         ),
                                       ),
-
-                                      tabState.index == 0
-
-                                          //? D E S C R I P T I O N   P A G E
-                                          ? BuildDescription(
-                                              content: content,
-                                            )
-
-                                          //? C H A P T E R S   T A B
-                                          : BuildChapters(
-                                              chapters: content.type == 'book'
-                                                  ? content.bookChapters!
-                                                  : content.videoChapters!,
-                                              contentId: content.id,
-                                              type: content.type,
-                                            )
-                                    ],
-                                  );
-                                }),
-                              )
-                            ],
+          
+                                //? tab with description, chapters, reviews
+                                const SliverPadding(
+                                  padding: EdgeInsets.all(16),
+                                ),
+          
+                                SliverToBoxAdapter(
+                                  child: BlocBuilder<TabCubit, TabState>(
+                                      builder: (context, tabState) {
+                                    // print("B U I L D I N G   $content");
+                                    return Column(
+                                      children: [
+                                        //* TAB
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: MyTabBar(
+                                            tabs: [
+                                              MyContainerButton(
+                                                  text: 'Description',
+                                                  textColor: tabState.index == 0
+                                                      ? Colors.white
+                                                      : AppColor.mainColorBlack,
+                                                  buttonColor: tabState.index == 0
+                                                      ? AppColor.mainColorBlack
+                                                      : Colors.transparent,
+                                                  onPressed: () {
+                                                    print('ButtonPressed');
+                                                    context
+                                                        .read<TabCubit>()
+                                                        .setTabIndex(0);
+                                                  }),
+                                              const SizedBox(width: 10),
+                                              MyContainerButton(
+                                                  text: 'Chapters',
+                                                  textColor: tabState.index == 1
+                                                      ? Colors.white
+                                                      : AppColor.mainColorBlack,
+                                                  buttonColor: tabState.index == 1
+                                                      ? AppColor.mainColorBlack
+                                                      : Colors.transparent,
+                                                  onPressed: () {
+                                                    print('ButtonPressed');
+                                                    context
+                                                        .read<TabCubit>()
+                                                        .setTabIndex(1);
+                                                  })
+                                            ],
+                                          ),
+                                        ),
+          
+                                        tabState.index == 0
+          
+                                            //? D E S C R I P T I O N   P A G E
+                                            ? BuildDescription(
+                                                content: state.content!,
+                                              )
+          
+                                            //? C H A P T E R S   T A B
+                                            : BuildChapters(
+                                                chapters: state.content!.type ==
+                                                        'book'
+                                                    ? state.content!.bookChapters!
+                                                    : state
+                                                        .content!.videoChapters!,
+                                                contentId: state.content!.id,
+                                                type: state.content!.type,
+                                              )
+                                      ],
+                                    );
+                                  }),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-            );
-          }),
+                        ],
+                      ),
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -282,8 +320,8 @@ class BuildChapters extends StatelessWidget {
         chapters: chapters,
         contentId: contentId,
         type: type,
-        preRequestAction: () => context
-            .pushNamed(AppRoutes.chapterPage) //! avigator.pushNamed(context, '/chapter-page'),
+        preRequestAction: () => context.pushNamed(AppRoutes
+            .chapterPage, pathParameters: {"id": contentId}) //! avigator.pushNamed(context, '/chapter-page'),
         );
   }
 }
