@@ -46,8 +46,9 @@ class MyDrawer extends StatelessWidget {
                 //! avigator.pop(context);
                 context.pop();
 
-                context.goNamed(AppRoutes.profile,
-                    extra: context.read<AuthCubit>().state.user!);
+                context.goNamed(AppRoutes.profile, queryParameters: {
+                  "user": context.read<AuthCubit>().state.user!.id
+                });
 
                 //! avigator.pushNamed(context, '/profile-page',
                 //     arguments: context.read<AuthCubit>().state.user!);

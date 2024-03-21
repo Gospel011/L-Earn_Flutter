@@ -36,6 +36,10 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
   void initState() {
     super.initState();
 
+    loadContent();
+  }
+
+  void loadContent() {
     context.read<ContentCubit>().getContentById(
         context.read<AuthCubit>().state.user?.token, widget.contentId);
   }
@@ -85,7 +89,10 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                 builder: (context, state) {
               return SafeArea(
                 child: state.content == null
-                    ? const Center(
+                    ? state.error != null ? Center(child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: MyElevatedButton(text: 'reload', onPressed: loadContent,),
+                    )) : const Center(
                         child: CircularProgressIndicator(
                           color: Colors.blueGrey,
                         ),

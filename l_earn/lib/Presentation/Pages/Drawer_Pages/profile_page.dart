@@ -244,8 +244,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Text("Share profile",
                         style: Theme.of(context).textTheme.bodyMedium),
                     onTap: () {
+                      final User user = context.read<AuthCubit>().state.user!;
+
                       Share.share(
-                          "${NetWorkConstants.baseShareUrl}/profile/${context.read<AuthCubit>().state.user!.id}");
+                          "${Uri.parse("${NetWorkConstants.baseShareUrl}/profile/${user.id}?nm=${user.firstName} ${user.lastName}")}");
                     },
                   ),
 

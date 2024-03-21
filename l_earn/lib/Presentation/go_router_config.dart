@@ -48,6 +48,7 @@ class GoRouterConfig {
   final PostCubit postCubit = PostCubit();
   final CommentCubit commentCubit = CommentCubit();
   final ContentCubit contentCubit = ContentCubit();
+  final ContentCubit contentCubit2 = ContentCubit();
   final PaymentCubit paymentCubit = PaymentCubit();
 
   GoRouter get router => GoRouter(
@@ -213,6 +214,7 @@ class GoRouterConfig {
                     //                                       'thumbnailUrl': content.thumbnailUrl
                     //                                     }
 
+                    
                     return BlocProvider.value(
                         value: contentCubit,
                         child: CreateTutorialPage(
@@ -232,7 +234,10 @@ class GoRouterConfig {
                   builder: (context, state) {
                     return MultiBlocProvider(
                       providers: [
-                        BlocProvider.value(value: contentCubit),
+                        BlocProvider.value(value: contentCubit2),
+                        // BlocProvider<ContentCubit>(
+                        //   create: (context) => ContentCubit()
+                        // ),
                         BlocProvider.value(value: paymentCubit)
                       ],
                       child: ContentDescriptionPage(
@@ -247,7 +252,7 @@ class GoRouterConfig {
                         path: 'chapter-page',
                         builder: (context, state) {
                           return MultiBlocProvider(providers: [
-                            BlocProvider.value(value: contentCubit),
+                            BlocProvider.value(value: contentCubit2),
                             BlocProvider.value(value: postCubit),
                             BlocProvider<FollowCubit>(
                                 create: (context) => FollowCubit()),

@@ -199,10 +199,10 @@ mixin ContentMixin {
                           print("Share content pressed");
                           print("POST TAG LENGT ${content.tags}");
 
-                          Share.share("${NetWorkConstants.baseShareUrl}/contents/${content.id}");
+                          Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/contents/${content.id}?nm=${content.title}")}");
                           
                         },
-                        child: Text('Edit ${content.type}'),
+                        child: Text('Share ${content.type}'),
                       ),
                       //? EDIT CONTENT
                       PopupMenuItem(
@@ -324,6 +324,20 @@ mixin ContentMixin {
                       ),
                     ]
                   : [
+                    //? SHARE CONTENT
+                      PopupMenuItem(
+                        value: 'share',
+                        onTap: () {
+                          //TODO: HANDLE EDIT CONTENT
+                          print("Share content pressed");
+                          print("POST TAG LENGT ${content.tags}");
+
+                          Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/contents/${content.id}?nm=${content.title}")}");
+                          
+                        },
+                        child: Text('Share ${content.type}'),
+                      ),
+
                       //? DELETE CONTENT
                       PopupMenuItem(
                         value: 'report',

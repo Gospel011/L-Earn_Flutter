@@ -118,7 +118,7 @@ class _LearnPageState extends State<LearnPage>
                               style: textTheme,
                             ),
                             onTap: () {
-                              Share.share("${NetWorkConstants.baseShareUrl}/contents/${content.id}");
+                              Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/contents/${content.id}?nm=${content.title}")}");
                             }),
                         PopupMenuItem(
                             child: Text(
