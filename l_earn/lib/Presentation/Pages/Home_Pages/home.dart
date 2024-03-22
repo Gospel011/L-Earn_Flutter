@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
-import 'package:l_earn/Presentation/components/my_circularProgressIndicator.dart';
+
 import 'package:l_earn/Presentation/components/my_circular_progress_indicator.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_post_widget.dart';
@@ -125,8 +125,26 @@ class _HomeState extends State<Home> {
                         );
                       }),
 
-                  
-                  
+                  BlocBuilder<PostCubit, PostState>(builder: (context, state) {
+                    return SliverToBoxAdapter(
+                        child: state is NewPostsLoading
+                            ? const MyCircularProgressIndicator()
+                            : state is NewPostsFailed
+                                ? Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: MyElevatedButton(
+                                        text: 'Reload',
+                                        onPressed: () {
+                                          print('RELOADING');
+                                          getPosts();
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox());
+                  }),
                 ],
               );
             },

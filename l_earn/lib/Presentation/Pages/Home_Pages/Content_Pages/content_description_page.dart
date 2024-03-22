@@ -16,6 +16,7 @@ import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_content_thumbnail.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
+import 'package:l_earn/Presentation/components/my_circular_progress_indicator.dart';
 
 import 'package:l_earn/utils/colors.dart';
 
@@ -93,9 +94,7 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: MyElevatedButton(text: 'reload', onPressed: loadContent,),
                     )) : const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.blueGrey,
-                        ),
+                        child: MyCircularProgressIndicator()
                       )
                     : Column(
                         children: [
