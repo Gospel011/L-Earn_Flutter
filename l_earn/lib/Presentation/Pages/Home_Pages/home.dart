@@ -6,6 +6,8 @@ import 'package:l_earn/Presentation/components/my_circular_progress_indicator.da
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
 import 'package:l_earn/Presentation/components/my_post_widget.dart';
 import 'package:l_earn/utils/colors.dart';
+import 'package:l_earn/utils/constants.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../BusinessLogic/PostCubit/post_cubit.dart';
 import '../../../DataLayer/Models/post_model.dart';
@@ -101,6 +103,9 @@ class _HomeState extends State<Home> {
                           index: index,
                           moreActions: [
                             PopupMenuItem(
+                              onTap: (){
+                                Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/posts/${post.id}?author=${post.user.firstName} ${post.user.lastName}")}");
+                              },
                                 child: Text(
                               "Share post",
                               style: textTheme,

@@ -49,6 +49,7 @@ dependencies:
   cached_network_image: ^3.3.1
   app_links: ^4.0.0
   share_plus: ^7.2.2
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -85,6 +86,9 @@ flutter:
     - assets/svg_icons/events-fill.svg
     - assets/svg_icons/events-thin.svg
     - assets/svg_icons/events-thin_v2.svg
+               
+               
+              
     - assets/svg_icons/google_icon.svg
 
     - assets/svg_icons/home-fill.svg

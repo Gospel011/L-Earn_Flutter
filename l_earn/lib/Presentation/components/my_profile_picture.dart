@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:l_earn/DataLayer/Models/user_model.dart';
@@ -49,10 +50,12 @@ class MyProfilePicture extends StatelessWidget {
               )
             : CircleAvatar(
                 backgroundColor: Colors.blueGrey,
-                foregroundImage: user.profilePicture != 'default.png'
-                    ? NetworkImage(user.profilePicture!)
-                    : null,
                 radius: radius ?? 48,
+                child: user.profilePicture != 'default.png'
+                    ? ClipRRect(
+                      borderRadius: BorderRadius.circular(48),
+                      child: CachedNetworkImage( imageUrl: user.profilePicture!, fit: BoxFit.cover,))
+                    : null,
               ),
       ),
     );

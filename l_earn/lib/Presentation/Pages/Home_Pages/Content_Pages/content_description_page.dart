@@ -22,6 +22,7 @@ import 'package:l_earn/utils/colors.dart';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:l_earn/utils/constants.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class ContentDescriptionPage extends StatefulWidget {
   const ContentDescriptionPage({super.key, required this.contentId});
@@ -71,8 +72,7 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
           listener: (context, state) {
             print('STATE IS $state');
 
-             if (state is ContentLoadingFailed ||
-                state is ContentNotFound) {
+            if (state is ContentLoadingFailed || state is ContentNotFound) {
               var content = state.error!.content;
 
               if (state.error!.content == 'Invalid  "content" id') {
@@ -82,20 +82,24 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                   context: context,
                   builder: ((context) =>
                       MyDialog(title: state.error!.title, content: content)));
-            } 
+            }
           },
-        
           child: Scaffold(
             body: BlocBuilder<ContentCubit, ContentState>(
                 builder: (context, state) {
               return SafeArea(
                 child: state.content == null
-                    ? state.error != null ? Center(child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: MyElevatedButton(text: 'reload', onPressed: loadContent,),
-                    )) : const Center(
-                        child: MyCircularProgressIndicator()
-                      )
+                    ? state.error != null
+                        ? Center(
+                            child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: MyElevatedButton(
+                              text: 'reload',
+                              onPressed: loadContent,
+                            ),
+                          ))
+                        : const Center(child: MyCircularProgressIndicator())
                     : Column(
                         children: [
                           Expanded(
@@ -106,16 +110,16 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                                     child: MyContentThumbnail(
                                         content: state.content!,
                                         borderRadius: 0)),
-          
+
                                 //? title
                                 SliverToBoxAdapter(
                                     child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16.0, vertical: 8),
-                                  child:
-                                      ContentMetaWidget(content: state.content!),
+                                  child: ContentMetaWidget(
+                                      content: state.content!),
                                 )),
-          
+
                                 //? Pay Button
                                 state.content!.author.id ==
                                             context
@@ -124,7 +128,8 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                                                 .user
                                                 ?.id ||
                                         state.content!.price == 0
-                                    ? const SliverToBoxAdapter(child: SizedBox())
+                                    ? const SliverToBoxAdapter(
+                                        child: SizedBox())
                                     : SliverToBoxAdapter(
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -148,20 +153,22 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                                                             .user
                                                             ?.token,
                                                         state.content!.id);
-          
+
                                                 print(
                                                     "A B O U T   T O   R E C E I V E   ${state.content!.price}");
                                               },
-                                            );
+                                            ).animate().shimmer(
+                                              
+                                                duration: const Duration(seconds: 1));
                                           }),
                                         ),
                                       ),
-          
+
                                 //? tab with description, chapters, reviews
                                 const SliverPadding(
                                   padding: EdgeInsets.all(16),
                                 ),
-          
+
                                 SliverToBoxAdapter(
                                   child: BlocBuilder<TabCubit, TabState>(
                                       builder: (context, tabState) {
@@ -179,7 +186,8 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                                                   textColor: tabState.index == 0
                                                       ? Colors.white
                                                       : AppColor.mainColorBlack,
-                                                  buttonColor: tabState.index == 0
+                                                  buttonColor: tabState.index ==
+                                                          0
                                                       ? AppColor.mainColorBlack
                                                       : Colors.transparent,
                                                   onPressed: () {
@@ -194,7 +202,8 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                                                   textColor: tabState.index == 1
                                                       ? Colors.white
                                                       : AppColor.mainColorBlack,
-                                                  buttonColor: tabState.index == 1
+                                                  buttonColor: tabState.index ==
+                                                          1
                                                       ? AppColor.mainColorBlack
                                                       : Colors.transparent,
                                                   onPressed: () {
@@ -206,21 +215,22 @@ class _ContentDescriptionPageState extends State<ContentDescriptionPage> {
                                             ],
                                           ),
                                         ),
-          
+
                                         tabState.index == 0
-          
+
                                             //? D E S C R I P T I O N   P A G E
                                             ? BuildDescription(
                                                 content: state.content!,
                                               )
-          
+
                                             //? C H A P T E R S   T A B
                                             : BuildChapters(
                                                 chapters: state.content!.type ==
                                                         'book'
-                                                    ? state.content!.bookChapters!
-                                                    : state
-                                                        .content!.videoChapters!,
+                                                    ? state
+                                                        .content!.bookChapters!
+                                                    : state.content!
+                                                        .videoChapters!,
                                                 contentId: state.content!.id,
                                                 type: state.content!.type,
                                               )
@@ -326,8 +336,10 @@ class BuildChapters extends StatelessWidget {
         chapters: chapters,
         contentId: contentId,
         type: type,
-        preRequestAction: () => context.pushNamed(AppRoutes
-            .chapterPage, pathParameters: {"id": contentId}) //! avigator.pushNamed(context, '/chapter-page'),
+        preRequestAction: () => context.pushNamed(AppRoutes.chapterPage,
+                pathParameters: {
+                  "id": contentId
+                }) //! avigator.pushNamed(context, '/chapter-page'),
         );
   }
 }

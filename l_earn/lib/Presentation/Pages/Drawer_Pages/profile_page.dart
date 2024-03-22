@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
-import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
+
 import 'package:l_earn/BusinessLogic/ProfileCubit/profile_cubit.dart';
 
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
-import 'package:l_earn/DataLayer/Models/content_model.dart';
+
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
 import 'package:l_earn/Presentation/components/build_banner_and_user_description.dart';
-import 'package:l_earn/Presentation/components/my_circularProgressIndicator.dart';
+
 import 'package:l_earn/Presentation/components/my_circular_progress_indicator.dart';
-import 'package:l_earn/Presentation/components/my_content_widget.dart';
+
 import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_image_loading_placeholder_widget.dart';
 
-import 'package:l_earn/Presentation/components/my_text_button.dart';
+
 import 'package:l_earn/Presentation/components/my_container_button.dart';
-import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
+
 
 import 'package:l_earn/utils/colors.dart';
 

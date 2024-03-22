@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
-import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_state.dart';
+
 import 'package:l_earn/BusinessLogic/AuthCubit/follow/follow_cubit.dart';
 import 'package:l_earn/BusinessLogic/PostCubit/post_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
@@ -14,6 +14,8 @@ import 'package:l_earn/Presentation/components/render_user_name.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/utils/colors.dart';
 import 'package:l_earn/utils/constants.dart';
+
+import 'package:flutter_animate/flutter_animate.dart';
 
 class BuildBannerAndUserDescription extends StatefulWidget {
   const BuildBannerAndUserDescription({
