@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
             context.goNamed(AppRoutes.profile, queryParameters: {"user": id});
             break;
           case 'posts':
-            // context.goNamed(AppRoutes.post, queryParameters: {"user": id});
+            context.goNamed(AppRoutes.expandedPost, pathParameters: {"id": id});
             break;
           case 'contents':
             print("contents");

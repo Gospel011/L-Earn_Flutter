@@ -30,6 +30,7 @@ import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/content_shell
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_an_event_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/create_tutorial_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Post_Action_Pages/normal_post_page.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/expanded_post_page.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/home_page.dart';
 import 'package:l_earn/Presentation/Pages/Payment_Page/payment_details.dart';
 import 'package:l_earn/Presentation/Pages/Payment_Page/payment_page.dart';
@@ -68,6 +69,17 @@ class GoRouterConfig {
               ], child: HomePage());
             },
             routes: [
+              //? Expanded Post Page
+              GoRoute(
+                name: AppRoutes.expandedPost,
+                path: "expanded-post",
+                builder: (context, state) {
+                  print("${AppRoutes.expandedPost} from go_router");
+                  return BlocProvider<PostCubit>(
+                      create: (context) => PostCubit(), child: ExpandedPostPage(id: state.pathParameters["id"]!));
+                },
+              ),
+
               //? PROFILE PAGE ROUTE
               StatefulShellRoute.indexedStack(
                   builder: (context, state, shell) {
@@ -99,7 +111,9 @@ class GoRouterConfig {
                             print("\n\n\n\n");
                             print("Returning Contents Shell _________------");
                             print("\n\n\n\n");
-                            return const ContentsShell();
+                            return BlocProvider.value(
+                              value: contentCubit,
+                              child: const ContentsShell());
 
                             ///*uuuuuu
                           },
@@ -214,7 +228,6 @@ class GoRouterConfig {
                     //                                       'thumbnailUrl': content.thumbnailUrl
                     //                                     }
 
-                    
                     return BlocProvider.value(
                         value: contentCubit,
                         child: CreateTutorialPage(
@@ -241,7 +254,8 @@ class GoRouterConfig {
                         BlocProvider.value(value: paymentCubit)
                       ],
                       child: ContentDescriptionPage(
-                        contentId: state.pathParameters["id"]!, //! provide path parameter as [String]
+                        contentId: state.pathParameters[
+                            "id"]!, //! provide path parameter as [String]
                       ),
                     );
                   },

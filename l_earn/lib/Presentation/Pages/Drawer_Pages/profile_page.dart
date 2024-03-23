@@ -6,12 +6,14 @@ import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/ProfileCubit/profile_cubit.dart';
 
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
+import 'package:l_earn/DataLayer/Models/content_model.dart';
 
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/Helpers/auth_helper.dart';
 import 'package:l_earn/Presentation/components/build_banner_and_user_description.dart';
 
 import 'package:l_earn/Presentation/components/my_circular_progress_indicator.dart';
+import 'package:l_earn/Presentation/components/my_content_widget.dart';
 
 import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/Presentation/components/my_image_loading_placeholder_widget.dart';
@@ -52,15 +54,31 @@ class _ProfilePageState extends State<ProfilePage> {
     print('Asking__________________');
 
     // user = context.read<AuthCubit>().state.user!;
-    context
-        .read<ContentCubit>()
-        .loadContents(context.read<AuthCubit>().state.user?.token);
+    // context
+    //     .read<ContentCubit>()
+    //     .loadContents(context.read<AuthCubit>().state.user?.token);
 
-    widget.loadContents(context, userId: widget.userId);
+    loadContents( userId: widget.userId);
 
     context.read<ProfileCubit>().getUserById(
         context.read<AuthCubit>().state.user?.token, widget.userId);
   }
+
+  void delete(contentId) {
+    context
+        .read<ContentCubit>()
+        .deleteBook(context.read<AuthCubit>().state.user?.token, id: contentId);
+  }
+
+  void loadContents(
+      {int page = 1, required String userId}) {
+    context.read<ContentCubit>().loadContents(
+        context.read<AuthCubit>().state.user!.token,
+        userId: userId,
+        page: page);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
               context.pop();
 
               //? REFRESH CONTENT
-              widget.loadContents(context, userId: widget.userId);
+              loadContents(userId: widget.userId);
             }
 
           },
@@ -192,10 +210,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     state.myContents!.isNotEmpty) {
                   final User user = context.read<AuthCubit>().state.user!;
 
-                  return widget.buildListOfContents(context,
+                  return Builder(builder: (context) => buildListOfContents(context,
                       contents: state.myContents!,
                       itemCount: state.myContents!.length,
-                      user: user);
+                      user: user));
                 } else {
                   return const SliverToBoxAdapter(
                       child: Padding(
@@ -212,6 +230,204 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  SliverList buildListOfContents(BuildContext context,
+      {required List<Content> contents,
+      required int itemCount,
+      // required void Function() onDelete,
+      required User user}) {
+    return SliverList.builder(
+        itemCount: itemCount,
+        itemBuilder: (content, index) {
+          final Content content = contents[index];
+          const padding = EdgeInsets.only(left: 16.0, right: 16, bottom: 16);
+
+          return Padding(
+            padding: padding,
+
+            //* CONTENT
+            child: MyContent(
+              content: content,
+              moreActions: user.id == content.author.id
+                  ? [
+                      //? SHARE CONTENT
+                      PopupMenuItem(
+                        value: 'share',
+                        onTap: () {
+                          //TODO: HANDLE EDIT CONTENT
+                          print("Share content pressed");
+                          print("POST TAG LENGT ${content.tags}");
+
+                          Share.share(
+                              "${Uri.parse("${NetWorkConstants.baseShareUrl}/contents/${content.id}?nm=${content.title}")}");
+                        },
+                        child: Text('Share ${content.type}'),
+                      ),
+                      //? EDIT CONTENT
+                      PopupMenuItem(
+                        value: 'edit',
+                        onTap: () {
+                          //TODO: HANDLE EDIT CONTENT
+                          print("Edit content pressed");
+                          print("POST TAG LENGT ${content.tags}");
+
+                          //! avigator.pushNamed(context, '/create-tutorial',
+                          //     arguments: {
+                          //       'title': content.title,
+                          //       'description': content.description,
+                          //       'price': content.price,
+                          //       'genre': content.tags?.join(''),
+                          //       'thumbnailUrl': content.thumbnailUrl,
+                          //       'id': content.id
+                          //     });
+                          context.pushNamed(AppRoutes.createTutorial, extra: {
+                            'title': content.title,
+                            'description': content.description,
+                            'price': content.price,
+                            'genre': content.tags?.join(''),
+                            'thumbnailUrl': content.thumbnailUrl,
+                            'id': content.id
+                          });
+                        },
+                        child: Text('Edit ${content.type}'),
+                      ),
+
+                      //? ADD CHAPTER
+                      PopupMenuItem(
+                        value: 'add',
+                        onTap: () {
+                          //TODO: HANDLE ADD CONTENT
+                          print("Add chapter pressed");
+
+                          context.pushNamed(AppRoutes.writeBook,
+                              extra: {"content": content});
+                          //! avigator.of(context).pushReplacementNamed(
+                          //     '/write-book-page',
+                          //     arguments: {"content": content});
+                        },
+                        child: const Text('Add chapter'),
+                      ),
+
+                      //? DELETE CONTENT
+                      PopupMenuItem(
+                        value: 'delete',
+                        onTap: () {
+                          //TODO: HANDLE DELETE CONTENT
+                          print("Delete content pressed pressed");
+
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return MyDialog(
+                                  title: "Delete Book?",
+                                  content: RichText(
+                                    text: TextSpan(
+                                        text:
+                                            'Are you sure you want to delete ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        children: [
+                                          TextSpan(
+                                              text: '"${content.title}"',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      fontStyle:
+                                                          FontStyle.italic)),
+                                          const TextSpan(
+                                              text: '? This operation is '),
+                                          TextSpan(
+                                              text: 'irreversible',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold))
+                                        ]),
+                                  ),
+                                  actions: [
+                                    //! Yes
+                                    MyContainerButton(
+                                        text: 'yes',
+                                        showShadow: false,
+                                        textColor: Colors.black,
+                                        buttonColor: Colors.transparent,
+                                        onPressed: () {
+
+                                          context.pop();
+
+                                          delete(content.id);
+
+                                          // deleteBook(content.id,
+                                          //     context: context);
+                                        }),
+
+                                    //?No
+                                    MyContainerButton(
+                                        text: "No",
+                                        onPressed: () {
+                                          //! avigator.pop(context);
+                                          context.pop();
+                                          print("User clicked No");
+                                        })
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text(
+                          'Delete ${content.type}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.red),
+                        ),
+                      ),
+                    ]
+                  : [
+                      //? SHARE CONTENT
+                      PopupMenuItem(
+                        value: 'share',
+                        onTap: () {
+                          //TODO: HANDLE EDIT CONTENT
+                          print("Share content pressed");
+                          print("POST TAG LENGT ${content.tags}");
+
+                          Share.share(
+                              "${Uri.parse("${NetWorkConstants.baseShareUrl}/contents/${content.id}?nm=${content.title}")}");
+                        },
+                        child: Text('Share ${content.type}'),
+                      ),
+
+                      //? DELETE CONTENT
+                      PopupMenuItem(
+                        value: 'report',
+                        onTap: () {
+                          //TODO: HANDLE DELETE CONTENT
+                          print("Delete content pressed pressed");
+                        },
+                        child: Text('Report ${content.type}'),
+                      ),
+                    ],
+              onThumbnailPressed: () {
+                //? REQUEST FOR A PARTICULAR CONTENT
+                print('${content.title} thumbnail pressed');
+                context.read<ContentCubit>().getContentById(
+                    context.read<AuthCubit>().state.user?.token, content.id);
+
+                context.pushNamed(AppRoutes.contentDescription,
+                    pathParameters: {"id": content.id});
+              },
+              onMetaPressed: () {
+                print('${content.title} meta pressed');
+              },
+            ),
+          );
+        });
   }
 
   Widget buildPopupMenuButton() {

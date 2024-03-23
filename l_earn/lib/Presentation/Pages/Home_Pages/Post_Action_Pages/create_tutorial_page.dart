@@ -115,8 +115,7 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
             if (context.mounted) {
               //! avigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
               //? TESTING NAVIGATING TO PROFILE PAGE INSTEAD
-              context.goNamed(AppRoutes.profile,
-                  extra: context.read<AuthCubit>().state.user!);
+              context.goNamed(AppRoutes.profile,queryParameters: {"user": context.read<AuthCubit>().state.user!.id!});
             }
           } else if (state is ContentEdited) {
             await showDialog(
@@ -131,8 +130,7 @@ class _CreateTutorialPageState extends State<CreateTutorialPage> {
             if (context.mounted) {
               //! avigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
               //? TESTING NAVIGATING TO PROFILE PAGE INSTEAD
-              context.goNamed(AppRoutes.profile,
-                  extra: context.read<AuthCubit>().state.user!);
+              context.goNamed(AppRoutes.profile,queryParameters: {"user": context.read<AuthCubit>().state.user!.id!});
             }
           }
         },
