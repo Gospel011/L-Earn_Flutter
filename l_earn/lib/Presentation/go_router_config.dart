@@ -75,8 +75,12 @@ class GoRouterConfig {
                 path: "expanded-post/:postId",
                 builder: (context, state) {
                   print("${AppRoutes.expandedPost} from go_router");
-                  return BlocProvider<PostCubit>(
-                      create: (context) => PostCubit(), child: ExpandedPostPage(id: state.pathParameters["postId"]!));
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<PostCubit>(create: (context) => PostCubit()),
+                      BlocProvider<CommentCubit>(create: (context) => CommentCubit())
+                    ],
+                    child: ExpandedPostPage(id: state.pathParameters["postId"]!));
                 },
               ),
 
