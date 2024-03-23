@@ -72,11 +72,11 @@ class GoRouterConfig {
               //? Expanded Post Page
               GoRoute(
                 name: AppRoutes.expandedPost,
-                path: "expanded-post",
+                path: "expanded-post/:postId",
                 builder: (context, state) {
                   print("${AppRoutes.expandedPost} from go_router");
                   return BlocProvider<PostCubit>(
-                      create: (context) => PostCubit(), child: ExpandedPostPage(id: state.pathParameters["id"]!));
+                      create: (context) => PostCubit(), child: ExpandedPostPage(id: state.pathParameters["postId"]!));
                 },
               ),
 

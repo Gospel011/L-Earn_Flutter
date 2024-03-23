@@ -82,6 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return MultiBlocListener(
       listeners: [
         BlocListener<ContentCubit, ContentState>(
