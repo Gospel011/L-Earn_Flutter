@@ -10,6 +10,7 @@ import 'package:l_earn/Helpers/auth_helper.dart';
 
 part 'post_state.dart';
 
+
 class PostCubit extends Cubit<PostState> {
   PostCubit() : super(const NewPostsLoading(page: 0, newPosts: []));
   int currentPage = 0;
@@ -20,7 +21,7 @@ class PostCubit extends Cubit<PostState> {
 
     List<Post> newPosts = [...state.newPosts];
 
-    emit(NewPostsLoading(page: currentPage, newPosts: newPosts));
+    emit(NewPostsLoading(page: currentPage - 1, newPosts: newPosts));
 
     print("::: R E Q U E S T I N G   F O R   P A G E   $currentPage");
 

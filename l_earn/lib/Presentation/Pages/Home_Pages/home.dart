@@ -83,17 +83,14 @@ class _HomeState extends State<Home> {
         },
         child: Scaffold(
           body: BlocBuilder<PostCubit, PostState>(
-            buildWhen: (prev, curr) => prev.page == 0,
             builder: (context, state) {
-              return state is NewPostsLoading ? ListView.builder(
+              return state.page == 0 ? ListView.builder(
                   itemCount: 7,
 
                   itemBuilder: (BuildContext context, int index) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     child: const PostPlaceholderWidget().animate(onComplete: (controller) => controller.repeat()).shimmer(duration: const Duration(seconds: 2)),
-                  )) : BlocBuilder<PostCubit, PostState>(
-                builder: (context, state) {
-                  return CustomScrollView(
+                  )) : CustomScrollView(
                     controller: _scrollController,
                     slivers: [
                       //? TOP SPACING
@@ -102,13 +99,13 @@ class _HomeState extends State<Home> {
                           height: 16,
                         ),
                       ),
-              
+                                
                       //? SCROLLABLE LIST OF POSTS
                       SliverList.builder(
                           itemCount: state.newPosts.length,
                           itemBuilder: (context, index) {
                             final Post post = state.newPosts[index];
-              
+                                
                             return MyPostWidget(
                               post: post,
                               index: index,
@@ -140,7 +137,7 @@ class _HomeState extends State<Home> {
                               ],
                             );
                           }),
-              
+                                
                       BlocBuilder<PostCubit, PostState>(builder: (context, state) {
                         return SliverToBoxAdapter(
                             child: state is NewPostsLoading
@@ -163,8 +160,6 @@ class _HomeState extends State<Home> {
                       }),
                     ],
                   );
-                },
-              );
             }
           ),
         ),
