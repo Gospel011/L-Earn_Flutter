@@ -12,21 +12,22 @@ import 'package:l_earn/Presentation/components/my_post_header.dart';
 import 'package:l_earn/utils/constants.dart';
 
 class MyPostWidget extends StatelessWidget {
-  const MyPostWidget({
-    super.key,
-    required this.post,
-    required this.index,
-    this.moreActions
-  });
+  const MyPostWidget(
+      {super.key,
+      required this.post,
+      this.showComments,
+      required this.index,
+      this.moreActions});
 
   final Post post;
   final int index;
+  final bool? showComments;
   final List<PopupMenuEntry<String>>? moreActions;
 
   @override
   Widget build(BuildContext context) {
-          // print("::: P O S T   U S E R   ${context.namedLocation(AppRoutes.profile)}");
-          
+    // print("::: P O S T   U S E R   ${context.namedLocation(AppRoutes.profile)}");
+
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 10),
       child: Column(
@@ -34,8 +35,9 @@ class MyPostWidget extends StatelessWidget {
         children: [
           //? ROW WITH PROFILE PICTURE, NAME, HANDLE AND MORE ICON
           GestureDetector(
-            onTap: () => context.goNamed(AppRoutes.profile, queryParameters: {"user": post.user.id!}),
-            child: MyPostHeader(user: post.user, moreActions: moreActions)),
+              onTap: () => context.goNamed(AppRoutes.profile,
+                  queryParameters: {"user": post.user.id!}),
+              child: MyPostHeader(user: post.user, moreActions: moreActions)),
 
           //? TEXT
           MyCustomText(text: post.text),
@@ -45,19 +47,20 @@ class MyPostWidget extends StatelessWidget {
           // BarChart()
           post.image != null
               ? GestureDetector(
-                onTap:() {
-                  // Navigator.pushNamed(context, '/image-view-page', arguments: post.image!);
-                  context.pushNamed(AppRoutes.imageView, pathParameters: {"imageUrl": post.image!});
-                },
-                child: Container(
-                    width: double.maxFinite,
-                    constraints: const BoxConstraints(maxHeight: 500),
-                    child: MyImageWidget(image: post.image!)),
-              )
+                  onTap: () {
+                    // Navigator.pushNamed(context, '/image-view-page', arguments: post.image!);
+                    context.pushNamed(AppRoutes.imageView,
+                        pathParameters: {"imageUrl": post.image!});
+                  },
+                  child: Container(
+                      width: double.maxFinite,
+                      constraints: const BoxConstraints(maxHeight: 500),
+                      child: MyImageWidget(image: post.image!)),
+                )
               : const SizedBox(),
 
           //? LIKES COMMENTS SHARES
-          MyLikeCommentShareWidget(post: post, index: index)
+          MyLikeCommentShareWidget(post: post, index: index, showComments: showComments ?? true)
         ],
       ),
     );

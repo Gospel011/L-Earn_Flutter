@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
+import 'package:l_earn/Presentation/Pages/Home_Pages/expanded_post_page.dart';
 
 import 'package:l_earn/Presentation/components/my_circular_progress_indicator.dart';
 import 'package:l_earn/Presentation/components/my_elevated_button.dart';
@@ -81,78 +83,89 @@ class _HomeState extends State<Home> {
         },
         child: Scaffold(
           body: BlocBuilder<PostCubit, PostState>(
+            buildWhen: (prev, curr) => prev.page == 0,
             builder: (context, state) {
-              return CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  //? TOP SPACING
-                  const SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 16,
-                    ),
-                  ),
+              return state is NewPostsLoading ? ListView.builder(
+                  itemCount: 7,
 
-                  //? SCROLLABLE LIST OF POSTS
-                  SliverList.builder(
-                      itemCount: state.newPosts.length,
-                      itemBuilder: (context, index) {
-                        final Post post = state.newPosts[index];
-
-                        return MyPostWidget(
-                          post: post,
-                          index: index,
-                          moreActions: [
-                            PopupMenuItem(
-                              onTap: (){
-                                Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/posts/${post.id}?author=${post.user.firstName} ${post.user.lastName}")}");
-                              },
-                                child: Text(
-                              "Share post",
-                              style: textTheme,
-                            )),
-                            PopupMenuItem(
-                                child: Text(
-                              "Save",
-                              style: textTheme,
-                            )),
-                            PopupMenuItem(
-                              child: Text(
-                                "Report",
-                                style: textTheme,
-                              ),
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text("post flagged")));
-                              },
-                            ),
-                          ],
-                        );
+                  itemBuilder: (BuildContext context, int index) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                    child: const PostPlaceholderWidget().animate(onComplete: (controller) => controller.repeat()).shimmer(duration: const Duration(seconds: 2)),
+                  )) : BlocBuilder<PostCubit, PostState>(
+                builder: (context, state) {
+                  return CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      //? TOP SPACING
+                      const SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+              
+                      //? SCROLLABLE LIST OF POSTS
+                      SliverList.builder(
+                          itemCount: state.newPosts.length,
+                          itemBuilder: (context, index) {
+                            final Post post = state.newPosts[index];
+              
+                            return MyPostWidget(
+                              post: post,
+                              index: index,
+                              moreActions: [
+                                PopupMenuItem(
+                                  onTap: (){
+                                    Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/posts/${post.id}?author=${post.user.firstName} ${post.user.lastName}")}");
+                                  },
+                                    child: Text(
+                                  "Share post",
+                                  style: textTheme,
+                                )),
+                                PopupMenuItem(
+                                    child: Text(
+                                  "Save",
+                                  style: textTheme,
+                                )),
+                                PopupMenuItem(
+                                  child: Text(
+                                    "Report",
+                                    style: textTheme,
+                                  ),
+                                  onTap: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("post flagged")));
+                                  },
+                                ),
+                              ],
+                            );
+                          }),
+              
+                      BlocBuilder<PostCubit, PostState>(builder: (context, state) {
+                        return SliverToBoxAdapter(
+                            child: state is NewPostsLoading
+                                ? const MyCircularProgressIndicator()
+                                : state is NewPostsFailed
+                                    ? Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: MyElevatedButton(
+                                            text: 'Reload',
+                                            onPressed: () {
+                                              print('RELOADING');
+                                              getPosts();
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox());
                       }),
-
-                  BlocBuilder<PostCubit, PostState>(builder: (context, state) {
-                    return SliverToBoxAdapter(
-                        child: state is NewPostsLoading
-                            ? const MyCircularProgressIndicator()
-                            : state is NewPostsFailed
-                                ? Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      child: MyElevatedButton(
-                                        text: 'Reload',
-                                        onPressed: () {
-                                          print('RELOADING');
-                                          getPosts();
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox());
-                  }),
-                ],
+                    ],
+                  );
+                },
               );
-            },
+            }
           ),
         ),
       ),

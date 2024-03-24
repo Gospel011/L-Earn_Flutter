@@ -19,13 +19,18 @@ import 'package:l_earn/Presentation/components/my_textformfield.dart';
 import 'package:l_earn/utils/colors.dart';
 import 'package:l_earn/utils/constants.dart';
 import 'package:l_earn/utils/mixins.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MyLikeCommentShareWidget extends StatefulWidget {
   const MyLikeCommentShareWidget(
-      {super.key, required this.post, required this.index});
+      {super.key,
+      required this.post,
+      required this.index,
+      this.showComments = true});
 
   final Post post;
   final int index;
+  final bool showComments;
 
   @override
   State<MyLikeCommentShareWidget> createState() =>
@@ -82,59 +87,71 @@ class _MyLikeCommentShareWidgetState extends State<MyLikeCommentShareWidget>
           const SizedBox(width: 10),
 
           //? COMMENT
-          Builder(builder: (BuildContext context) {
-            return MyListTileWidget(
-                title: SizedBox(height: 18, child: AppIcons.comment),
-                subtitle: Text('${widget.post.comments}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(height: 1)),
-                onPressed: () {
-                  //? BOTTOM MODAL FOR COMMENTS
+          widget.showComments == false
+              ? const SizedBox()
+              : Builder(builder: (BuildContext context) {
+                  return MyListTileWidget(
+                      title: SizedBox(height: 18, child: AppIcons.comment),
+                      subtitle: Text('${widget.post.comments}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(height: 1)),
+                      onPressed: () {
+                        //? BOTTOM MODAL FOR COMMENTS
 
-                  //* SHOW BOTTOM MODAL
-                  showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) {
-                        return BlocProvider<CommentCubit>(
-                          create: (context) => CommentCubit(),
-                          child: Builder(builder: (context) {
-                            //* REQUEST COMMENTS
+                        //* SHOW BOTTOM MODAL
+                        showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return BlocProvider<CommentCubit>(
+                                create: (context) => CommentCubit(),
+                                child: Builder(builder: (context) {
+                                  //* REQUEST COMMENTS
 
-                            getComments(context);
+                                  getComments(context);
 
-                            return ClipRRect(
-                              borderRadius: const BorderRadiusDirectional.only(
-                                  topStart: Radius.circular(16),
-                                  topEnd: Radius.circular(16)),
-                              child: Scaffold(
-                                resizeToAvoidBottomInset: true,
-                                appBar: buildAppBar(context,
-                                    title:
-                                        "Comments for ${widget.post.user.firstName}'s post",
-                                    titleTextStyle:
-                                        Theme.of(context).textTheme.bodyMedium),
-                                body: BlocBuilder<CommentCubit, CommentState>(
-                                    builder: (context, state) {
-                                  print("Current state is $state");
-                                  return state is CommentsLoading
-                                      ? const Center(child: MyCircularProgressIndicator())
-                                      : BuildComments(
-                                          comments: state.comments,
-                                          post: widget.post,
-                                        );
+                                  return ClipRRect(
+                                    borderRadius:
+                                        const BorderRadiusDirectional.only(
+                                            topStart: Radius.circular(16),
+                                            topEnd: Radius.circular(16)),
+                                    child: Scaffold(
+                                      resizeToAvoidBottomInset: true,
+                                      appBar: buildAppBar(context,
+                                          title:
+                                              "Comments for ${widget.post.user.firstName}'s post",
+                                          titleTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium),
+                                      body: BlocBuilder<CommentCubit,
+                                              CommentState>(
+                                          builder: (context, state) {
+                                        print("Current state is $state");
+                                        return state is CommentsLoading
+                                            ? const Center(
+                                                child:
+                                                    MyCircularProgressIndicator())
+                                            : BuildComments(
+                                                comments: state.comments,
+                                                post: widget.post,
+                                              );
+                                      }),
+                                    ),
+                                  );
                                 }),
-                              ),
-                            );
-                          }),
-                        );
+                              );
+                            });
                       });
-                });
-          }),
+                }),
 
-          const SizedBox(width: 10),
+          IconButton(
+              onPressed: () {
+                print('share');
+                Share.share("${Uri.parse("${NetWorkConstants.baseShareUrl}/posts/${widget.post.id}?author=${widget.post.user.firstName} ${widget.post.user.lastName}")}");
+              },
+              icon: AppIcons.share)
         ]),
       ),
     );

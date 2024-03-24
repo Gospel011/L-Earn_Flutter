@@ -78,6 +78,22 @@ class PostCubit extends Cubit<PostState> {
         error: AppError(title: title, content: content)));
   }
 
+  Future<void> getPost({required String token, required String postId, required String userId}) async {
+    emit(GettingPost(newPosts: state.newPosts, posts: state.posts));
+
+    final response = await PostRepo.getPost(token, postId, userId);
+
+    if (response is Post) {
+      emit(PostFound(
+          newPosts: state.newPosts, posts: state.posts, post: response));
+    } else {
+      emit(GettingPostFailed(
+          error: response as AppError,
+          newPosts: state.newPosts,
+          posts: state.posts));
+    }
+  }
+
   void updatePostAuthor(User newUser) {
     List<Post> posts = state.newPosts;
 

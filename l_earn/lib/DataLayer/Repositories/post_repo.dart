@@ -6,7 +6,6 @@ import 'package:l_earn/DataLayer/Models/like_model.dart';
 
 import 'package:l_earn/DataLayer/Models/post_model.dart';
 
-
 class PostRepo {
   static dynamic loadNewPosts(
       {required int page,
@@ -24,26 +23,31 @@ class PostRepo {
 
       for (int i = 0; i < postList.length; i++) {
         Map<String, dynamic> postMap = postList[i];
-        var user = postMap['userId'];
-        postMap['user'] = user;
-        postMap['userId'] = null;
-
-        var likesArray = postMap['likes'];
-        postMap['likes'] = likesArray.length;
-        postMap['liked'] = likesArray.contains(userId);
-        postMap['comments'] = postMap['comments'].length;
+        postMap = parsePostMap(postMap, userId);
 
         // print("PostMap = $postMap");
 
         posts.add(Post.fromMap(postMap));
-
       }
-        print("POSTS = $posts");
+      print("POSTS = $posts");
       return posts;
     } else {
       return AppError(
           title: response["title"] ?? 'Error', content: response["message"]);
     }
+  }
+
+  static Map<String, dynamic> parsePostMap(Map<String, dynamic> postMap, String userId) {
+    var user = postMap['userId'];
+    postMap['user'] = user;
+    postMap['userId'] = null;
+
+    var likesArray = postMap['likes'];
+    postMap['likes'] = likesArray.length;
+    postMap['liked'] = likesArray.contains(userId);
+    postMap['comments'] = postMap['comments'].length;
+
+    return postMap;
   }
 
   static createNewPost(
@@ -125,10 +129,27 @@ class PostRepo {
       final likesArray = comment['likes'];
       comment['likes'] = likesArray.length;
       comment['liked'] = likesArray.contains(userId);
-      // comment['comments'] = comment['comments'].length
+      // comment['comments'] = comment['comments'].length  090 650 94071 -mtn
       return Comment.fromMap(comment);
     } else {
       return AppError.errorObject(response as AppError);
+    }
+  }
+
+  static getPost(token, postId, userId) async {
+    final endpoint = "posts/$postId";
+
+    final response = await BackendSource.makeGETRequest(token, endpoint);
+
+    print("::: G E T   P O S T   R E S P O N S E   I S $response");
+
+    if (response['status'] == 'success') {
+      var postMap = response['post'];
+      postMap = parsePostMap(postMap, userId);
+
+      return Post.fromMap(postMap);
+    } else {
+      return AppError.errorObject(response);
     }
   }
 }
