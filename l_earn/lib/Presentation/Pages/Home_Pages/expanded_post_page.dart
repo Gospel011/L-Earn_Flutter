@@ -56,7 +56,6 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   final BoxDecoration containerDecoration = BoxDecoration(
       color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8));
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,15 +80,20 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                     ? SliverToBoxAdapter(
                         child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: const PostPlaceholderWidget().animate(onComplete: (controller) => controller.repeat()).shimmer(duration: const Duration(seconds: 2)),
+                        child: const PostPlaceholderWidget()
+                            .animate(
+                                onComplete: (controller) => controller.repeat())
+                            .shimmer(duration: const Duration(seconds: 2)),
                       ))
                     : SliverToBoxAdapter(
                         child: MyPostWidget(
-                            post: postState.post!, showComments: false, index: 0)),
-            
+                            post: postState.post!,
+                            showComments: false,
+                            index: 0)),
+
                 //? Comments
                 // commentState is CommentsLoading && postState is! GettingPost ? MyCircularProgressIndicator : BuildComments(comments: commentState.comments, post: postState.post!)
-            
+
                 SliverToBoxAdapter(
                   child: Row(
                     children: [
@@ -97,19 +101,21 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                         padding: const EdgeInsets.only(
                             top: 8.0, bottom: 8, left: 16, right: 16),
                         child: Text(
-                          "Comments${postState.post?.comments != null ? " \u2022 ${postState.post!.comments}" : "" }",
+                          "Comments${postState.post?.comments != null ? " \u2022 ${postState.post!.comments}" : ""}",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                              ?.copyWith(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       )
                     ],
                   ),
                 ),
-            
+
                 commentState is CommentsLoading && postState is GettingPost
-                    ? const SliverToBoxAdapter(child: MyCircularProgressIndicator())
+                    ? const SliverToBoxAdapter(
+                        child: MyCircularProgressIndicator())
                     : SliverList.builder(
                         itemCount: commentState.comments.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -123,20 +129,22 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
               ],
             ),
 
-
             commentState is CommentsLoading && postState is GettingPost
                 ? const SizedBox()
-                : Positioned( bottom: 0,
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width - 32,
-                        // height: 154,
-                        child: CommentTextField(post: postState.post!)),
-                    ),
-                  ))
+                : Positioned(
+                    bottom: 0,
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width - 32,
+                            // height: 154,
+                            child: postState.post != null
+                                ? CommentTextField(post: postState.post!)
+                                : const SizedBox()),
+                      ),
+                    ))
           ],
         );
       }),
@@ -147,7 +155,6 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 class PostPlaceholderWidget extends StatelessWidget {
   const PostPlaceholderWidget({
     super.key,
-    
   });
 
   Random get random => Random();
@@ -157,35 +164,52 @@ class PostPlaceholderWidget extends StatelessWidget {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       //? header
       const PlaceHolderPostHeader(),
-    
-      const SizedBox(height: 4,),
-    
+
+      const SizedBox(
+        height: 4,
+      ),
+
       //? post
-    
+
       Wrap(
         spacing: 4,
         runSpacing: 8,
         children: [
-        ...List.generate(random.nextInt(10) + 10, (index) => PlaceHolderContainer(width: (random.nextDouble() + 1) * 70))
-      ],),
-    
+          ...List.generate(
+              random.nextInt(10) + 10,
+              (index) =>
+                  PlaceHolderContainer(width: (random.nextDouble() + 1) * 70))
+        ],
+      ),
+
       //? like comment share
-    
-      const SizedBox(height: 10,),
-    
+
+      const SizedBox(
+        height: 10,
+      ),
+
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           children: [
-            PlaceHolderContainer(width: 24, height: 24,),
-        
-            SizedBox(width: 10,),
-        
-            PlaceHolderContainer(width: 24, height: 24,),
-        
-            SizedBox(width: 10,),
-        
-            PlaceHolderContainer(width: 24, height: 24,),
+            PlaceHolderContainer(
+              width: 24,
+              height: 24,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            PlaceHolderContainer(
+              width: 24,
+              height: 24,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            PlaceHolderContainer(
+              width: 24,
+              height: 24,
+            ),
           ],
         ),
       )
@@ -198,12 +222,10 @@ class PlaceHolderPostHeader extends StatelessWidget {
     super.key,
   });
 
-  
-
   @override
   Widget build(BuildContext context) {
     return const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,11 +236,11 @@ class PlaceHolderPostHeader extends StatelessWidget {
               height: 24 * 2,
               borderRadiusAll: 24,
             ),
-    
+
             SizedBox(
               width: 10,
             ),
-    
+
             //? name and handle
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -226,11 +248,9 @@ class PlaceHolderPostHeader extends StatelessWidget {
                 PlaceHolderContainer(
                   width: 180,
                 ),
-    
                 SizedBox(
                   height: 4,
                 ),
-    
                 PlaceHolderContainer(
                   width: 180,
                 ),
@@ -238,9 +258,10 @@ class PlaceHolderPostHeader extends StatelessWidget {
             )
           ],
         ),
-        
-        
-        const PlaceHolderContainer(width: 20, height: 48,)
+        const PlaceHolderContainer(
+          width: 20,
+          height: 48,
+        )
       ],
     );
   }
@@ -268,7 +289,8 @@ class PlaceHolderContainer extends StatelessWidget {
         height: height ?? 18,
         decoration: BoxDecoration(
           color: color ?? Colors.grey.shade300,
-          borderRadius: borderRadius ?? BorderRadius.circular(borderRadiusAll ?? 8),
+          borderRadius:
+              borderRadius ?? BorderRadius.circular(borderRadiusAll ?? 8),
         ));
   }
 }
