@@ -23,7 +23,6 @@ class MyProfilePicture extends StatelessWidget {
   final bool tappable;
   final XFile? _pickedImage;
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -53,8 +52,13 @@ class MyProfilePicture extends StatelessWidget {
                 radius: radius ?? 48,
                 child: user.profilePicture != 'default.png'
                     ? ClipRRect(
-                      borderRadius: BorderRadius.circular(48),
-                      child: CachedNetworkImage( imageUrl: user.profilePicture!, fit: BoxFit.cover,))
+                        borderRadius: BorderRadius.circular(48),
+                        child: CachedNetworkImage(
+                          height: radius != null ? radius! * 2 : 48 * 2,
+                          width: radius != null ? radius! * 2 : 48 * 2,
+                          imageUrl: user.profilePicture!,
+                          fit: BoxFit.cover,
+                        ))
                     : null,
               ),
       ),
