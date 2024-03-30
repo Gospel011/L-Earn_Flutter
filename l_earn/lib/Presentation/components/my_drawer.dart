@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:l_earn/DataLayer/Models/user_model.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
@@ -16,145 +18,142 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
+      child: Stack(
+        alignment: Alignment.topCenter,
         children: [
-          //* Image and Name
-          DrawerHeader(
-              decoration: const BoxDecoration(shape: BoxShape.circle),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  //* Picture
-                  MyProfilePicture(user: user),
-
-                  const SizedBox(
-                    height: 8,
-                  ),
-
-                  //* Name
-                  RenderUserName(user: user, fontWeight: FontWeight.bold,)
-                ],
-              )),
-
-          //? VIEW PROFILE
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyDrawerItem(
-              text: "View profile",
-              leadingIcon: const Icon(Icons.person),
-              onPressed: () {
-                print("View profile button pressed");
-                //! avigator.pop(context);
-                context.pop();
-
-                context.goNamed(AppRoutes.profile, queryParameters: {
-                  "user": context.read<AuthCubit>().state.user!.id
-                });
-
-                //! avigator.pushNamed(context, '/profile-page',
-                //     arguments: context.read<AuthCubit>().state.user!);
-              },
-            ),
-          ),
-
-          //? TUTORS PROFILE PAGE
-          context.read<AuthCubit>().state.user?.role == 'tutor'
-              ? Padding(
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                //* Image and Name
+                DrawerHeader(
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        //* Picture
+                        MyProfilePicture(user: user),
+            
+                        const SizedBox(
+                          height: 8,
+                        ),
+            
+                        //* Name
+                        RenderUserName(
+                          user: user,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ],
+                    )),
+            
+                //? VIEW PROFILE
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: MyDrawerItem(
-                    text: "Tutor's dashboard",
-                    leadingIcon: const Icon(Icons.dashboard),
+                    text: "View profile",
+                    leadingIcon: const Icon(Icons.person),
+                    onPressed: () {
+                      print("View profile button pressed");
+                      //! avigator.pop(context);
+                      context.pop();
+            
+                      context.goNamed(AppRoutes.profile, queryParameters: {
+                        "user": context.read<AuthCubit>().state.user!.id
+                      });
+            
+                      //! avigator.pushNamed(context, '/profile-page',
+                      //     arguments: context.read<AuthCubit>().state.user!);
+                    },
+                  ),
+                ),
+            
+                //? TUTORS PROFILE PAGE
+                context.read<AuthCubit>().state.user?.role == 'tutor'
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: MyDrawerItem(
+                          text: "Tutor's dashboard",
+                          leadingIcon: const Icon(Icons.dashboard),
+                          onPressed: () {
+                            print("Payment history button pressed");
+                            //! avigator.pop(context);
+                            context.pop();
+            
+                            //! avigator.pushNamed(context, '/tutors-profile');
+                            context.goNamed(AppRoutes.tutorsDashboard);
+                          },
+                        ),
+                      )
+                    : const SizedBox(),
+            
+                //? DRAFTS
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: MyDrawerItem(
+                    text: "Drafts",
+                    leadingIcon: const Icon(Icons.drafts),
+                    onPressed: () {
+                      print("Drafts button pressed");
+            
+                      context.pop();
+            
+                      context.goNamed(AppRoutes.drafts);
+                    },
+                  ),
+                ),
+            
+                //? VIEW PAYMENT HISTORY
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: MyDrawerItem(
+                    text: "Payment history",
+                    leadingIcon: const Icon(Icons.history),
                     onPressed: () {
                       print("Payment history button pressed");
                       //! avigator.pop(context);
                       context.pop();
-
-                      //! avigator.pushNamed(context, '/tutors-profile');
-                      context.goNamed(AppRoutes.tutorsDashboard);
+            
+                      //! avigator.pushNamed(context, '/payment-history-page');
+                      context.goNamed(AppRoutes.paymentHistory);
                     },
                   ),
-                )
-              : const SizedBox(),
-
-          //? DRAFTS
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyDrawerItem(
-              text: "Drafts",
-              leadingIcon: const Icon(Icons.drafts),
-              onPressed: () {
-                print("Drafts button pressed");
-
-                context.pop();
-
-                context.goNamed(AppRoutes.drafts);
-              },
+                ),
+            
+                //? Logout
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: MyDrawerItem(
+                    text: "Logout",
+                    leadingIcon: const Icon(Icons.logout),
+                    onPressed: () {
+                      print("Logout button pressed");
+                      //! avigator.pop(context);
+                      context.pop();
+                      context.read<AuthCubit>().logout();
+                    },
+                  ),
+                ),
+            
+                //! const Expanded(
+                //!   child: SizedBox(),
+                //! ),
+            
+                // const SizedBox(
+                //   height: 24,
+                // )
+              ],
             ),
-          ),
-
-          //? VIEW PAYMENT HISTORY
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyDrawerItem(
-              text: "Payment history",
-              leadingIcon: const Icon(Icons.history),
-              onPressed: () {
-                print("Payment history button pressed");
-                //! avigator.pop(context);
-                context.pop();
-
-                //! avigator.pushNamed(context, '/payment-history-page');
-                context.goNamed(AppRoutes.paymentHistory);
-              },
-            ),
-          ),
-
-          //? Logout
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyDrawerItem(
-              text: "Logout",
-              leadingIcon: const Icon(Icons.logout),
-              onPressed: () {
-                print("Logout button pressed");
-                //! avigator.pop(context);
-                context.pop();
-                context.read<AuthCubit>().logout();
-              },
-            ),
-          ),
-
-          const Expanded(
-            child: SizedBox(),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              '"The key to a successful product is scattered among the minds of it\'s users."',
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontStyle: FontStyle.italic, fontSize: 16),
-            ),
-          ),
-
-          const SizedBox(
-            height: 8,
           ),
 
           //? Contact us
-          MyContainerButton(
-            text: "Contact us",
-            onPressed: () {
-              print('Contact us button pressed');
-            },
-          ),
-
-          const SizedBox(
-            height: 24,
-          )
+            Positioned(
+              bottom: 24,
+              child: MyContainerButton(
+                text: "Contact us",
+                onPressed: () {
+                  print('Contact us button pressed');
+                },
+              ),
+            ),
         ],
       ),
     );
