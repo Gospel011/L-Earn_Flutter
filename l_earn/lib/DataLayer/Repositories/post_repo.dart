@@ -6,7 +6,6 @@ import 'package:l_earn/DataLayer/Models/like_model.dart';
 
 import 'package:l_earn/DataLayer/Models/post_model.dart';
 
-
 class PostRepo {
   static dynamic loadNewPosts(
       {required int page,
@@ -36,9 +35,8 @@ class PostRepo {
         // print("PostMap = $postMap");
 
         posts.add(Post.fromMap(postMap));
-
       }
-        print("POSTS = $posts");
+      print("POSTS = $posts");
       return posts;
     } else {
       return AppError(
@@ -129,6 +127,42 @@ class PostRepo {
       return Comment.fromMap(comment);
     } else {
       return AppError.errorObject(response as AppError);
+    }
+  }
+
+  static getPost(
+      {required String userId,
+      required String token,
+      required String postId}) async {
+    final endpoint = "posts/$postId";
+    final response = await BackendSource.makeGETRequest(token, endpoint);
+
+    print(response);
+
+    if (response['status'] == 'success') {
+      //* convert list of post maps to actual objects;
+      
+
+      print(':::::::::::::::::::::');
+
+      
+        Map<String, dynamic> postMap = response['post'];
+        var user = postMap['userId'];
+        postMap['user'] = user;
+        postMap['userId'] = null;
+
+        var likesArray = postMap['likes'];
+        postMap['likes'] = likesArray.length;
+        postMap['liked'] = likesArray.contains(userId);
+        postMap['comments'] = postMap['comments'].length;
+
+        
+
+        return Post.fromMap(postMap);
+      
+    } else {
+      return AppError(
+          title: response["title"] ?? 'Error', content: response["message"]);
     }
   }
 }
