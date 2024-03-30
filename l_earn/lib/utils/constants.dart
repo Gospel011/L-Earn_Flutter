@@ -91,6 +91,7 @@ class AppRoutes {
   static const writeBook = 'write-book-page';
   static const chapterPage = 'chapter-page';
   static const createEvent = 'create-event';
+  static const drafts = 'drafts';
 
   static const expandedPost = 'expanded-post';
 }

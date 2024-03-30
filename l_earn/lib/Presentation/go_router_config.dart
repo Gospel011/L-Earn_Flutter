@@ -20,6 +20,7 @@ import 'package:l_earn/Presentation/Pages/Auth_Pages/forgot_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/login_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/reset_password_page.dart';
 import 'package:l_earn/Presentation/Pages/Auth_Pages/signup_page.dart';
+import 'package:l_earn/Presentation/Pages/Drawer_Pages/drafts.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/payment_history_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/profile_page.dart';
 import 'package:l_earn/Presentation/Pages/Drawer_Pages/tutors_profile.dart';
@@ -180,6 +181,15 @@ class GoRouterConfig {
                       value: paymentCubit,
                       child: const TutorsProfilePage(),
                     );
+                  }),
+
+              //? DRAFTS
+              GoRoute(
+                  name: AppRoutes.drafts,
+                  path: 'drafts',
+                  builder: (context, state) {
+                    print("${AppRoutes.drafts} from go_router");
+                    return const DraftsPage();
                   }),
 
               //? PAYMENT HISTORY

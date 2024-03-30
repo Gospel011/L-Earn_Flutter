@@ -32,7 +32,7 @@ class MyDrawer extends StatelessWidget {
                   ),
 
                   //* Name
-                  RenderUserName(user: user)
+                  RenderUserName(user: user, fontWeight: FontWeight.bold,)
                 ],
               )),
 
@@ -41,6 +41,7 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: MyDrawerItem(
               text: "View profile",
+              leadingIcon: const Icon(Icons.person),
               onPressed: () {
                 print("View profile button pressed");
                 //! avigator.pop(context);
@@ -62,6 +63,7 @@ class MyDrawer extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: MyDrawerItem(
                     text: "Tutor's dashboard",
+                    leadingIcon: const Icon(Icons.dashboard),
                     onPressed: () {
                       print("Payment history button pressed");
                       //! avigator.pop(context);
@@ -74,11 +76,28 @@ class MyDrawer extends StatelessWidget {
                 )
               : const SizedBox(),
 
+          //? DRAFTS
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: MyDrawerItem(
+              text: "Drafts",
+              leadingIcon: const Icon(Icons.drafts),
+              onPressed: () {
+                print("Drafts button pressed");
+
+                context.pop();
+
+                context.goNamed(AppRoutes.drafts);
+              },
+            ),
+          ),
+
           //? VIEW PAYMENT HISTORY
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: MyDrawerItem(
               text: "Payment history",
+              leadingIcon: const Icon(Icons.history),
               onPressed: () {
                 print("Payment history button pressed");
                 //! avigator.pop(context);
@@ -95,6 +114,7 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: MyDrawerItem(
               text: "Logout",
+              leadingIcon: const Icon(Icons.logout),
               onPressed: () {
                 print("Logout button pressed");
                 //! avigator.pop(context);
@@ -144,7 +164,12 @@ class MyDrawer extends StatelessWidget {
 class MyDrawerItem extends StatelessWidget {
   final String text;
   final void Function() onPressed;
-  const MyDrawerItem({super.key, required this.text, required this.onPressed});
+  const MyDrawerItem(
+      {super.key,
+      required this.text,
+      required this.onPressed,
+      this.leadingIcon});
+  final Widget? leadingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +178,20 @@ class MyDrawerItem extends StatelessWidget {
       onTap: onPressed,
       child: Row(
         children: [
+          leadingIcon != null
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: leadingIcon,
+                )
+              : const SizedBox(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
         ],
