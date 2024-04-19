@@ -11,6 +11,7 @@ import 'package:l_earn/BusinessLogic/ProfileCubit/profile_cubit.dart';
 import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
+import 'package:l_earn/BusinessLogic/DraftsCubit/drafts_cubit.dart';
 import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/DataLayer/Models/invoice_model.dart';
@@ -302,6 +303,8 @@ class GoRouterConfig {
                         BlocProvider.value(value: contentCubit),
                         BlocProvider<FollowCubit>(
                             create: (context) => FollowCubit()),
+                        BlocProvider<DraftsCubit>(
+                            create: (context) => DraftsCubit()),
                       ],
                       child: WriteABookPage(
                           content: args['content'],

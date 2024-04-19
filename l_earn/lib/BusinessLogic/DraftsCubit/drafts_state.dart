@@ -17,7 +17,7 @@ class DraftsState {
 
   factory DraftsState.fromMap(Map<String, dynamic> map) {
     return DraftsState(
-      drafts: map['drafts'] != null ? List<Drafts>.from((map['drafts'] as List<int>).map<Drafts?>((x) => Drafts.fromMap(x as Map<String,dynamic>),),) : null,
+      drafts: map['drafts'] != null ? List<Drafts>.from((map['drafts'] as List<int>).map<Drafts?>((x) => Drafts.fromMap(x as Map<String,dynamic>),),) : [],
     );
   }
 
@@ -29,7 +29,7 @@ class DraftsState {
 
 
 class DraftsInitial extends DraftsState {
-  DraftsInitial({required List drafts});
+  DraftsInitial({required super.drafts});
 }
 
 class SavedToDrafs extends DraftsState {

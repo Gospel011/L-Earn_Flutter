@@ -7,16 +7,22 @@ part 'drafts_state.dart';
 class DraftsCubit extends HydratedCubit<DraftsState> {
   DraftsCubit() : super(DraftsInitial(drafts: []));
 
-  void put(Drafts oldDraft, Drafts newDraft) {
+  /// This method takes a draft object and inserts it into the drafts list.
+  /// If the draft exist, it replaces the old draft with the one provided.
+  void put(Drafts draft) {
     List<Drafts> drafts = state.drafts;
 
-    int? index = drafts.indexOf(oldDraft);
+    int? index = drafts.indexOf(draft);
 
     if (index >= 0) {
-      drafts[index] = newDraft;
+      drafts[index] = draft;
     } else {
-      drafts.add(newDraft);
+      drafts.add(draft);
     }
+  }
+
+  void clearAll() {
+    state.drafts.clear();
   }
 
   @override

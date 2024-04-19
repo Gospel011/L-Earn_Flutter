@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:l_earn/DataLayer/Models/content_model.dart';
+import 'package:l_earn/DataLayer/Models/drafts_model.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_editor.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/ContentCubit/content_cubit.dart';
-// import 'package:l_earn/BusinessLogic/Models/content_model.dart';
+import 'package:l_earn/DataLayer/Models/content_model.dart';
+import 'package:l_earn/BusinessLogic/DraftsCubit/drafts_cubit.dart';
 // C:\Users\user\FLUTTER_PROJECTS\L-EARN\L-Earn_Flutter\l_earn\lib\BusinessLogic\contentCubit\content_cubit.dart
 
 import 'package:flutter_quill/flutter_quill.dart';
@@ -22,7 +24,6 @@ class WriteABookPage extends StatefulWidget with AppBarMixin {
 
   final Content? content;
   final String? chapterId;
-  
 
   @override
   State<WriteABookPage> createState() => _WriteABookPageState();
@@ -35,7 +36,52 @@ class _WriteABookPageState extends State<WriteABookPage> {
 
   Map<String, String> get body => convertToBody();
 
-  
+  static final id = AppConstants.uuid.v4();
+
+  void saveToDrafts() {
+
+    // Return if title and content is empty
+    if (_titleController.text.trim() == '' &&
+        _contentController.document.toDelta().toJson().toString().length ==
+            13) {
+    print("T I M E IS  ${DateTime.now()} content is ${widget.content!.title}");
+    // context.read<DraftsCubit>().clearAll(); //! remove later
+      print("Title and content is empty so no drafts saved");
+      return;
+    }
+
+    final Drafts draft = Drafts(
+        id: widget.chapterId ?? id,
+        bookName: widget.content!.title,
+        chapter: widget.content!.articles + 1,
+        title: _titleController.text == '' ? 'untitled' : _titleController.text,
+        content: _contentController.document.toDelta().toJson(),
+        dateLastUpdated: DateTime.now());
+
+    context.read<DraftsCubit>().put(draft);
+    print("Saved drafts = ${context.read<DraftsCubit>().state.drafts}");
+    // print("Content ${draft.content.toString().length == 13}");
+
+
+    // print("Drafts is $draft");
+  }
+
+  late final Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 1), (time) {
+      // print("Timer is $time");
+      saveToDrafts();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    print("C A N C E L E D timer");
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
