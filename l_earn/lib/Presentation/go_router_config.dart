@@ -11,7 +11,7 @@ import 'package:l_earn/BusinessLogic/ProfileCubit/profile_cubit.dart';
 import 'package:l_earn/BusinessLogic/commentCubit/comment_cubit.dart';
 import 'package:l_earn/BusinessLogic/contentCubit/content_cubit.dart';
 import 'package:l_earn/BusinessLogic/paymentCubit/payment_cubit.dart';
-import 'package:l_earn/BusinessLogic/DraftsCubit/drafts_cubit.dart';
+
 import 'package:l_earn/BusinessLogic/tabCubit/tab_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
 import 'package:l_earn/DataLayer/Models/invoice_model.dart';
@@ -53,6 +53,7 @@ class GoRouterConfig {
   final ContentCubit contentCubit = ContentCubit();
   final ContentCubit contentCubit2 = ContentCubit();
   final PaymentCubit paymentCubit = PaymentCubit();
+  
 
   GoRouter get router => GoRouter(
       navigatorKey: _rootNavigatorKey,
@@ -78,13 +79,14 @@ class GoRouterConfig {
                 builder: (context, state) {
                   print("${AppRoutes.expandedPost} from go_router");
                   return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<PostCubit>(
-                      create: (context) => PostCubit()),
-                      BlocProvider<CommentCubit>(
-                      create: (context) => CommentCubit())
-                    ],
-                    child: ExpandedPostPage(id: state.pathParameters["postId"]!));
+                      providers: [
+                        BlocProvider<PostCubit>(
+                            create: (context) => PostCubit()),
+                        BlocProvider<CommentCubit>(
+                            create: (context) => CommentCubit())
+                      ],
+                      child: ExpandedPostPage(
+                          id: state.pathParameters["postId"]!));
                 },
               ),
 
@@ -120,8 +122,8 @@ class GoRouterConfig {
                             print("Returning Contents Shell _________------");
                             print("\n\n\n\n");
                             return BlocProvider.value(
-                              value: contentCubit,
-                              child: const ContentsShell());
+                                value: contentCubit,
+                                child: const ContentsShell());
 
                             ///*uuuuuu
                           },
@@ -303,8 +305,6 @@ class GoRouterConfig {
                         BlocProvider.value(value: contentCubit),
                         BlocProvider<FollowCubit>(
                             create: (context) => FollowCubit()),
-                        BlocProvider<DraftsCubit>(
-                            create: (context) => DraftsCubit()),
                       ],
                       child: WriteABookPage(
                           content: args['content'],

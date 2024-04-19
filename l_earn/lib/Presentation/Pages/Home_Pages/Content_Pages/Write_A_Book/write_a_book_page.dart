@@ -39,13 +39,12 @@ class _WriteABookPageState extends State<WriteABookPage> {
   static final id = AppConstants.uuid.v4();
 
   void saveToDrafts() {
-
     // Return if title and content is empty
     if (_titleController.text.trim() == '' &&
         _contentController.document.toDelta().toJson().toString().length ==
             13) {
-    print("T I M E IS  ${DateTime.now()} content is ${widget.content!.title}");
-    // context.read<DraftsCubit>().clearAll(); //! remove later
+      print(
+          "T I M E IS  ${DateTime.now()} content is ${widget.content!.title}");
       print("Title and content is empty so no drafts saved");
       return;
     }
@@ -58,12 +57,8 @@ class _WriteABookPageState extends State<WriteABookPage> {
         content: _contentController.document.toDelta().toJson(),
         dateLastUpdated: DateTime.now());
 
-    context.read<DraftsCubit>().put(draft);
-    print("Saved drafts = ${context.read<DraftsCubit>().state.drafts}");
-    // print("Content ${draft.content.toString().length == 13}");
-
-
-    // print("Drafts is $draft");
+    // TODO: save to draft provider
+    print("Draft is $draft");
   }
 
   late final Timer timer;
@@ -98,6 +93,7 @@ class _WriteABookPageState extends State<WriteABookPage> {
                         content: state.error!.content);
                   });
             } else if (state is ChapterCreated) {
+              // TODO: Delete chapter from drafts
               await showDialog(
                   context: context,
                   builder: (context) {
