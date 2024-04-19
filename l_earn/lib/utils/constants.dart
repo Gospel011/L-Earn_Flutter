@@ -1,5 +1,10 @@
 // import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
+
+class AppConstants {
+  static const Uuid uuid = Uuid();
+}
 
 //! NETWORK CONSTANTS
 class NetWorkConstants {

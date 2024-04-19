@@ -17,13 +17,25 @@ import 'package:l_earn/utils/mixins.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
 
-class WriteABookPage extends StatelessWidget with AppBarMixin {
+class WriteABookPage extends StatefulWidget with AppBarMixin {
   const WriteABookPage({super.key, this.content, this.chapterId});
 
-  static final _contentController = QuillController.basic();
-  static final _titleController = TextEditingController();
   final Content? content;
   final String? chapterId;
+  
+
+  @override
+  State<WriteABookPage> createState() => _WriteABookPageState();
+}
+
+class _WriteABookPageState extends State<WriteABookPage> {
+  final _contentController = QuillController.basic();
+
+  final _titleController = TextEditingController();
+
+  Map<String, String> get body => convertToBody();
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +58,15 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
                     return MyDialog(
                         title: "Successful",
                         content:
-                            "A new chapter has been added to \"${content?.title}\"");
+                            "A new chapter has been added to \"${widget.content?.title}\"");
                   });
 
               if (context.mounted) {
-                context.push(AppRoutes.profile,
-                    extra: context.read<AuthCubit>().state.user);
+                context.goNamed(AppRoutes.profile, queryParameters: {
+                  "user": context.read<AuthCubit>().state.user!.id!
+                });
+                // context.goNamed(AppRoutes.profile,
+                //     extra: context.read<AuthCubit>().state.user);
                 //! avigator.pushReplacementNamed(context, '/profile-page',
                 //     arguments: context.read<AuthCubit>().state.user);
               }
@@ -64,48 +79,40 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
           },
           child: Scaffold(
               resizeToAvoidBottomInset: true,
-              appBar: buildAppBar(context, automaticallyImplyLeading: Platform.isWindows, actions: [
-                Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Builder(builder: (context) {
-                      return BlocBuilder<ContentCubit, ContentState>(
-                          builder: (context, state) {
-                        print(state);
-                        return MyContainerButton(
-                            text: 'Add',
-                            loading: state is CreatingChapter,
-                            onPressed: () {
-                              //TODO: IMPLEMENT POSTING FUNCTIONALITY FOR CONTENT
-                              if (state is CreatingChapter) return;
+              appBar: widget.buildAppBar(context,
+                  automaticallyImplyLeading: Platform.isWindows,
+                  actions: [
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Builder(builder: (context) {
+                          return BlocBuilder<ContentCubit, ContentState>(
+                              builder: (context, state) {
+                            print(state);
+                            return MyContainerButton(
+                                text: 'Add',
+                                loading: state is CreatingChapter,
+                                onPressed: () {
+                                  //TODO: IMPLEMENT POSTING FUNCTIONALITY FOR CONTENT
+                                  if (state is CreatingChapter) return;
 
-                              print("post pressed");
+                                  print("post pressed");
 
-                              print(
-                                  ":::::::::::::::::: P R I N T I N G   U S E R   C O N T E N T :::::::::::::::::::::::::");
+                                  print(
+                                      ":::::::::::::::::: P R I N T I N G   U S E R   C O N T E N T :::::::::::::::::::::::::");
 
-                              Map<String, String> body = {
-                                "title": _titleController.text,
-                              };
-
-                              var encodedBody = jsonEncode(_contentController
-                                  .document
-                                  .toDelta()
-                                  .toJson());
-                              body['content'] = encodedBody;
-
-                              context.read<ContentCubit>().createChapter(
-                                  token: context
-                                      .read<AuthCubit>()
-                                      .state
-                                      .user
-                                      ?.token,
-                                  contentId: content!.id,
-                                  details: body);
-                            });
-                      });
-                    }))
-              ]),
+                                  context.read<ContentCubit>().createChapter(
+                                      token: context
+                                          .read<AuthCubit>()
+                                          .state
+                                          .user
+                                          ?.token,
+                                      contentId: widget.content!.id,
+                                      details: body);
+                                });
+                          });
+                        }))
+                  ]),
               body: MyQuillEditor(
                   controller: _contentController,
                   textEditingController: _titleController,
@@ -113,5 +120,16 @@ class WriteABookPage extends StatelessWidget with AppBarMixin {
                   readOnly: false,
                   fresh: true))),
     );
+  }
+
+  Map<String, String> convertToBody() {
+    Map<String, String> body = {
+      "title": _titleController.text,
+    };
+
+    var encodedBody =
+        jsonEncode(_contentController.document.toDelta().toJson());
+    body['content'] = encodedBody;
+    return body;
   }
 }
