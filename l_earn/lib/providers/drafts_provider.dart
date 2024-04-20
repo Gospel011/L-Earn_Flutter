@@ -32,6 +32,13 @@ class DraftsProvider extends ChangeNotifier {
      } catch (e) {
       print("Number parsing error");
      }
+     try {
+      final res = ("chapter ${draft.chapter}" == "chapter ${int.parse(keyword.trim().split(' ')[1])}");
+      print("Checking $res");
+      if ("chapter ${draft.chapter}" == "chapter ${int.parse(keyword.trim().split(' ')[1])}") return true;
+     } catch (e) {
+      print("Number parsing error 2");
+     }
      return false; 
     }).toList();
   }

@@ -3,13 +3,16 @@ import 'package:l_earn/utils/mixins.dart';
 import 'package:provider/provider.dart';
 import 'package:l_earn/providers/drafts_provider.dart';
 import 'package:l_earn/Presentation/components/my_textformfield.dart';
+import 'package:l_earn/Helpers/stream_helper.dart';
+import 'package:go_router/go_router.dart';
+import 'package:l_earn/utils/constants.dart';
 
 class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
   const DraftsPage({super.key});
 
   static final _searchController = TextEditingController();
 
-  static final _stream = StreamHelper();
+  static final _draftsStream = StreamHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +109,8 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
                         final searchResult = context.read<DraftsProvider>().find(value);
 
                         print("Search Result (${searchResult.length}) : $searchResult");
+
+                        _draftsStream.add(searchResult);
                       },
                       validator: (value) {},
                       borderRadius: 24,
@@ -134,22 +139,49 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
 
               // list of drafts
               StreamBuilder(
-                stream: draftsStream.stream,
+                stream: _draftsStream.stream,
                 initialData: context.read<DraftsProvider>().drafts,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   return SliverList.builder(
-                itemCount: context.read<DraftsProvider>().drafts.length,
+                itemCount: snapshot.data.length == 0 ? 1 : snapshot.data.length,
+                // itemCount: snapshot.hasData ? snapshot.data.length : context.read<DraftsProvider>().drafts.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final draft = context.read<DraftsProvider>().drafts[index];
-                  final chapter = draft.chapter;
-                  final title = draft.title;
+
+                  if (snapshot.data.length == 0) return Padding(
+                    padding: EdgeInsets.all(16),
+                    child: const Text("No drafts found")
+                  );
+
+                  final draft = snapshot.data[index];
+                  // final draft = snapshot.hasData ? snapshot.data[index] : context.read<DraftsProvider>().drafts[index];
+                  final id = draft.id; // id
+                  final chapterContent = draft.content; // chapterContent
+                  final bookName = draft.bookName; // bookName
+                  final chapter = draft.chapter; //chapter
+                  final title = draft.title;  // title
                   final lastUpdated = draft.dateLastUpdated;
                   final timeDifference = calculateTimeDifference(lastUpdated.toString());
                   final timestamp = formatTimestamp(lastUpdated.toString());
 
+                  final extras = {
+                          "chapterId": id,
+                          "title": title,
+                          "chapter": chapter,
+                          "bookName": bookName,
+                          "chapterContent": chapterContent
+                        };
+
+
+                  print("Empty ${snapshot.data}");
+
                   return Padding(
                     padding: EdgeInsets.only(left: 16, right: 16, top: index == 0 ? 24 : 8, bottom: 8),
-                    child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        print("Extras $extras");
+                        context.pushNamed(AppRoutes.writeBook, extra: extras);
+                      },
+                      child: Container(
                       padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -179,6 +211,7 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
                     ],
                   )
                   )
+                    )
                   );
                 },
               );

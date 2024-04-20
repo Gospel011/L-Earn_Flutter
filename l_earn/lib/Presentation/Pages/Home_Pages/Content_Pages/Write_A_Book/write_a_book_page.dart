@@ -21,10 +21,16 @@ import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/providers/drafts_provider.dart';
 
 class WriteABookPage extends StatefulWidget with AppBarMixin {
-  const WriteABookPage({super.key, this.content, this.chapterId, this.bookName, this.chapter});
+  const WriteABookPage({super.key, this.chapterContent, this.content, this.title, this.chapterId, this.bookName, this.chapter});
 
   /// The parent book of this chapter
   final Content? content;
+
+  /// The content of this chapter
+  final List<dynamic>? chapterContent;
+
+  /// The title of this chapter
+  final String? title;
 
   /// The unique id for this chapter. If this has been saved to drafts, this
   /// would be this chapter's id in the drafts.
@@ -55,10 +61,10 @@ class _WriteABookPageState extends State<WriteABookPage> {
     if (_titleController.text.trim() == '' &&
         _contentController.document.toDelta().toJson().toString().length ==
             13) {
-      print(
-          "T I M E IS  ${DateTime.now()} content is ${widget.content!.title}");
-      print("Title and content is empty so no drafts saved");
-    print("S A V E D   D R A F T S (${savedDrafts.length})   $savedDrafts");
+    //   print(
+    //       "T I M E IS  ${DateTime.now()} content is ${widget.content!.title}");
+    //   print("Title and content is empty so no drafts saved");
+    // print("S A V E D   D R A F T S (${savedDrafts.length})   $savedDrafts");
       return;
     }
 
@@ -85,6 +91,13 @@ class _WriteABookPageState extends State<WriteABookPage> {
   @override
   void initState() {
     super.initState();
+    
+
+    if (widget.title != null && widget.title != 'untitled') _titleController.text = widget.title!;
+    if (widget.content != null) {
+      _contentController.document =
+              Document.fromJson(widget.chapterContent!);
+    }
     timer = Timer.periodic(const Duration(seconds: 1), (time) {
       // print("Timer is $time");
       saveToDrafts();

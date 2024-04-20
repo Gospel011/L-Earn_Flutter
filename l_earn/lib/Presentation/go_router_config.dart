@@ -323,6 +323,8 @@ class GoRouterConfig {
                         create: (context) => draftsProvider,
                         child: WriteABookPage(
                           content: args['content'],
+                          chapterContent: args['chapterContent'],
+                          title: args['title'],
                           bookName: args['bookName'],
                           chapter: args['chapter'],
                           chapterId: args['chapterId'])
@@ -425,8 +427,8 @@ class GoRouterConfig {
         final String currentLocation = state.matchedLocation;
 
         if (isLoggedIn && currentLocation == '/login') {
-          return '/home/drafts';
-          // return '/home'; //! ORIGINAL
+          // return '/home/drafts';
+          return '/home'; //! ORIGINAL
         }
 
         return null;
