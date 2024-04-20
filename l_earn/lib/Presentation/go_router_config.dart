@@ -425,7 +425,8 @@ class GoRouterConfig {
         final String currentLocation = state.matchedLocation;
 
         if (isLoggedIn && currentLocation == '/login') {
-          return '/home';
+          return '/home/drafts';
+          // return '/home'; //! ORIGINAL
         }
 
         return null;
