@@ -9,6 +9,8 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
 
   static final _searchController = TextEditingController();
 
+  static final _stream = StreamHelper();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +100,13 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
                     MyTextFormField(
                       controller: _searchController,
                       hintText: 'Search for book or chapter',
+                      onChanged: (value) {
+                        print("Value is ___________________________________\n$value");
+
+                        final searchResult = context.read<DraftsProvider>().find(value);
+
+                        print("Search Result (${searchResult.length}) : $searchResult");
+                      },
                       validator: (value) {},
                       borderRadius: 24,
                       hintStyle: TextStyle(fontSize: 18),
@@ -124,7 +133,11 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
               )),
 
               // list of drafts
-              SliverList.builder(
+              StreamBuilder(
+                stream: draftsStream.stream,
+                initialData: context.read<DraftsProvider>().drafts,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  return SliverList.builder(
                 itemCount: context.read<DraftsProvider>().drafts.length,
                 itemBuilder: (BuildContext context, int index) {
                   final draft = context.read<DraftsProvider>().drafts[index];
@@ -167,6 +180,8 @@ class DraftsPage extends StatelessWidget with AppBarMixin, TimeParserMixin {
                   )
                   )
                   );
+                },
+              );
                 },
               ),
             ],

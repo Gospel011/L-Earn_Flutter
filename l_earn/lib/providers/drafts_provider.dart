@@ -14,6 +14,28 @@ class DraftsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // const Drafts({
+  //   required this.id,
+  //   required this.bookName,
+  //   required this.chapter,
+  //   this.title = 'untitled',
+  //   required this.content,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  //   required this.dateLastUpdated,
+  // });
+
+  List<Drafts> find(String keyword) {
+    return drafts.where((draft) {
+     if (draft.bookName?.toLowerCase()?.contains(keyword.toLowerCase()) == true) return true;
+     if (draft.title?.toLowerCase()?.contains(keyword.toLowerCase()) == true) return true;
+     try {
+      if (draft.chapter == int.parse(keyword.trim())) return true;
+     } catch (e) {
+      print("Number parsing error");
+     }
+     return false; 
+    }).toList();
+  }
+
   // read drafts
   List<Drafts> get drafts => _draftsBox.values.toList();
 
