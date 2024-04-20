@@ -202,7 +202,10 @@ class GoRouterConfig {
                   path: 'drafts',
                   builder: (context, state) {
                     print("${AppRoutes.drafts} from go_router");
-                    return const DraftsPage();
+                    return ChangeNotifierProvider<DraftsProvider>(
+                      create: (context) => draftsProvider,
+                      child: const DraftsPage()
+                    );
                   }),
 
               //? PAYMENT HISTORY
@@ -320,6 +323,8 @@ class GoRouterConfig {
                         create: (context) => draftsProvider,
                         child: WriteABookPage(
                           content: args['content'],
+                          bookName: args['bookName'],
+                          chapter: args['chapter'],
                           chapterId: args['chapterId'])
                       ),
                     );

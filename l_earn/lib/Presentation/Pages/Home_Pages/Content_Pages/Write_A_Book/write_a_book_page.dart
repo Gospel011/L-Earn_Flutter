@@ -21,10 +21,20 @@ import 'package:l_earn/Presentation/components/my_dialog.dart';
 import 'package:l_earn/providers/drafts_provider.dart';
 
 class WriteABookPage extends StatefulWidget with AppBarMixin {
-  const WriteABookPage({super.key, this.content, this.chapterId});
+  const WriteABookPage({super.key, this.content, this.chapterId, this.bookName, this.chapter});
 
+  /// The parent book of this chapter
   final Content? content;
+
+  /// The unique id for this chapter. If this has been saved to drafts, this
+  /// would be this chapter's id in the drafts.
   final String? chapterId;
+
+  /// This is the title of the parent book
+  final String? bookName;
+
+  /// The current chapter being written
+  final int? chapter;
 
   @override
   State<WriteABookPage> createState() => _WriteABookPageState();
@@ -54,8 +64,8 @@ class _WriteABookPageState extends State<WriteABookPage> {
 
     final Drafts draft = Drafts(
         id: widget.chapterId ?? id,
-        bookName: widget.content!.title,
-        chapter: widget.content!.articles + 1,
+        bookName: widget.bookName ?? widget.content!.title,
+        chapter: widget.chapter ?? widget.content!.articles + 1,
         title: _titleController.text == '' ? 'untitled' : _titleController.text,
         content: _contentController.document.toDelta().toJson(),
         dateLastUpdated: DateTime.now());
