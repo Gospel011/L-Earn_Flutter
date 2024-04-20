@@ -54,6 +54,16 @@ class MyTextFormField extends StatelessWidget {
 
   /// This filters the users input and accepts only the valid ones.
   final List<TextInputFormatter>? inputFormatters;
+
+  /// This is the padding between the text and the text form fields borders.
+  final EdgeInsets? contentPadding;
+
+  /// This is the border radius of the text form field.
+  final double? borderRadius;
+
+  /// This is the text style of this text form field.
+  final TextStyle? hintStyle;
+
   const MyTextFormField(
       {super.key,
       this.hintText,
@@ -69,6 +79,9 @@ class MyTextFormField extends StatelessWidget {
       this.enabled,
       this.keyboardType,
       this.inputFormatters,
+      this.contentPadding,
+      this.borderRadius,
+      this.hintStyle,
       this.focusNode,
       this.onChanged,
       this.textFieldType});
@@ -104,9 +117,19 @@ class MyTextFormField extends StatelessWidget {
       cursorWidth: 1.0,
       decoration: InputDecoration(
         contentPadding: textFieldType == TextFieldType.otp
-            ? EdgeInsets.symmetric(horizontal: 8)
-            : null,
+            ? const EdgeInsets.symmetric(horizontal: 8)
+            : contentPadding,
         hintText: hintText,
+        hintStyle: hintStyle,
+        enabledBorder:
+            (Theme.of(context).inputDecorationTheme.enabledBorder as OutlineInputBorder?)?.copyWith(
+                  borderRadius: BorderRadius.circular(borderRadius ?? 8),
+
+                ),
+        focusedBorder:
+            (Theme.of(context).inputDecorationTheme.focusedBorder as OutlineInputBorder?)?.copyWith(
+                  borderRadius: BorderRadius.circular(borderRadius ?? 8),
+                ),
         suffixIcon: suffixIcon != null
             ? IconButton(onPressed: suffixOnpressed, icon: suffixIcon!)
             : null,

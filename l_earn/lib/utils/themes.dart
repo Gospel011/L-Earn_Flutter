@@ -6,6 +6,7 @@ final class AppTheme {
 //* MY APP THEME DATA
   static ThemeData myAppTheme = ThemeData(
       primaryColor: AppColor.mainColorBlack,
+      textSelectionTheme: const TextSelectionThemeData(selectionHandleColor: Colors.black),
       
 
       //* My text themes
@@ -15,7 +16,7 @@ final class AppTheme {
             fontFamily: 'Nunito',
             fontSize: 17,
             height: 24 / 17,
-            fontWeight: FontWeight.w400),
+            fontWeight: FontWeight.w500),
         bodyLarge: TextStyle(
             color: AppColor.textColor,
             fontFamily: 'Nunito',
