@@ -40,9 +40,16 @@ import 'package:l_earn/Presentation/Pages/Profile_Pages/edit_profile_page.dart';
 import 'package:l_earn/Presentation/Pages/Utility_Pages/image_view_page.dart';
 import 'package:l_earn/utils/constants.dart';
 
+import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
+import 'package:l_earn/providers/drafts_provider.dart';
+import 'package:l_earn/DataLayer/Models/drafts/drafts_model.dart';
+
+
 class GoRouterConfig {
-  GoRouterConfig({required this.authCubit});
+  GoRouterConfig({required this.authCubit, required this.draftsBox});
   final AuthCubit authCubit;
+  final Box<Drafts> draftsBox;
 
   final GlobalKey<NavigatorState> _rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -53,6 +60,9 @@ class GoRouterConfig {
   final ContentCubit contentCubit = ContentCubit();
   final ContentCubit contentCubit2 = ContentCubit();
   final PaymentCubit paymentCubit = PaymentCubit();
+
+  //? P R O V I D E R S
+  DraftsProvider get draftsProvider => DraftsProvider(draftsBox);
   
 
   GoRouter get router => GoRouter(
@@ -306,9 +316,12 @@ class GoRouterConfig {
                         BlocProvider<FollowCubit>(
                             create: (context) => FollowCubit()),
                       ],
-                      child: WriteABookPage(
+                      child: ChangeNotifierProvider<DraftsProvider>(
+                        create: (context) => draftsProvider,
+                        child: WriteABookPage(
                           content: args['content'],
-                          chapterId: args['chapterId']),
+                          chapterId: args['chapterId'])
+                      ),
                     );
                   }),
 

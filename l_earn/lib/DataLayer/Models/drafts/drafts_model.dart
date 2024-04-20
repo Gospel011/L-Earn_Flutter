@@ -1,13 +1,28 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+part 'drafts_model.g.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+@HiveType(typeId: 0)
 class Drafts extends Equatable {
+
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String? bookName;
+
+  @HiveField(2)
   final int? chapter;
+
+  @HiveField(3, defaultValue: 'untitled')
   final String title;
+
+  @HiveField(4)
   final List<Map<String, dynamic>> content;
+
+  @HiveField(5)
   final DateTime dateLastUpdated;
 
   const Drafts({
@@ -15,7 +30,7 @@ class Drafts extends Equatable {
     required this.bookName,
     required this.chapter,
     this.title = 'untitled',
-    required this.content,
+    required this.content,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     required this.dateLastUpdated,
   });
 

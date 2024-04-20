@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:l_earn/DataLayer/Models/drafts_model.dart';
+import 'package:l_earn/DataLayer/Models/drafts/drafts_model.dart';
 
 class DraftsProvider extends ChangeNotifier {
   DraftsProvider(Box<Drafts> box) : _draftsBox = box;
@@ -15,7 +15,10 @@ class DraftsProvider extends ChangeNotifier {
   }
 
   // read drafts
-  void getAll() {
-    
+  List<Drafts> get drafts => _draftsBox.values.toList();
+
+  // delete drafts
+  void delete(Drafts draft) {
+    _draftsBox.delete(draft.id);
   }
 }

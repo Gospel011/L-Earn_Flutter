@@ -4,12 +4,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:l_earn/DataLayer/Models/drafts_model.dart';
+import 'package:l_earn/DataLayer/Models/drafts/drafts_model.dart';
 import 'package:l_earn/Presentation/Pages/Home_Pages/Content_Pages/my_quill_editor.dart';
 import 'package:l_earn/BusinessLogic/AuthCubit/auth/auth_cubit.dart';
 import 'package:l_earn/BusinessLogic/ContentCubit/content_cubit.dart';
 import 'package:l_earn/DataLayer/Models/content_model.dart';
-import 'package:l_earn/BusinessLogic/DraftsCubit/drafts_cubit.dart';
 // C:\Users\user\FLUTTER_PROJECTS\L-EARN\L-Earn_Flutter\l_earn\lib\BusinessLogic\contentCubit\content_cubit.dart
 
 import 'package:flutter_quill/flutter_quill.dart';
@@ -18,6 +17,8 @@ import 'package:l_earn/utils/constants.dart';
 import 'package:l_earn/utils/mixins.dart';
 import 'package:l_earn/Presentation/components/my_container_button.dart';
 import 'package:l_earn/Presentation/components/my_dialog.dart';
+
+import 'package:l_earn/providers/drafts_provider.dart';
 
 class WriteABookPage extends StatefulWidget with AppBarMixin {
   const WriteABookPage({super.key, this.content, this.chapterId});
@@ -40,12 +41,14 @@ class _WriteABookPageState extends State<WriteABookPage> {
 
   void saveToDrafts() {
     // Return if title and content is empty
+    final savedDrafts = context.read<DraftsProvider>().drafts;
     if (_titleController.text.trim() == '' &&
         _contentController.document.toDelta().toJson().toString().length ==
             13) {
       print(
           "T I M E IS  ${DateTime.now()} content is ${widget.content!.title}");
       print("Title and content is empty so no drafts saved");
+    print("S A V E D   D R A F T S (${savedDrafts.length})   $savedDrafts");
       return;
     }
 
@@ -57,7 +60,14 @@ class _WriteABookPageState extends State<WriteABookPage> {
         content: _contentController.document.toDelta().toJson(),
         dateLastUpdated: DateTime.now());
 
+
     // TODO: save to draft provider
+    context.read<DraftsProvider>().put(draft);
+
+    // final savedDrafts = context.read<DraftsProvider>().drafts;
+
+    print("S A V E D   D R A F T S (${savedDrafts.length})   $savedDrafts");
+
     print("Draft is $draft");
   }
 
